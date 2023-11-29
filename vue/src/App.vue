@@ -33,7 +33,7 @@ const logout = async () => {
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">
-        <img src="@/assets/logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+        <img src="@/assets/logo1.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
         VCard
       </a>
       <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -43,6 +43,8 @@ const logout = async () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
+          <!--check if user is logged-->
+          
           <li class="nav-item">
             <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
               Register
@@ -93,13 +95,115 @@ const logout = async () => {
   <div class="container-fluid">
     <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <div class="position-sticky pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                Reports
+              </a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                Reports
+              </a>
+            </li>
+        
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+              <a class="nav-link" href="#">
+                Reports
+              </a>
+            </li>
+         
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                Reports
+              </a>
+            </li>
+           
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                Reports
+              </a>
+            </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                Reports
+              </a>
+            </li>
+          </ul>
 
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>My Projects</span>
+            
+          </h6>
+          <ul class="nav flex-column mb-2">
+            <li class="nav-item" v-for="prj in workInProgressProjects" :key="prj.id">
+              <router-link class="nav-link w-100 me-3" 
+                :class="{ active: $route.name == 'ProjectTasks' && $route.params.id == prj.id }"
+                :to="{ name: 'ProjectTasks', params: { id: prj.id } }">
+                <i class="bi bi-file-ruled"></i>
+                {{ prj.name }}
+              </router-link>
+            </li>
+          </ul>
+
+          <div class="d-block d-md-none">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>User</span>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
+                  Register
+                </a>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" 
+                              :to="{ name: 'Login' }">
+                  <i class="bi bi-box-arrow-in-right"></i>
+                  Login
+                </router-link>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+                  <span class="avatar-text">User Name</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                  <li>
+                      <router-link class="dropdown-item"
+                                  :class="{ active: $route.name == 'User' && $route.params.id == 1 }"
+                                  :to="{ name: 'User', params: { id: 1 } }">
+                        <i class="bi bi-person-square"></i>
+                        Profile
+                      </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }" 
+                                  :to="{ name: 'ChangePassword' }">
+                      <i class="bi bi-key-fill"></i>
+                      Change password
+                    </router-link>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#">
+                      <i class="bi bi-arrow-right"></i>Logout
+                    </a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+        </div>
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <router-view></router-view>
-        <!--<LaravelTester />-->
-        <WebSocketTester />
       </main>
     </div>
   </div>
