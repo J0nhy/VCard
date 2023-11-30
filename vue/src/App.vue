@@ -1,8 +1,7 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted , inject} from 'vue'
+import { useRouter ,RouterLink, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
-const axios = inject('axios')
 import { useToast } from "vue-toastification"
 import { useUserStore } from './stores/user.js'
 
@@ -12,18 +11,28 @@ import WebSocketTester from '@/components/WebSocketTester.vue'
 
 const toast = useToast()
 const userStore = useUserStore()
+const router = useRouter()
+
 
 
 const workInProgressProjects = ref([])
 
 const logout = async () => {
-  try {
-    await axios.post('logout')
+  if (await userStore.logout()) {
     toast.success('User has logged out of the application.')
-    delete axios.defaults.headers.common.Authorization
-    userStore.clearUser()
-  } catch (error) {
+    clickMenuOption()
+    router.push({ name: 'home' })
+  } else {
     toast.error('There was a problem logging out of the application!')
+  }
+}
+
+const clickMenuOption = () => {
+  const domReference = document.getElementById('buttonSidebarExpandId')
+  if (domReference) {
+    if (window.getComputedStyle(domReference).display !== "none") {
+      domReference.click()
+    }
   }
 }
 </script>
@@ -45,12 +54,13 @@ const logout = async () => {
         <ul class="navbar-nav">
           <!--check if user is logged-->
           
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
+          <li class="nav-item" v-show="!userStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'NewUser'}" :to="{ name: 'NewUser' }" @click="clickMenuOption">
+              <i class="bi bi-person-check-fill"></i>
               Register
-            </a>
+            </router-link >
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
               <i class="bi bi-box-arrow-in-right"></i>
               Login

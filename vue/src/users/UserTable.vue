@@ -1,8 +1,11 @@
 <script setup>
-import { inject } from "vue";
+import { useUserStore } from "../../stores/user.js"
 import avatarNoneUrl from '@/assets/avatar-none.png'
+import { inject } from "vue";
 
 const serverBaseUrl = inject("serverBaseUrl");
+const userStore = useUserStore()
+const axios = inject('axios')
 
 const props = defineProps({
   users: {
@@ -33,19 +36,26 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-});
+})
 
-const emit = defineEmits(["edit"]);
+const emit = defineEmits(["edit"])
 
 const photoFullUrl = (user) => {
   return user.photo_url
     ? serverBaseUrl + "/storage/fotos/" + user.photo_url
     : avatarNoneUrl;
-};
+}
 
 const editClick = (user) => {
-  emit("edit", user);
-};
+  emit("edit", user)  
+}
+
+const canViewUserDetail = (userId) => {
+  if (!userStore.user) {
+    return false
+  }
+  return userStore.user.type == 'A' || userStore.user.id == userId
+}
 </script>
 
 <template>
@@ -71,7 +81,7 @@ const editClick = (user) => {
         <td v-if="showAdmin" class="align-middle">{{ user.type == "A" ? "Sim" : "" }}</td>
         <td v-if="showGender" class="align-middle">{{ user.gender_name }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-end" v-if="canViewUserDetail(user.id)">
             <button
               class="btn btn-xs btn-light"
               @click="editClick(user)"
