@@ -13,6 +13,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'view_auth_users';
+
+    public function findForPassport(string $username):User
+    {
+        return $this->where('username', $username)->first();
+    }
+
     protected $fillable = [
         'name',
         'email',
@@ -40,6 +47,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 
     public function getGenderNameAttribute()
     {

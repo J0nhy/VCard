@@ -53,6 +53,7 @@ export const useUserStore = defineStore('user', () => {
     async function logout () {
         try {
             await axios.post('logout')
+            axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
             clearUser()
             return true
         } catch (error) {
