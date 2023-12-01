@@ -18,7 +18,6 @@ const credentials = ref({
 const emit = defineEmits(['login'])
 const login = async () => {
   try {
-    console.log('Attempting login with credentials:', credentials.value);
 
     const response = await axios.post('login', credentials.value)
     console.log('Login successful. Response:', response.data);
@@ -32,7 +31,6 @@ const login = async () => {
     router.back()
   }
   catch (error) {
-    console.error('Login error:', error);
 
     delete axios.defaults.headers.common.Authorization
     userStore.clearUser()
