@@ -22,9 +22,10 @@ const login = async () => {
 
     const response = await axios.post('login', credentials.value)
     console.log('Login successful. Response:', response.data);
-    
+    sessionStorage.setItem("token", response.data.access_token);
     toast.success('User ' + credentials.value.username + ' has entered the application.')
     axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
+    //axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
     await userStore.loadUser()
 
     emit('login')
