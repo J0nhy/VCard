@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Services\Base64Services;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+class UpdateVcardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +25,13 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|int',
-            'name' => 'required|string|max:255',
+            'phone_number' => 'required|int',
+            'name' => 'required|string|max:255', 
             'email' => 'required|email',
+            //'confirmation_code' => 'required|string',
+            'photo_url' => 'nullable|string',
+            'balance' => 'required|double',
+            'max_debit' => 'required|double',
         ];
     }
 

@@ -5,7 +5,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
-  user: {
+  vcard: {
     type: Object,
     required: true,
   },
@@ -17,34 +17,34 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "cancel"]);
 
-const editingUser = ref(props.user)
+const editingVcard = ref(props.vcard)
 
 watch(
-  () => props.user,
-  (newUser) => {
-    editingUser.value = newUser
+  () => props.vcard,
+  (newVcard) => {
+    editingVcard.value = newVcard
   },
   { immediate: true }
 )
 
 const photoFullUrl = computed(() => {
-  return editingUser.value.photo_url
-    ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
+  return editingVcard.value.photo_url
+    ? serverBaseUrl + "/storage/fotos/" + editingVcard.value.photo_url
     : avatarNoneUrl
 })
 
 const save = () => {
-  emit("save", editingUser.value);
+  emit("save", editingVcard.value);
 }
 
 const cancel = () => {
-  emit("cancel", editingUser.value);
+  emit("cancel", editingVcard.value);
 }
 </script>
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">User #{{ editingUser.id }}</h3>
+    <h3 class="mt-5 mb-3">Vcard #{{ editingVcard.phone_number }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -55,9 +55,9 @@ const cancel = () => {
             class="form-control"
             :class="{ 'is-invalid': errors ? errors['name'] : false }"
             id="inputName"
-            placeholder="User Name"
+            placeholder="Vcard Name"
             required
-            v-model="editingUser.name"
+            v-model="editingVcard.name"
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
@@ -71,9 +71,44 @@ const cancel = () => {
             id="inputEmail"
             placeholder="Email"
             required
-            v-model="editingUser.email"
+            v-model="editingVcard.email"
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
+        </div>
+
+        <div class="mb-3 px-1">
+          <label for="inputBalance" class="form-label">Balance</label>
+          <input
+            type="text"
+            class="form-control"
+            :class="{ 'is-invalid': errors ? errors['balance'] : false }"
+            id="inputBalance"
+            placeholder="Balance"
+            required
+            v-model="editingVcard.balance"
+          />
+          <field-error-message :errors="errors" fieldName="balance"></field-error-message>
+        </div>
+        <div class="mb-3 px-1">
+          <label for="inputMaxDebit" class="form-label">Max Debit</label>
+          <input
+            type="text"
+            class="form-control"
+            :class="{ 'is-invalid': errors ? errors['max_debit'] : false }"
+            id="inputMaxDebit"
+            placeholder="max_debit"
+            required
+            v-model="editingVcard.max_debit"
+          />
+          <field-error-message :errors="errors" fieldName="max_debit"></field-error-message>
+        </div>
+      </div>
+      <div class="w-25">
+        <div class="mb-3">
+          <label class="form-label">Photo</label>
+          <div class="form-control text-center">
+            <img :src="photoFullUrl" class="w-100" />
+          </div>
         </div>
       </div>
     </div>

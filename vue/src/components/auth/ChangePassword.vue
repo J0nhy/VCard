@@ -21,8 +21,7 @@ const changePassword = () => {
   <form
     class="row g-3 needs-validation"
     novalidate
-    @submit.prevent="changePassword"
-  >
+    @submit.prevent="changePassword">
     <h3 class="mt-5 mb-3">Change Password</h3>
     <hr>
     <div class="mb-3">

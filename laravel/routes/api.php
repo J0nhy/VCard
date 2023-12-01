@@ -5,22 +5,29 @@ use App\Http\Controllers\api\TaskController;
 use App\Http\Controllers\api\ProjectController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AuthController;
-
+use App\Http\Controllers\api\VcardController;
 
 Route::post('login', [AuthController::class, 'login']);
 
-Route::post('users', [UserController::class, 'store']);
-
-
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('users/me', [UserController::class, 'show_me']);
 
-    Route::get('users', [UserController::class, 'index']);
-    Route::get('users/{user}', [UserController::class, 'show'])
+    Route::get('user/{id}', [UserController::class, 'show'])
         ->middleware('can:view,user');
-    Route::put('users/{user}', [UserController::class, 'update'])
+    Route::put('user/{id}', [UserController::class, 'update'])
         ->middleware('can:update,user');
-    Route::patch('users/{user}/password', [UserController::class, 'update_password'])
+    Route::get('vcard/{phoneNumber}', [VcardController::class, 'show'])
+        ->middleware('can:view,vcard');
+    Route::put('vcard/{phoneNumber}', [VcardController::class, 'update'])
+        ->middleware('can:update,vcard');
+
+    Route::get('users', [UsersController::class, 'index']);
+    Route::get('users/{user}', [UsersController::class, 'show'])
+        ->middleware('can:view,user');
+    Route::post('users', [UserController::class, 'store'])
+        ->middleware('can:create,user');
+    Route::put('users/{user}', [UsersController::class, 'update'])
+        ->middleware('can:update,user');
+    Route::patch('users/{user}/password', [UsersController::class, 'update_password'])
         ->middleware('can:updatePassword,user');
 });

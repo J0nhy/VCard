@@ -5,15 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class ViewAuthUsers extends Model
 {
     use HasFactory;
 
-    protected $table = 'users';
+    protected $table = 'view_auth_users';
 
     protected $fillable = [
+        'user_type',
+        'username',
         'email',
+        'password',
         'name',
+        'blocked',
+        'photo_url'
     ];
 }
-

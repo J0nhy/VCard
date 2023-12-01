@@ -5,7 +5,7 @@ import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import User from "../components/users/User.vue"
 import Users from "../components/users/Users.vue"
-
+import Vcard from "../components/vcards/Vcard.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,11 +51,24 @@ const router = createRouter({
     },
     {
       path: '/users/:id',
+      name: 'Users',
+      component: Users,
+    }, 
+    {
+      path: '/user/:id',
       name: 'User',
       component: User,
       //props: true
       // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/vcard/:phoneNumber',
+      name: 'Vcard',
+      component: Vcard,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ phoneNumber: parseInt(route.params.phoneNumber) })
     }, 
 
   ]

@@ -25,7 +25,7 @@ const loadUsers = async () => {
 }
 
 const editUser = (user) => {
-  router.push({ name: 'User', params: { id: user.id } })
+  router.push({ name: 'Users', params: { id: user.id } })
 }
 
 onMounted (() => {

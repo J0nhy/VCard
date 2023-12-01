@@ -2,43 +2,46 @@
 import axios from 'axios'
 import { useToast } from "vue-toastification"
 import { ref, watch } from 'vue'
-import UserDetail from "./UserDetail.vue"
+import VcardDetail from "./VcardDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 const toast = useToast()
 const router = useRouter()
 
 const props = defineProps({
-    id: {
+    phoneNumber: {
       type: Number,
       default: null
     }
 })
 
-const newUser = () => {
+const newVcard = () => {
     return {
-      id: null,
+      phone_number: null,
       name: '',
       email: '',
+      photo_url: '',
+      balance: 0,
+      max_debit: 0,
     }
 }
 
-const user = ref(newUser())
+const vcard = ref(newVcard())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the project (new or edit)
 let originalValueStr = ''
 
-const loadUser = async (id) => {
+const loadVcard = async (phoneNumber) => {
   originalValueStr = ''
   errors.value = null
-  if (!id || (id < 0)) {
-    user.value = newUser()
+  if (!phoneNumber || (phoneNumber < 0)) {
+    vcard.value = newVcard()
   } else {
       try {
-        const response = await axios.get('http://laravel.test/api/user/' + id)
-        user.value = response.data.data
-        originalValueStr = JSON.stringify(user.value)
+        const response = await axios.get('http://laravel.test/api/vcard/' + phoneNumber)
+        vcard.value = response.data.data
+        originalValueStr = JSON.stringify(vcard.value)
       } catch (error) {
         console.log(error)
       }
@@ -48,30 +51,30 @@ const loadUser = async (id) => {
 const save = async () => {
   errors.value = null
   try {
-    const response = await axios.put('http://laravel.test/api/user/' + props.id, user.value)
-    user.value = response.data.data
-    originalValueStr = JSON.stringify(user.value)
-    toast.success('User #' + user.value.id + ' was updated successfully.')
+    const response = await axios.put('http://laravel.test/api/vcard/' + props.phoneNumber, vcard.value)
+    vcard.value = response.data.data
+    originalValueStr = JSON.stringify(vcard.value)
+    toast.success('Vcard #' + vcard.value.phoneNumber + ' was updated successfully.')
     
   } catch (error) {
     if (error.response.status == 422) {
       errors.value = error.response.data.errors
-      toast.error('User #' + props.id + ' was not updated due to validation errors!')
+      toast.error('Vcard #' + props.phoneNumber + ' was not updated due to validation errors!')
     } else {
-      toast.error('User #' + props.id + ' was not updated due to unknown server error!')
+      toast.error('Vcard #' + props.phoneNumber + ' was not updated due to unknown server error!')
     }
   }
 }
 
 const cancel = () => {
-  originalValueStr = JSON.stringify(user.value)
+  originalValueStr = JSON.stringify(vcard.value)
   router.back()
 }
 
 watch(
-  () => props.id,
+  () => props.phoneNumber,
   (newValue) => {
-      loadUser(newValue)
+      loadVcard(newValue)
     },
   {immediate: true}  
 )
@@ -85,7 +88,7 @@ const leaveConfirmed = () => {
 
 onBeforeRouteLeave((to, from, next) => {
   nextCallBack = null
-  let newValueStr = JSON.stringify(user.value)
+  let newValueStr = JSON.stringify(vcard.value)
   if (originalValueStr != newValueStr) {
     // Some value has changed - only leave after confirmation
     nextCallBack = next
@@ -108,10 +111,10 @@ onBeforeRouteLeave((to, from, next) => {
   >
   </confirmation-dialog>  
 
-  <user-detail
-    :user="user"
+  <vcard-detail
+    :vcard="vcard"
     :errors="errors"
     @save="save"
     @cancel="cancel"
-  ></user-detail>
+  ></vcard-detail>
 </template>
