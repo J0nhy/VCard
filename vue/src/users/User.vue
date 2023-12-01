@@ -1,6 +1,5 @@
 <script setup>
 import { useToast } from "vue-toastification"
-import axios from 'axios'
 
 import { useUserStore } from '../../stores/user.js'
 import { ref, watch, inject} from 'vue'
@@ -10,6 +9,7 @@ import { useRouter, onBeforeRouteLeave } from 'vue-router'
 const toast = useToast()
 const router = useRouter()
 const userStore = useUserStore()
+const axios = inject('axios')
 
 const props = defineProps({
     id: {
@@ -57,7 +57,6 @@ const save = async (userToSave) => {
   errors.value = null
   if (inserting(props.id)) {
     try {
-      console.log(userToSave)
       const response = await axios.post('users', userToSave)
       user.value = response.data.data
       originalValueStr = JSON.stringify(user.value)
@@ -70,17 +69,15 @@ const save = async (userToSave) => {
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
-        console.log(errors.value)
         toast.error('User was not registered due to validation errors!')
       } else {
-        console.log("oooo")
 
         toast.error('User was not registered due to unknown server error!')
       }
     }
   } else {
     try {
-      console.log(userToSave)
+
       const response = await axios.put('users/' + props.id, userToSave)
       user.value = response.data.data
       originalValueStr = JSON.stringify(user.value)
@@ -97,7 +94,7 @@ const save = async (userToSave) => {
         toast.error('User #' + props.id + ' was not updated due to validation errors!')
       } else {
         console.log(errors.value)
-
+        
         toast.error('User #' + props.id + ' was not updated due to unknown server error!')
       }
     }

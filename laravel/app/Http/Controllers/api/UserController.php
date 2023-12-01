@@ -46,8 +46,7 @@ class UserController extends Controller
         $user = new User();
         $user->name = $dataToSave['name'];
         $user->email = $dataToSave['email'];
-        $user->type = 'M';
-        $user->gender = $dataToSave['gender'];
+
         $user->password = bcrypt($dataToSave['password']);
 
         // Create a new photo file from base64 content

@@ -108,7 +108,7 @@ const cleanPhoto = () => {
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">User #{{ editingUser.id }}</h3>
+    <h3 class="mt-5 mb-3">{{ userTitle }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -201,7 +201,7 @@ const cleanPhoto = () => {
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>
-</template>
+</template>dd
 
 <style scoped>
 .total_hours {

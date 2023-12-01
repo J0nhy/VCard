@@ -1,8 +1,11 @@
 <script setup>
 import { inject } from "vue";
+import { useUserStore } from "../../stores/user.js"
+
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl");
+const userStore = useUserStore()
 
 const props = defineProps({
   users: {
