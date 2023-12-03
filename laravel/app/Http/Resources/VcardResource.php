@@ -18,10 +18,11 @@ class VcardResource extends JsonResource
             'phone_number' => $this->phone_number,
             'name' => $this->name,
             'email' => $this->email,
-            //'confirmation_code' => $this->confirmation_code,
             'photo_url' => $this->photo_url,
             'balance' => $this->balance,
             'max_debit' => $this->max_debit,
+            'password' => $this->password,
+            'confirmation_code' => $this->confirmation_code,
         ];
     }
 }

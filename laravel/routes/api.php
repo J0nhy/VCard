@@ -9,17 +9,17 @@ use App\Http\Controllers\api\VcardController;
 
 Route::post('login', [AuthController::class, 'login']);
 
+Route::get('user/{id}', [UserController::class, 'show']);
+Route::put('user/{id}', [UserController::class, 'update']);
+Route::get('user/password/{id}', [UserController::class, 'showPassword']);
+Route::put('user/password/{id}', [UserController::class, 'updatePassword']);
+Route::get('vcard/{phone_number}', [VcardController::class, 'show']);
+Route::put('vcard/{phone_number}', [VcardController::class, 'update']);
+Route::get('vcard/password/{phone_number}', [VcardController::class, 'showPassword']);
+Route::put('vcard/password/{phone_number}', [VcardController::class, 'updatePassword']);
+
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
-
-    Route::get('user/{id}', [UserController::class, 'show'])
-        ->middleware('can:view,user');
-    Route::put('user/{id}', [UserController::class, 'update'])
-        ->middleware('can:update,user');
-    Route::get('vcard/{phoneNumber}', [VcardController::class, 'show'])
-        ->middleware('can:view,vcard');
-    Route::put('vcard/{phoneNumber}', [VcardController::class, 'update'])
-        ->middleware('can:update,vcard');
 
     Route::get('users', [UsersController::class, 'index']);
     Route::get('users/{user}', [UsersController::class, 'show'])

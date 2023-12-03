@@ -1,7 +1,7 @@
 <script setup>
 import { useToast } from "vue-toastification"
 import { ref, watch, inject } from 'vue'
-import VcardDetail from "./VcardDetail.vue"
+import PasswordChange from "./PasswordChange.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 const toast = useToast()
@@ -17,11 +17,7 @@ const props = defineProps({
 
 const newVcard = () => {
     return {
-      name: '',
-      email: '',
-      photo_url: '',
-      balance: 0,
-      max_debit: 0,
+      phone_number: '',
     }
 }
 
@@ -38,7 +34,7 @@ const loadVcard = async (phone_number) => {
     vcard.value = newVcard()
   } else {
       try {
-        const response = await axios.get('vcard/' + phone_number)
+        const response = await axios.get('vcard/password/' + phone_number)
         vcard.value = response.data.data
         originalValueStr = JSON.stringify(vcard.value)
       } catch (error) {
@@ -50,7 +46,7 @@ const loadVcard = async (phone_number) => {
 const save = async () => {
   errors.value = null
   try {
-    const response = await axios.put('vcard/' + props.phone_number, vcard.value)
+    const response = await axios.put('vcard/password/' + props.phone_number, vcard.value)
     vcard.value = response.data.data
     originalValueStr = JSON.stringify(vcard.value)
     toast.success('Vcard #' + vcard.value.phone_number + ' was updated successfully.')
@@ -59,6 +55,8 @@ const save = async () => {
     if (error.response.status == 422) {
       errors.value = error.response.data.errors
       toast.error('Vcard #' + props.phone_number + ' was not updated due to validation errors!')
+    } else if (error.response.status == 401) {
+      toast.error('Vcard #' + props.phone_number + ' was not updated, password/pin is incorrect!')
     } else {
       toast.error('Vcard #' + props.phone_number + ' was not updated due to unknown server error!')
     }
@@ -110,10 +108,10 @@ onBeforeRouteLeave((to, from, next) => {
   >
   </confirmation-dialog>  
 
-  <vcard-detail
+  <password-change
     :vcard="vcard"
     :errors="errors"
     @save="save"
     @cancel="cancel"
-  ></vcard-detail>
+  ></password-change>
 </template>

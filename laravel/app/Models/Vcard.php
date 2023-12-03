@@ -16,10 +16,11 @@ class Vcard extends Model
     protected $fillable = [
         'name',
         'email',
-        //'confirmation_code',
         'photo_url',
         'balance',
         'max_debit',
+        'password',
+        'confirmation_code',
     ];
 }
 

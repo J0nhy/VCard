@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class UpdateUserPasswordRequest extends FormRequest
+class UpdateVcardPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,6 +26,7 @@ class UpdateUserPasswordRequest extends FormRequest
     {
         return [
             'new_password' => ['confirmed', Password::min(3)],
+            'new_confirmation_code' => ['confirmed', 'size:3'],
         ];
     }
 }

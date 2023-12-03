@@ -67,6 +67,9 @@ const clickMenuOption = () => {
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
+
+                <!-- Quando as sessoes tiverem arranjadas, verificar se é User ou Vcard com um if e redirecionar para as respetivas paginas -->
+
                 <router-link class="dropdown-item"
                             :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
                             :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
@@ -75,6 +78,9 @@ const clickMenuOption = () => {
                 </router-link>
               </li>
               <li>
+
+                <!-- Quando as sessoes tiverem arranjadas, verificar se é User ou Vcard com um if e redirecionar para as respetivas paginas -->
+
                 <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
                               :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>

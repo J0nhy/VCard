@@ -25,17 +25,17 @@ class UpdateVcardRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone_number' => 'required|int',
+            'phone_number' => 'required|numeric',
             'name' => 'required|string|max:255', 
             'email' => 'required|email',
             //'confirmation_code' => 'required|string',
             'photo_url' => 'nullable|string',
-            'balance' => 'required|double',
-            'max_debit' => 'required|double',
+            'balance' => 'required|numeric',
+            'max_debit' => 'required|numeric',
         ];
     }
 
-    public function withValidator($validator)
+    /*public function withValidator($validator)
     {
         $validator->after(function ($validator) {
             $base64ImagePhoto = $this->base64ImagePhoto ?? null;
@@ -47,5 +47,5 @@ class UpdateVcardRequest extends FormRequest
                 }
             }
         });
-    }
+    }*/
 }
