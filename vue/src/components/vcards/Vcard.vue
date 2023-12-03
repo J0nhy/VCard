@@ -1,15 +1,23 @@
 <script setup>
-import axios from 'axios'
+
 import { useToast } from "vue-toastification"
-import { ref, watch } from 'vue'
+import { ref, watch, inject } from 'vue'
 import VcardDetail from "./VcardDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useVcardStore } from "../../stores/vcard"
 
 const toast = useToast()
 const router = useRouter()
+const vcardStore = useVcardStore()
+
+const axios = inject('axios')
 
 const props = defineProps({
     phoneNumber: {
+      type: Number,
+      default: null
+    },
+    id: {
       type: Number,
       default: null
     }
@@ -21,8 +29,8 @@ const newVcard = () => {
       name: '',
       email: '',
       photo_url: '',
-      balance: 0,
-      max_debit: 0,
+      password: '',
+      confirmation_number: '',
     }
 }
 
@@ -32,6 +40,7 @@ const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the project (new or edit)
 let originalValueStr = ''
 
+const inserting = (id) => !id || (id < 0)
 const loadVcard = async (phoneNumber) => {
   originalValueStr = ''
   errors.value = null
@@ -39,7 +48,7 @@ const loadVcard = async (phoneNumber) => {
     vcard.value = newVcard()
   } else {
       try {
-        const response = await axios.get('http://laravel.test/api/vcard/' + phoneNumber)
+        const response = await axios.get('vcard/' + phoneNumber)
         vcard.value = response.data.data
         originalValueStr = JSON.stringify(vcard.value)
       } catch (error) {
@@ -48,20 +57,43 @@ const loadVcard = async (phoneNumber) => {
   }
 }
 
-const save = async () => {
+const save = async (vcardToSave) => {
   errors.value = null
-  try {
-    const response = await axios.put('http://laravel.test/api/vcard/' + props.phoneNumber, vcard.value)
-    vcard.value = response.data.data
-    originalValueStr = JSON.stringify(vcard.value)
-    toast.success('Vcard #' + vcard.value.phoneNumber + ' was updated successfully.')
-    
-  } catch (error) {
-    if (error.response.status == 422) {
-      errors.value = error.response.data.errors
-      toast.error('Vcard #' + props.phoneNumber + ' was not updated due to validation errors!')
-    } else {
-      toast.error('Vcard #' + props.phoneNumber + ' was not updated due to unknown server error!')
+  console.log(vcardToSave)
+  console.log(props.id)
+  if (inserting(props.id)) {
+    try {
+      const response = await axios.post('vcard', vcardToSave)
+      vcard.value = response.data.data
+      originalValueStr = JSON.stringify(vcard.value)
+      toast.success('User #' + vcard.value.id + ' was registered successfully.')
+      
+      router.push({name: 'Dashboard'})
+    } catch (error) {
+      if (error.response.status == 422) {
+        errors.value = error.response.data.errors
+        toast.error('VCard was not registered due to validation errors!')
+      } else {
+        toast.error('Vcard was not registered due to unknown server error!')
+      }
+    }
+  } else {
+    try {
+      const response = await axios.put('vcard/' + props.id, vcardToSave)
+      vcard.value = response.data.data
+      originalValueStr = JSON.stringify(vcard.value)
+      toast.success('User #' + vcard.value.id + ' was updated successfully.')
+      if (vcard.value.id == vcardStore.vcardId) {
+        await vcardStore.loadUser()
+      }
+      router.back()
+    } catch (error) {
+      if (error.response.status == 422) {
+        errors.value = error.response.data.errors
+        toast.error('Vcard #' + props.id + ' was not updated due to validation errors!')
+      } else {
+        toast.error('Vcard #' + props.id + ' was not updated due to unknown server error!')
+      }
     }
   }
 }
@@ -114,6 +146,7 @@ onBeforeRouteLeave((to, from, next) => {
   <vcard-detail
     :vcard="vcard"
     :errors="errors"
+    :inserting="inserting(id)"
     @save="save"
     @cancel="cancel"
   ></vcard-detail>

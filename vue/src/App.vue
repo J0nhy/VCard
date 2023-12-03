@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter ,RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
+import { useVcardStore } from './stores/vcard.js'
 import { useUserStore } from './stores/user.js'
 
 
@@ -8,11 +9,12 @@ import LaravelTester from '@/components/LaravelTester.vue'
 import WebSocketTester from '@/components/WebSocketTester.vue'
 
 const toast = useToast()
+const vcardStore = useVcardStore()
 const userStore = useUserStore()
 const router = useRouter()
 
 const logout = async () => {
-  if (await userStore.logout()) {
+  if (await vcardStore.logout()) {
     toast.success('User has logged out of the application.')
     clickMenuOption()
     router.push({ name: 'home' })
@@ -46,8 +48,16 @@ const clickMenuOption = () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
+
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'NewUser'}" :to="{ name: 'NewUser' }" @click="clickMenuOption">
+              <i class="bi bi-person-check-fill"></i>
+              Register Admin
+            </router-link >
+          </li>
+
+          <li class="nav-item" v-show="!vcardStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard'}" :to="{ name: 'NewVcard' }" @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
               Register
             </router-link >
@@ -148,55 +158,7 @@ const clickMenuOption = () => {
             </li>
           </ul>
 
-          <div class="d-block d-md-none">
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>User</span>
-            </h6>
-            <ul class="nav flex-column mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="bi bi-person-check-fill"></i>
-                  Register
-                </a>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" 
-                              :to="{ name: 'Login' }">
-                  <i class="bi bi-box-arrow-in-right"></i>
-                  Login
-                </router-link>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
-                  <span class="avatar-text">User Name</span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-                  <li>
-                      <router-link class="dropdown-item"
-                                  :class="{ active: $route.name == 'User' && $route.params.id == 1 }"
-                                  :to="{ name: 'User', params: { id: 1 } }">
-                        <i class="bi bi-person-square"></i>
-                        Profile
-                      </router-link>
-                  </li>
-                  <li>
-                    <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }" 
-                                  :to="{ name: 'ChangePassword' }">
-                      <i class="bi bi-key-fill"></i>
-                      Change password
-                    </router-link>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="#">
-                      <i class="bi bi-arrow-right"></i>Logout
-                    </a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+          
 
         </div>
       </nav>

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class StoreUserRequest extends UpdateUserRequest
+class StoreVcardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,9 @@ class StoreUserRequest extends UpdateUserRequest
         return [
             'name' => 'required',
             'email' => 'required',
+            'phone_number' => 'required|unique:vcards|max:9|min:9',
             'password' => 'required|max:50|min:3',
+            'confirmation_code' => 'required|max:3|min:3',
             //make phone_number unique and required
 
         ];

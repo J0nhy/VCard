@@ -26,12 +26,13 @@ class UpdateVcardRequest extends FormRequest
     {
         return [
             'phone_number' => 'required|int',
-            'name' => 'required|string|max:255', 
+            'name' => 'required|string|max:255',
             'email' => 'required|email',
             //'confirmation_code' => 'required|string',
             'photo_url' => 'nullable|string',
             'balance' => 'required|double',
             'max_debit' => 'required|double',
+            'confirmation_number' => 'required|int',
         ];
     }
 

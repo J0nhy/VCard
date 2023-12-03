@@ -70,6 +70,12 @@ const router = createRouter({
       // Replaced with the following line to ensure that id is a number
       props: route => ({ phoneNumber: parseInt(route.params.phoneNumber) })
     }, 
+    {
+      path: '/vcard/new',
+      name: 'NewVcard',
+      component: Vcard,
+      props: { id: -1 }
+    },
 
   ]
 })

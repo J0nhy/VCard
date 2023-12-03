@@ -31,7 +31,7 @@ const login = async () => {
     router.back()
   }
   catch (error) {
-
+    console.log(error)
     delete axios.defaults.headers.common.Authorization
     userStore.clearUser()
 
