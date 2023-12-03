@@ -13,18 +13,18 @@ const axios = inject('axios')
 
 
 const props = defineProps({
-    id: {
-      type: Number,
-      default: null
-    }
+  id: {
+    type: Number,
+    default: null
+  }
 })
 
 const newUser = () => {
   return {
-      id: null,
-      name: '',
-      email: '',
-    }
+    id: null,
+    name: '',
+    email: '',
+  }
 }
 
 const user = ref(newUser())
@@ -33,43 +33,29 @@ const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the project (new or edit)
 let originalValueStr = ''
 
-const inserting = (id) => !id || (id < 0)
+//const inserting = (id) => !id || (id < 0)
 const loadUser = async (id) => {
   originalValueStr = ''
   errors.value = null
-  if (inserting(id)) {
+  if (!id || (id < 0)) {
     user.value = newUser()
   } else {
-      try {
-        const response = await axios.get('http://laravel.test/api/user/' + id)
-        user.value = response.data.data
-        originalValueStr = JSON.stringify(user.value)
-      } catch (error) {
-        console.log(error)
-      }
+    try {
+      const response = await axios.get('user/' + id)
+      user.value = response.data.data
+      originalValueStr = JSON.stringify(user.value)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
 const save = async (userToSave) => {
   errors.value = null
-  try {
-    const response = await axios.put('http://laravel.test/api/user/' + props.id, user.value)
-    user.value = response.data.data
-    originalValueStr = JSON.stringify(user.value)
-    toast.success('User #' + user.value.id + ' was updated successfully.')
-    
-  } catch (error) {
-    if (error.response.status == 422) {
-      errors.value = error.response.data.errors
-      toast.error('User #' + props.id + ' was not updated due to validation errors!')
-    } else {
-      toast.error('User #' + props.id + ' was not updated due to unknown server error!')
-    }
-  }
-  
+
   console.log(userToSave)
   console.log(props.id)
-  if (inserting(props.id)) {
+  /*if (inserting(props.id)) {
     try {
       const response = await axios.post('users', userToSave)
       user.value = response.data.data
@@ -79,7 +65,7 @@ const save = async (userToSave) => {
         username: user.value.email,
         password: userToSave.password
       })
-      router.push({name: 'Dashboard'})
+      router.push({ name: 'Dashboard' })
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
@@ -88,16 +74,13 @@ const save = async (userToSave) => {
         toast.error('User was not registered due to unknown server error!')
       }
     }
-  } else {
+  } else {*/
     try {
-      const response = await axios.put('users/' + props.id, userToSave)
+      const response = await axios.put('user/' + props.id, user.value)
       user.value = response.data.data
       originalValueStr = JSON.stringify(user.value)
       toast.success('User #' + user.value.id + ' was updated successfully.')
-      if (user.value.id == userStore.userId) {
-        await userStore.loadUser()
-      }
-      router.back()
+
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
@@ -107,19 +90,19 @@ const save = async (userToSave) => {
       }
     }
   }
-}
+//}
 
 const cancel = () => {
   originalValueStr = JSON.stringify(user.value)
-  router.back()
+  window.location.reload()
 }
 
 watch(
   () => props.id,
   (newValue) => {
-      loadUser(newValue)
-    },
-  {immediate: true}  
+    loadUser(newValue)
+  },
+  { immediate: true }
 )
 
 let nextCallBack = null
@@ -146,19 +129,14 @@ onBeforeRouteLeave((to, from, next) => {
 </script>
 
 <template>
-  <confirmation-dialog
-    ref="confirmationLeaveDialog"
-    confirmationBtn="Discard changes and leave"
-    msg="Do you really want to leave? You have unsaved changes!"
-    @confirmed="leaveConfirmed"
-  >
-  </confirmation-dialog>  
+  <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
+    msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
+  </confirmation-dialog>
 
-  <user-detail
-    :user="user"
-    :errors="errors"
-    :inserting="inserting(id)"
-    @save="save"
-    @cancel="cancel"
+  <user-detail 
+  :user="user" 
+  :errors="errors" 
+  @save="save" 
+  @cancel="cancel"
   ></user-detail>
 </template>

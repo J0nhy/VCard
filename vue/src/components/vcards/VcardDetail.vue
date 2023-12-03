@@ -22,9 +22,11 @@ const props = defineProps({
 const emit = defineEmits(["save", "cancel"]);
 
 const editingVcard = ref(props.vcard)
+
+
+const inputPhotoFile = ref(null)
 const editingImageAsBase64 = ref(null)
 const deletePhotoOnTheServer = ref(false)
-
 
 watch(
   () => props.vcard,
@@ -48,7 +50,10 @@ const photoFullUrl = computed(() => {
 })
 
 const save = () => {
-  emit("save", editingVcard.value);
+  const userToSave = editingVcard.value
+  userToSave.deletePhotoOnServer = deletePhotoOnTheServer.value
+  userToSave.base64ImagePhoto = editingImageAsBase64.value
+  emit("save", userToSave);
 }
 
 const cancel = () => {
@@ -100,15 +105,8 @@ const cleanPhoto = () => {
       <div class="w-75 pe-4">
         <div class="mb-3">
           <label for="inputName" class="form-label">Name</label>
-          <input
-            type="text"
-            class="form-control"
-            :class="{ 'is-invalid': errors ? errors['name'] : false }"
-            id="inputName"
-            placeholder="Vcard Name"
-            required
-            v-model="editingVcard.name"
-          />
+          <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['name'] : false }"
+            id="inputName" placeholder="Vcard Name" required v-model="editingVcard.name" />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
         <div class="mb-3">
@@ -127,15 +125,8 @@ const cleanPhoto = () => {
 
         <div class="mb-3 px-1">
           <label for="inputEmail" class="form-label">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            :class="{ 'is-invalid': errors ? errors['email'] : false }"
-            id="inputEmail"
-            placeholder="Email"
-            required
-            v-model="editingVcard.email"
-          />
+          <input type="email" class="form-control" :class="{ 'is-invalid': errors ? errors['email'] : false }"
+            id="inputEmail" placeholder="Email" required v-model="editingVcard.email" />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
 
@@ -162,7 +153,7 @@ const cleanPhoto = () => {
           <field-error-message :errors="errors" fieldName="password_confirmation"></field-error-message>
         </div>
         <div class="mb-3"  v-if="inserting">
-          <label for="inputConfirmation_Code" class="form-label">Confirmation Pin</label>
+          <label for="inputConfirmation_Code" class="form-label">Confirmation Code</label>
           <input
               type="password"
               class="form-control"
@@ -190,6 +181,7 @@ const cleanPhoto = () => {
           </div>
         </div>
       </div>
+      <input type="file" style="visibility:hidden;" id="inputPhoto" ref="inputPhotoFile" @change="changePhotoFile" />
     </div>
     <div class="mb-3 d-flex justify-content-start">
       <button type="button" class="btn btn-primary px-5" @click="save">Save</button>

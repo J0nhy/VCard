@@ -1,5 +1,4 @@
 <script setup>
-
 import { useToast } from "vue-toastification"
 import { ref, watch, inject } from 'vue'
 import VcardDetail from "./VcardDetail.vue"
@@ -13,19 +12,19 @@ const vcardStore = useVcardStore()
 const axios = inject('axios')
 
 const props = defineProps({
-    phoneNumber: {
+    phone_number: {
       type: Number,
       default: null
     },
     id: {
       type: Number,
       default: null
-    }
+    },
+
 })
 
 const newVcard = () => {
     return {
-      phone_number: null,
       name: '',
       email: '',
       photo_url: '',
@@ -57,11 +56,14 @@ const loadVcard = async (phoneNumber) => {
   }
 }
 
+const routeName = router.currentRoute.value.name;
+console.log("Rota Atual:", routeName);
+
 const save = async (vcardToSave) => {
   errors.value = null
   console.log(vcardToSave)
   console.log(props.id)
-  if (inserting(props.id)) {
+  if (routeName == 'NewVcard') {
     try {
       const response = await axios.post('vcard', vcardToSave)
       vcard.value = response.data.data
@@ -100,11 +102,11 @@ const save = async (vcardToSave) => {
 
 const cancel = () => {
   originalValueStr = JSON.stringify(vcard.value)
-  router.back()
+  window.location.reload()
 }
 
 watch(
-  () => props.phoneNumber,
+  () => props.phone_number,
   (newValue) => {
       loadVcard(newValue)
     },

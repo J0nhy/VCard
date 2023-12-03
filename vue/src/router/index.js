@@ -6,6 +6,8 @@ import ChangePassword from "../components/auth/ChangePassword.vue"
 import User from "../components/users/User.vue"
 import Users from "../components/users/Users.vue"
 import Vcard from "../components/vcards/Vcard.vue"
+import vPassword from "../components/vcards/Password.vue"
+import uPassword from "../components/users/Password.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,18 +65,34 @@ const router = createRouter({
       props: route => ({ id: parseInt(route.params.id) })
     },
     {
-      path: '/vcard/:phoneNumber',
+      path: '/user/password/:id',
+      name: 'UserPassword',
+      component: uPassword,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/vcard/:phone_number',
       name: 'Vcard',
       component: Vcard,
       //props: true
       // Replaced with the following line to ensure that id is a number
-      props: route => ({ phoneNumber: parseInt(route.params.phoneNumber) })
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
     }, 
     {
       path: '/vcard/new',
       name: 'NewVcard',
       component: Vcard,
       props: { id: -1 }
+    },
+    {
+      path: '/vcard/password/:phone_number',
+      name: 'VcardPassword',
+      component: vPassword,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
 
   ]

@@ -22,6 +22,17 @@ Route::post('users', [UserController::class, 'store']);
     Route::get('user/{id}', [UserController::class, 'show']);
     Route::put('user/{id}', [UserController::class, 'update']);
 
+Route::get('user/{id}', [UserController::class, 'show']);
+Route::put('user/{id}', [UserController::class, 'update']);
+Route::get('user/password/{id}', [UserController::class, 'showPassword']);
+Route::put('user/password/{id}', [UserController::class, 'updatePassword']);
+Route::get('vcard/{phone_number}', [VcardController::class, 'show']);
+Route::put('vcard/{phone_number}', [VcardController::class, 'update']);
+Route::get('vcard/password/{phone_number}', [VcardController::class, 'showPassword']);
+Route::put('vcard/password/{phone_number}', [VcardController::class, 'updatePassword']);
+
+//Route::middleware('auth:api')->group(function () {
+
     Route::get('users', [UsersController::class, 'index']);
     Route::get('users/{user}', [UsersController::class, 'show']);
 

@@ -30,13 +30,10 @@ class UpdateVcardRequest extends FormRequest
             'email' => 'required|email',
             //'confirmation_code' => 'required|string',
             'photo_url' => 'nullable|string',
-            'balance' => 'required|double',
-            'max_debit' => 'required|double',
-            'confirmation_number' => 'required|int',
         ];
     }
 
-    public function withValidator($validator)
+    /*public function withValidator($validator)
     {
         $validator->after(function ($validator) {
             $base64ImagePhoto = $this->base64ImagePhoto ?? null;
@@ -48,5 +45,5 @@ class UpdateVcardRequest extends FormRequest
                 }
             }
         });
-    }
+    }*/
 }
