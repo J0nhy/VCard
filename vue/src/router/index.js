@@ -94,6 +94,12 @@ const router = createRouter({
       // Replaced with the following line to ensure that id is a number
       props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
+    {
+      path: '/vcard/delete/:phone_number',
+      name: 'VcardDelete'
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+    },
 
   ]
 })

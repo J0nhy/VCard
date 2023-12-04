@@ -84,12 +84,11 @@ const save = async (vcardToSave) => {
       const response = await axios.put('vcard/' + props.id, vcardToSave)
       vcard.value = response.data.data
       originalValueStr = JSON.stringify(vcard.value)
-      toast.success('User #' + vcard.value.id + ' was updated successfully.')
+      toast.success('User #' + vcard.value.phone_number + ' was updated successfully.')
       if (vcard.value.id == vcardStore.vcardId) {
         await vcardStore.loadUser()
       }
-      router.back()
-    } catch (error) {
+      } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
         toast.error('Vcard #' + props.id + ' was not updated due to validation errors!')
@@ -120,30 +119,12 @@ const leaveConfirmed = () => {
   }
 }
 
-onBeforeRouteLeave((to, from, next) => {
-  nextCallBack = null
-  let newValueStr = JSON.stringify(vcard.value)
-  if (originalValueStr != newValueStr) {
-    // Some value has changed - only leave after confirmation
-    nextCallBack = next
-    confirmationLeaveDialog.value.show()
-  } else {
-    // No value has changed, so we can leave the component without confirming
-    next()
-  }
-})
+
 
 
 </script>
 
 <template>
-  <confirmation-dialog
-    ref="confirmationLeaveDialog"
-    confirmationBtn="Discard changes and leave"
-    msg="Do you really want to leave? You have unsaved changes!"
-    @confirmed="leaveConfirmed"
-  >
-  </confirmation-dialog>  
 
   <vcard-detail
     :vcard="vcard"

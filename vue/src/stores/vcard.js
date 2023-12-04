@@ -88,6 +88,14 @@ export const useVcardStore = defineStore('vcard', () => {
         return false
     }
 
+    async function deleteVcard( deleteVcard) {
+        // Note that when an error occours, the exception should be
+        // catch by the function that called the deleteProject
+        const response = await axios.delete('vcard/' + deleteVcard.phone_number)
+     
+        return response.data.data
+    }  
+
 
     return {
         vcard,
@@ -99,6 +107,7 @@ export const useVcardStore = defineStore('vcard', () => {
         login,
         logout,
         restoreToken,
-        changePassword
+        changePassword,
+        deleteVcard
     }
 })

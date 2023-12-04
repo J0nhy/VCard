@@ -32,6 +32,7 @@ class VcardController extends Controller
 
     public function update(UpdateVcardRequest $request, Vcard $v, $phone_number)
     {
+        $phone_number = $request->get('phone_number');
 
         $Vcard = Vcard::find($request->get('phone_number'));
 
@@ -127,5 +128,12 @@ class VcardController extends Controller
         $vcard->save();
 
         return new VcardResource($vcard);
+    }
+
+    public function destroy($phone_number)
+    {
+        $Vcard = Vcard::find($phone_number);
+        $Vcard->delete();
+        return response()->json(null, 204);
     }
 }
