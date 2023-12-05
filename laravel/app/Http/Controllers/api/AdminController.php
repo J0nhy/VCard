@@ -11,8 +11,7 @@ use App\Models\ViewAuthAdmins;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminPasswordRequest;
-
-
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -91,7 +90,7 @@ class AdminController extends Controller
 
     public function show_me(Request $request)
     {
-
+        print_r($request . 'teste');
         return new AdminResource($request->user());
     }
 }

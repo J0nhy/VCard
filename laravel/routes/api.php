@@ -30,6 +30,10 @@ Route::put('admin/{id}', [AdminController::class, 'update']);
 Route::delete('admin/{id}', [AdminController::class, 'destroy']);
 Route::get('admin/password/{id}', [AdminController::class, 'showPassword']);
 Route::put('admin/password/{id}', [AdminController::class, 'updatePassword']);
-Route::get('admins/me', [AdminController::class, 'show_me']);
 
+Route::middleware('auth:api')->group(function () {
+
+    Route::get('admins/me', [AdminController::class, 'show_me']);
+
+});
 
