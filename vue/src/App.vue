@@ -2,7 +2,7 @@
 import { useRouter ,RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
 import { useVcardStore } from './stores/vcard.js'
-import { useUserStore } from './stores/user.js'
+import { useAdminStore } from './stores/admin.js'
 
 
 import LaravelTester from '@/components/LaravelTester.vue'
@@ -10,12 +10,12 @@ import WebSocketTester from '@/components/WebSocketTester.vue'
 
 const toast = useToast()
 const vcardStore = useVcardStore()
-const userStore = useUserStore()
+const adminStore = useAdminStore()
 const router = useRouter()
 
 const logout = async () => {
   if (await vcardStore.logout()) {
-    toast.success('User has logged out of the application.')
+    toast.success('Admin has logged out of the application.')
     clickMenuOption()
     router.push({ name: 'home' })
   } else {
@@ -49,47 +49,47 @@ const clickMenuOption = () => {
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
 
-          <li class="nav-item" v-show="!userStore.user">
-            <router-link class="nav-link" :class="{ active: $route.name === 'NewUser'}" :to="{ name: 'NewUser' }" @click="clickMenuOption">
+          <li class="nav-item" v-show="!adminStore.admin">
+            <router-link class="nav-link" :class="{ active: $route.name === 'NewAdmin'}" :to="{ name: 'NewAdmin' }" @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
               Register Admin
             </router-link >
           </li>
 
-          <li class="nav-item" v-show="!vcardStore.user">
+          <li class="nav-item" v-show="!vcardStore.admin">
             <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard'}" :to="{ name: 'NewVcard' }" @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
               Register
             </router-link >
           </li>
-          <li class="nav-item" v-show="!userStore.user">
+          <li class="nav-item" v-show="!adminStore.admin">
             <router-link class="nav-link" :class="{ active: $route.name === 'Login' }"
                           :to="{ name: 'Login' }" @click="clickMenuOption">
               <i class="bi bi-box-arrow-in-right"></i>
               Login
             </router-link>
           </li>
-          <li class="nav-item dropdown" v-show="userStore.user">
+          <li class="nav-item dropdown" v-show="adminStore.admin">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
-              <span class="avatar-text">{{ userStore.userName }}</span>
+              <img :src="adminStore.adminPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+              <span class="avatar-text">{{ adminStore.adminName }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
 
-                <!-- Quando as sessoes tiverem arranjadas, verificar se é User ou Vcard com um if e redirecionar para as respetivas paginas -->
+                <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link class="dropdown-item"
-                            :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
-                            :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
+                            :class="{ active: $route.name == 'Admin' && $route.params.id == adminStore.adminId }"
+                            :to="{ name: 'Admin', params: { id: adminStore.adminId } }" @click="clickMenuOption">
                   <i class="bi bi-person-square"></i>
                   Profile
                 </router-link>
               </li>
               <li>
 
-                <!-- Quando as sessoes tiverem arranjadas, verificar se é User ou Vcard com um if e redirecionar para as respetivas paginas -->
+                <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
                               :to="{ name: 'ChangePassword' }" @click="clickMenuOption">

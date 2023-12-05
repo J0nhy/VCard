@@ -2,50 +2,52 @@ import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-export const useUserStore = defineStore('user', () => {
+export const useAdminStore = defineStore('admin', () => {
 
     const serverBaseUrl = inject('serverBaseUrl')
     const axios = inject('axios')
 
-    const user = ref(null)
+    const admin = ref(null)
 
-    const userName = computed(() => user.value?.name ?? 'Anonymous')
+    const adminName = computed(() => admin.value?.name ?? 'Anonymous')
 
-    const userId = computed(() => user.value?.id ?? -1)
+    const adminId = computed(() => admin.value?.id ?? -1)
 
-    const userType = computed(() => user.value?.type ?? 'M')
+    const adminType = computed(() => admin.value?.type ?? 'M')
 
-    const userPhotoUrl = computed(() =>
-        user.value?.photo_url
-        ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
+    const adminPhotoUrl = computed(() =>
+        admin.value?.photo_url
+        ? serverBaseUrl + '/storage/fotos/' + admin.value.photo_url
         : avatarNoneUrl)
 
-    async function loadUser() {
+    async function loadAdmin() {
         try {
-            const response = await axios.get('users/me')
-            user.value = response.data.data
+            const response = await axios.get('admins/me')
+            admin.value = response.data.data
         } catch (error) {
-            clearUser()
+            console.log(error)
+            clearAdmin()
             throw error
         }
     }
 
-    function clearUser() {
+    function clearAdmin() {
         delete axios.defaults.headers.common.Authorization
         sessionStorage.removeItem('token')
-        user.value = null
+        admin.value = null
     }
 
     async function login(credentials) {
         try {
+            console.log(credentials)
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
-            await loadUser()
+            await loadAdmin()
             return true
         }
         catch(error) {
-            clearUser()
+            clearAdmin()
             return false
         }
     }
@@ -54,7 +56,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             await axios.post('logout')
             axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
-            clearUser()
+            clearAdmin()
             return true
         } catch (error) {
             return false
@@ -62,11 +64,11 @@ export const useUserStore = defineStore('user', () => {
     }
 
     async function changePassword(credentials) {
-        if (userId.value < 0) {
-            throw 'Anonymous users cannot change the password!'
+        if (adminId.value < 0) {
+            throw 'Anonymous admins cannot change the password!'
         }
         try {
-            await axios.patch(`users/${user.value.id}/password`, credentials)
+            await axios.patch(`admins/${admin.value.id}/password`, credentials)
             return true
         } catch (error) {
             throw error
@@ -78,10 +80,10 @@ export const useUserStore = defineStore('user', () => {
         let storedToken = sessionStorage.getItem('token')
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
-            await loadUser()
+            await loadAdmin()
             return true
         }
-        clearUser()
+        clearAdmin()
         return false
     }
 
@@ -94,13 +96,13 @@ export const useUserStore = defineStore('user', () => {
 
 
     return {
-        user,
-        userId,
-        userName,
-        userType,
-        userPhotoUrl,
-        loadUser,
-        clearUser,
+        admin,
+        adminId,
+        adminName,
+        adminType,
+        adminPhotoUrl,
+        loadAdmin,
+        clearAdmin,
         login,
         logout,
         restoreToken,

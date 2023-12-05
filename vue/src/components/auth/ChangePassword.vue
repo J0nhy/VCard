@@ -1,12 +1,12 @@
 <script setup>
 import { useToast } from "vue-toastification"
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../../stores/user.js'
+import { useAdminStore } from '../../stores/admin.js'
 import { ref } from 'vue'
 
 const toast = useToast()
 const router = useRouter()
-const userStore = useUserStore()
+const adminStore = useAdminStore()
   
 const passwords = ref({
   current_password: '',
@@ -21,7 +21,7 @@ const emit = defineEmits(['changedPassword'])
 
 const changePassword = async () => {
   try {
-    await userStore.changePassword(passwords.value)
+    await adminStore.changePassword(passwords.value)
     toast.success('Password has been changed.')
     emit('changedPassword')
     router.back()

@@ -1,13 +1,13 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
-import { useUserStore } from '../../stores/user.js'
+import { useAdminStore } from '../../stores/admin.js'
 
 const serverBaseUrl = inject("serverBaseUrl");
-const userStore = useUserStore()
+const adminStore = useAdminStore()
 
 const props = defineProps({
-  user: {
+  admin: {
     type: Object,
     required: true,
   },
@@ -23,16 +23,16 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "cancel"]);
 
-const editingUser = ref(props.user)
+const editingAdmin = ref(props.admin)
 
 const inputPhotoFile = ref(null)
 const editingImageAsBase64 = ref(null)
 const deletePhotoOnTheServer = ref(false)
 
 watch(
-  () => props.user,
-  (newUser) => {
-    editingUser.value = newUser
+  () => props.admin,
+  (newAdmin) => {
+    editingAdmin.value = newAdmin
   },
   { immediate: true }
 )
@@ -44,28 +44,28 @@ const photoFullUrl = computed(() => {
   if (editingImageAsBase64.value) {
     return editingImageAsBase64.value
   } else {
-    return editingUser.value.photo_url
-      ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
+    return editingAdmin.value.photo_url
+      ? serverBaseUrl + "/storage/fotos/" + editingAdmin.value.photo_url
       : avatarNoneUrl
   }
 })
 
-const userTitle = computed(()=>{
-  if (!editingUser.value) {
+const adminTitle = computed(()=>{
+  if (!editingAdmin.value) {
     return ''
   }
-  return props.inserting ? 'Register a new user' : 'User #' + editingUser.value.id
+  return props.inserting ? 'Register a new admin' : 'Admin #' + editingAdmin.value.id
 })
 
 const save = () => {
-  const userToSave = editingUser.value
-  userToSave.deletePhotoOnServer = deletePhotoOnTheServer.value
-  userToSave.base64ImagePhoto = editingImageAsBase64.value
-  emit("save", userToSave);
+  const adminToSave = editingAdmin.value
+  adminToSave.deletePhotoOnServer = deletePhotoOnTheServer.value
+  adminToSave.base64ImagePhoto = editingImageAsBase64.value
+  emit("save", adminToSave);
 }
 
 const cancel = () => {
-  emit("cancel", editingUser.value);
+  emit("cancel", editingAdmin.value);
 }
 
 // When changing the photo file, change the editingImageAsBase64.value
@@ -108,7 +108,7 @@ const cleanPhoto = () => {
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">{{ userTitle }}</h3>
+    <h3 class="mt-5 mb-3">{{ adminTitle }}</h3>
     <hr/>
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -119,9 +119,9 @@ const cleanPhoto = () => {
             class="form-control"
             :class="{ 'is-invalid': errors ? errors['name'] : false }"
             id="inputName"
-            placeholder="User Name"
+            placeholder="Admin Name"
             required
-            v-model="editingUser.name"
+            v-model="editingAdmin.name"
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
@@ -135,9 +135,32 @@ const cleanPhoto = () => {
             id="inputEmail"
             placeholder="Email"
             required
-            v-model="editingUser.email"
+            v-model="editingAdmin.email"
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
+        </div>
+
+        <div class="mb-3" v-if="inserting">
+          <label for="inputPassword" class="form-label">Password</label>
+          <input
+              type="password"
+              class="form-control"
+              :class="{ 'is-invalid': errors ? errors['password'] : false }"
+              id="inputPassword"
+              v-model="editingAdmin.password"
+          />
+          <field-error-message :errors="errors" fieldName="password"></field-error-message>
+        </div>
+        <div class="mb-3"  v-if="inserting">
+          <label for="inputPasswordConfirmation" class="form-label">Password Confirmation</label>
+          <input
+              type="password"
+              class="form-control"
+              :class="{ 'is-invalid': errors ? errors['password_confirmation'] : false }"
+              id="inputPasswordConfirmation"
+              v-model="editingAdmin.password_confirmation"
+          />
+          <field-error-message :errors="errors" fieldName="password_confirmation"></field-error-message>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Services\Base64Services;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+class UpdateAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

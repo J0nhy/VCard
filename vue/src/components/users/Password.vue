@@ -15,28 +15,28 @@ const props = defineProps({
     }
 })
 
-const newUser = () => {
+const newAdmin = () => {
     return {
       id: '',
     }
 }
 
-const user = ref(newUser())
+const admin = ref(newAdmin())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the project (new or edit)
 let originalValueStr = ''
 
-const loadUser = async (id) => {
+const loadAdmin = async (id) => {
   originalValueStr = ''
   errors.value = null
   if (!id || (id < 0)) {
-    user.value = newUser()
+    admin.value = newAdmin()
   } else {
       try {
-        const response = await axios.get('user/password/' + id)
-        user.value = response.data.data
-        originalValueStr = JSON.stringify(user.value)
+        const response = await axios.get('admin/password/' + id)
+        admin.value = response.data.data
+        originalValueStr = JSON.stringify(admin.value)
       } catch (error) {
         console.log(error)
       }
@@ -46,32 +46,32 @@ const loadUser = async (id) => {
 const save = async () => {
   errors.value = null
   try {
-    const response = await axios.put('user/password/' + props.id, user.value)
-    user.value = response.data.data
-    originalValueStr = JSON.stringify(user.value)
-    toast.success('User #' + user.value.id + ' was updated successfully.')
+    const response = await axios.put('admin/password/' + props.id, admin.value)
+    admin.value = response.data.data
+    originalValueStr = JSON.stringify(admin.value)
+    toast.success('Admin #' + admin.value.id + ' was updated successfully.')
     
   } catch (error) {
     if (error.response.status == 422) {
       errors.value = error.response.data.errors
-      toast.error('User #' + props.id + ' was not updated due to validation errors!')
+      toast.error('Admin #' + props.id + ' was not updated due to validation errors!')
     } else if (error.response.status == 401) {
-      toast.error('User #' + props.id + ' was not updated, password/pin is incorrect!')
+      toast.error('Admin #' + props.id + ' was not updated, password/pin is incorrect!')
     } else {
-      toast.error('User #' + props.id + ' was not updated due to unknown server error!')
+      toast.error('Admin #' + props.id + ' was not updated due to unknown server error!')
     }
   }
 }
 
 const cancel = () => {
-  originalValueStr = JSON.stringify(user.value)
+  originalValueStr = JSON.stringify(admin.value)
   window.location.reload()
 }
 
 watch(
   () => props.id,
   (newValue) => {
-      loadUser(newValue)
+      loadAdmin(newValue)
     },
   {immediate: true}  
 )
@@ -85,7 +85,7 @@ const leaveConfirmed = () => {
 
 onBeforeRouteLeave((to, from, next) => {
   nextCallBack = null
-  let newValueStr = JSON.stringify(user.value)
+  let newValueStr = JSON.stringify(admin.value)
   if (originalValueStr != newValueStr) {
     // Some value has changed - only leave after confirmation
     nextCallBack = next
@@ -109,7 +109,7 @@ onBeforeRouteLeave((to, from, next) => {
   </confirmation-dialog>  
 
   <password-change
-    :user="user"
+    :admin="admin"
     :errors="errors"
     @save="save"
     @cancel="cancel"

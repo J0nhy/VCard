@@ -3,11 +3,11 @@ import HomeView from '../views/HomeView.vue'
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
+import Admin from "../components/users/Admin.vue"
 import User from "../components/users/User.vue"
-import Users from "../components/users/Users.vue"
 import Vcard from "../components/vcards/Vcard.vue"
 import vPassword from "../components/vcards/Password.vue"
-import uPassword from "../components/users/Password.vue"
+import aPassword from "../components/users/Password.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,33 +41,33 @@ const router = createRouter({
       component: Dashboard
     },
     {
-      path: '/users',
-      name: 'Users',
-      component: Users,
+      path: '/user',
+      name: 'User',
+      component: User,
     },
     {
-      path: '/users/new',
-      name: 'NewUser',
-      component: User,
+      path: '/admin/new',
+      name: 'NewAdmin',
+      component: Admin,
       props: { id: -1 }
     },
-    {
-      path: '/users/:id',
-      name: 'Users',
-      component: Users,
-    }, 
     {
       path: '/user/:id',
       name: 'User',
       component: User,
+    }, 
+    {
+      path: '/admin/:id',
+      name: 'Admin',
+      component: Admin,
       //props: true
       // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
     },
     {
-      path: '/user/password/:id',
-      name: 'UserPassword',
-      component: uPassword,
+      path: '/admin/password/:id',
+      name: 'AdminPassword',
+      component: aPassword,
       //props: true
       // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
