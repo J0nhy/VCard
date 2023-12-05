@@ -37,6 +37,7 @@ export const useAdminStore = defineStore('admin', () => {
         admin.value = null
     }
 
+    /*
     async function login(credentials) {
         try {
             console.log(credentials)
@@ -61,7 +62,7 @@ export const useAdminStore = defineStore('admin', () => {
         } catch (error) {
             return false
         }
-    }
+    }*/
 
     async function changePassword(credentials) {
         if (adminId.value < 0) {
@@ -103,8 +104,6 @@ export const useAdminStore = defineStore('admin', () => {
         adminPhotoUrl,
         loadAdmin,
         clearAdmin,
-        login,
-        logout,
         restoreToken,
         changePassword,
         deletevCard

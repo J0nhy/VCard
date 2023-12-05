@@ -3,11 +3,11 @@
 import { useToast } from "vue-toastification"
 import { useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
-import { useAdminStore } from '../../stores/admin.js'
+import { useUserStore } from '../../stores/user.js'
 
 const toast = useToast()
 const router = useRouter()
-const userStore = useAdminStore()
+const userStore = useUserStore()
 
 const axios = inject('axios')
 
@@ -20,25 +20,22 @@ const login = async () => {
   try {
 
     const response = await axios.post('login', credentials.value)
-
-    console.log('Login successful. Response:', response.data);
     sessionStorage.setItem("token", response.data.access_token);
-    toast.success('Admin ' + credentials.value.username + ' has entered the application.')
+    toast.success('User ' + credentials.value.username + ' has entered the application.')
     axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
     //axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
-    await userStore.loadAdmin()
-
+    await userStore.loadUser()
+    console.log('userStore.user:', userStore.user)
     emit('login')
     router.back()
   }
   catch (error) {
-    console.log('Login failed. Error:', error.response)
-    console.log(error)
+    console.log('error login.vue:', error)
     delete axios.defaults.headers.common.Authorization
-    userStore.clearAdmin()
+    userStore.clearUser()
 
     credentials.value.password = ''
-    toast.error('Admin credentials are invalid!')
+    toast.error('User credentials are invalid!')
   }
 }
 </script>

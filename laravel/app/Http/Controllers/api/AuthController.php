@@ -22,6 +22,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
+
+
+
+
             //print_r("username:" . $request->username);
             request()->request->add(
                 $this->passportAuthenticationData($request->username, $request->password)
@@ -32,7 +36,9 @@ class AuthController extends Controller
             );
             //print_r($request);
 
+
             $response = Route::dispatch($request);
+
 
             //print_r($response);
 

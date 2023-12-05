@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\UsersController;
 use App\Http\Controllers\api\VcardController;
 
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
+
 
 Route::get('vcard/{phoneNumber}', [VcardController::class, 'show']);
 Route::put('vcard/{phoneNumber}', [VcardController::class, 'update']);
@@ -33,7 +34,12 @@ Route::put('admin/password/{id}', [AdminController::class, 'updatePassword']);
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('logout', [AuthController::class, 'logout']);
+
     Route::get('admins/me', [AdminController::class, 'show_me']);
+    Route::get('users/me', [UsersController::class, 'show_me']);
+    Route::get('vcard/me', [VcardController::class, 'show_me']);
+
 
 });
 

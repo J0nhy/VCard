@@ -36,7 +36,7 @@ export const useVcardStore = defineStore('vcard', () => {
         sessionStorage.removeItem('token')
         vcard.value = null
     }
-
+/*
     async function login(credentials) {
         try {
             const response = await axios.post('login', credentials)
@@ -62,7 +62,7 @@ export const useVcardStore = defineStore('vcard', () => {
         } catch (error) {
             return false
         }
-    }
+    }*/
 
     async function changePassword(credentials) {
         if (vcardId.value < 0) {
@@ -104,8 +104,6 @@ export const useVcardStore = defineStore('vcard', () => {
         vcardPhotoUrl,
         loadVcard,
         clearVcard,
-        login,
-        logout,
         restoreToken,
         changePassword,
         deleteVcard

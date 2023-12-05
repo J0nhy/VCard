@@ -1,8 +1,10 @@
 <script setup>
-import { useRouter ,RouterLink, RouterView } from 'vue-router'
+import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
 import { useVcardStore } from './stores/vcard.js'
 import { useAdminStore } from './stores/admin.js'
+import { useUserStore } from './stores/user.js'
+
 
 
 import LaravelTester from '@/components/LaravelTester.vue'
@@ -11,11 +13,12 @@ import WebSocketTester from '@/components/WebSocketTester.vue'
 const toast = useToast()
 const vcardStore = useVcardStore()
 const adminStore = useAdminStore()
+const userStore = useUserStore()
 const router = useRouter()
 
 const logout = async () => {
-  if (await vcardStore.logout()) {
-    toast.success('Admin has logged out of the application.')
+  if (await userStore.logout()) {
+    toast.success('User has logged out of the application.')
     clickMenuOption()
     router.push({ name: 'home' })
   } else {
@@ -49,31 +52,33 @@ const clickMenuOption = () => {
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
 
-          <li class="nav-item" v-show="!adminStore.admin">
-            <router-link class="nav-link" :class="{ active: $route.name === 'NewAdmin'}" :to="{ name: 'NewAdmin' }" @click="clickMenuOption">
+          <li class="nav-item" v-show="!userStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'NewAdmin' }" :to="{ name: 'NewAdmin' }"
+              @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
               Register Admin
-            </router-link >
+            </router-link>
           </li>
 
-          <li class="nav-item" v-show="!vcardStore.admin">
-            <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard'}" :to="{ name: 'NewVcard' }" @click="clickMenuOption">
+          <li class="nav-item" v-show="!userStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard' }" :to="{ name: 'NewVcard' }"
+              @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
               Register
-            </router-link >
+            </router-link>
           </li>
-          <li class="nav-item" v-show="!adminStore.admin">
-            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }"
-                          :to="{ name: 'Login' }" @click="clickMenuOption">
+          <li class="nav-item" v-show="!userStore.user">
+            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
+              @click="clickMenuOption">
               <i class="bi bi-box-arrow-in-right"></i>
               Login
             </router-link>
           </li>
-          <li class="nav-item dropdown" v-show="adminStore.admin">
+          <li class="nav-item dropdown" v-show="userStore.user">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="adminStore.adminPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
-              <span class="avatar-text">{{ adminStore.adminName }}</span>
+              <img :src="userStore.adminPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+              <span class="avatar-text">{{ userStore.userName }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
@@ -81,8 +86,8 @@ const clickMenuOption = () => {
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link class="dropdown-item"
-                            :class="{ active: $route.name == 'Admin' && $route.params.id == adminStore.adminId }"
-                            :to="{ name: 'Admin', params: { id: adminStore.adminId } }" @click="clickMenuOption">
+                  :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
+                  :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-person-square"></i>
                   Profile
                 </router-link>
@@ -92,7 +97,7 @@ const clickMenuOption = () => {
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                              :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
+                  :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
                   Change password
                 </router-link>
@@ -122,31 +127,31 @@ const clickMenuOption = () => {
                 teste1
               </a>
             </li>
-            
+
             <li class="nav-item">
               <a class="nav-link" href="#">
                 teste2
               </a>
             </li>
-        
+
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
               <a class="nav-link" href="#">
                 teste3
               </a>
             </li>
-         
+
             <li class="nav-item">
               <a class="nav-link" href="#">
                 teste4
               </a>
             </li>
-           
+
             <li class="nav-item">
               <a class="nav-link" href="#">
                 teste5
               </a>
             </li>
-          
+
             <li class="nav-item">
               <a class="nav-link" href="#">
                 teste6
@@ -156,15 +161,15 @@ const clickMenuOption = () => {
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>My Projects</span>
-            
+
           </h6>
           <ul class="nav flex-column mb-2">
-            <li class="nav-item" >
-              
+            <li class="nav-item">
+
             </li>
           </ul>
 
-          
+
 
         </div>
       </nav>

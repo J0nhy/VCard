@@ -136,4 +136,10 @@ class VcardController extends Controller
         $Vcard->delete();
         return response()->json(null, 204);
     }
+
+    public function show_me(Request $request)
+    {
+        print_r($request . 'teste');
+        return new VcardResource($request->user());
+    }
 }
