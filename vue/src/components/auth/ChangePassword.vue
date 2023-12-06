@@ -1,12 +1,16 @@
 <script setup>
 import { useToast } from "vue-toastification"
 import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/user.js'
 import { useAdminStore } from '../../stores/admin.js'
+import { useVcardStore } from "../../stores/vcard.js"
 import { ref } from 'vue'
 
 const toast = useToast()
 const router = useRouter()
+const userStore = useUserStore()
 const adminStore = useAdminStore()
+const vcardStore = useVcardStore()
   
 const passwords = ref({
   current_password: '',
@@ -21,11 +25,20 @@ const emit = defineEmits(['changedPassword'])
 
 const changePassword = async () => {
   try {
-    await adminStore.changePassword(passwords.value)
+
+    if(userStore.user.user_type == 'A'){
+      await adminStore.changePassword(passwords.value)
+    }else if(userStore.user.user_type == 'V'){
+      await vcardStore.changePassword(passwords.value)
+    }
+
+
+    
     toast.success('Password has been changed.')
     emit('changedPassword')
     router.back()
   } catch (error) {
+    console.log(error)
     if (error.response.status == 422) {
       errors.value = error.response.data.errors
       toast.error('Password has not been changed due to validation errors!')

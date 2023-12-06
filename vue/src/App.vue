@@ -34,6 +34,7 @@ const clickMenuOption = () => {
     }
   }
 }
+
 </script>
 
 
@@ -77,7 +78,7 @@ const clickMenuOption = () => {
           <li class="nav-item dropdown" v-show="userStore.user">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="userStore.adminPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
               <span class="avatar-text">{{ userStore.userName }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
@@ -85,12 +86,19 @@ const clickMenuOption = () => {
 
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
-                <router-link class="dropdown-item"
-                  :class="{ active: $route.name == 'User' && $route.params.id == userStore.userId }"
-                  :to="{ name: 'User', params: { id: userStore.userId } }" @click="clickMenuOption">
-                  <i class="bi bi-person-square"></i>
-                  Profile
-                </router-link>
+                <router-link v-if="userStore.userType === 'A'" class="dropdown-item"
+    :class="{ active: $route.name == 'Admin' && $route.params.id == userStore.userId }"
+    :to="{ name: 'Admin', params: { id: userStore.userId } }" @click="clickMenuOption">
+    <i class="bi bi-person-square"></i>
+    Profile (Admin)
+</router-link>
+
+<router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
+    :class="{ active: $route.name == 'Vcard' && $route.params.phone_number == userStore.userId }"
+    :to="{ name: 'Vcard', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
+    <i class="bi bi-person-square"></i>
+    Profile (Vcard)
+</router-link>
               </li>
               <li>
 

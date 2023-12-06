@@ -25,7 +25,7 @@ const login = async () => {
     axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
     //axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
     await userStore.loadUser()
-    console.log('userStore.user:', userStore.user)
+    //console.log('userStore.user:', userStore.user)
     emit('login')
     router.back()
   }

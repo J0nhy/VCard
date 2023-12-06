@@ -65,9 +65,7 @@ export const useAdminStore = defineStore('admin', () => {
     }*/
 
     async function changePassword(credentials) {
-        if (adminId.value < 0) {
-            throw 'Anonymous admins cannot change the password!'
-        }
+ 
         try {
             await axios.patch(`admins/${admin.value.id}/password`, credentials)
             return true

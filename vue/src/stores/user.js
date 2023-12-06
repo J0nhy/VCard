@@ -21,11 +21,11 @@ export const useUserStore = defineStore('user', () => {
             ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
             : avatarNoneUrl)
 
+            
     async function loadUser() {
         try {
             const response = await axios.get('users/me')
             user.value = response.data.data
-            console.log("user.value" + user.value)
    
 
         } catch (error) {

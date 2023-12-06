@@ -40,22 +40,22 @@ const router = createRouter({
       name: 'Dashboard',
       component: Dashboard
     },
-    {
+    /*{
       path: '/user',
       name: 'User',
       component: User,
-    },
+    },*/
     {
       path: '/admin/new',
       name: 'NewAdmin',
       component: Admin,
       props: { id: -1 }
     },
-    {
+    /*{
       path: '/user/:id',
       name: 'User',
       component: User,
-    }, 
+    }, */
     {
       path: '/admin/:id',
       name: 'Admin',

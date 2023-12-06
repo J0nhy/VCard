@@ -16,7 +16,7 @@ const totalUsers = computed(() => {
 
 const loadUsers = async () => {
     try {
-      const response = await axios.get('users')
+    const response = await axios.get('users')
     users.value = response.data.data
 
   } catch (error) {
