@@ -87,27 +87,35 @@ const clickMenuOption = () => {
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link v-if="userStore.userType === 'A'" class="dropdown-item"
-    :class="{ active: $route.name == 'Admin' && $route.params.id == userStore.userId }"
-    :to="{ name: 'Admin', params: { id: userStore.userId } }" @click="clickMenuOption">
-    <i class="bi bi-person-square"></i>
-    Profile (Admin)
-</router-link>
+                  :class="{ active: $route.name == 'Admin' && $route.params.id == userStore.userId }"
+                  :to="{ name: 'Admin', params: { id: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>
+                  Profile (Admin)
+                </router-link>
 
-<router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
-    :class="{ active: $route.name == 'Vcard' && $route.params.phone_number == userStore.userId }"
-    :to="{ name: 'Vcard', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
-    <i class="bi bi-person-square"></i>
-    Profile (Vcard)
-</router-link>
+                <router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
+                  :class="{ active: $route.name == 'Vcard' && $route.params.phone_number == userStore.userId }"
+                  :to="{ name: 'Vcard', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>
+                  Profile (Vcard)
+                </router-link>
               </li>
               <li>
 
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
-                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                  :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
+                <router-link v-if="userStore.userType === 'A'" class="dropdown-item"
+                  :class="{ active: $route.name === 'aPassword' && $route.params.id == userStore.userId}"
+                  :to="{ name: 'AdminPassword', params: { id: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
-                  Change password
+                  Change password (Admin)
+                </router-link>
+
+                <router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
+                  :class="{ active: $route.name === 'vPassword' && $route.params.phone_number == userStore.userId } "
+                  :to="{ name: 'VcardPassword', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change password (Vcard)
                 </router-link>
               </li>
               <li>

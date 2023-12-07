@@ -13,7 +13,7 @@ export const useUserStore = defineStore('user', () => {
 
     const userId = computed(() => user.value?.id ?? -1)
 
-    const userType = computed(() => user.value?.type ?? 'V')
+    const userType = computed(() => user.value?.user_type ?? 'V')
 
 
     const userPhotoUrl = computed(() =>
@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             const response = await axios.get('users/me')
             user.value = response.data.data
-   
+            //console.log("user.js: ", response.data.data)
 
         } catch (error) {
             console.log("erro" + error)
@@ -43,7 +43,7 @@ export const useUserStore = defineStore('user', () => {
 
     async function login(credentials) {
         try {
-            console.log(credentials)
+            //console.log(credentials)
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)

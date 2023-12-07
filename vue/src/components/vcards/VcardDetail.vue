@@ -20,6 +20,10 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  inserindo: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["save", "cancel", "delete"]);
@@ -31,6 +35,11 @@ const vcardStore = useVcardStore()
 const toast = useToast()
 const router = useRouter()
 
+//const inserindo = ref(props.inserting)
+//const insert = inserindo.value
+//
+//console.log("inserindo: " + insert)
+//console.log(props.inserindo)
 
 const vCardToDeleteDescription = computed(() => VcardToDelete.value
     ? `#${VcardToDelete.value.id} (${VcardToDelete.value.name})`
@@ -48,8 +57,15 @@ watch(
   (newVcard) => {
     editingVcard.value = newVcard
   },
-  { immediate: true }
+  { immediate: true },
+  () => props.inserting,
+  (newInserting) => {
+    console.log("Valor de inserting em VcardDetail.vue mudou para:", newInserting);
+  }
+  
 )
+
+
 
 const photoFullUrl = computed(() => {
   if (deletePhotoOnTheServer.value) {
@@ -129,6 +145,7 @@ const deleteClick = (Vcard) => {
     
   }  
 }
+
 </script>
 
 <template>
@@ -171,7 +188,7 @@ const deleteClick = (Vcard) => {
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
 
-        <div class="mb-3" v-if="inserting">
+        <div class="mb-3"  v-if="inserindo === true">
           <label for="inputPassword" class="form-label">Password</label>
           <input
               type="password"
@@ -182,7 +199,7 @@ const deleteClick = (Vcard) => {
           />
           <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
-        <div class="mb-3"  v-if="inserting">
+        <div class="mb-3"   v-if="inserindo === true">
           <label for="inputPasswordConfirmation" class="form-label">Password Confirmation</label>
           <input
               type="password"
@@ -193,7 +210,7 @@ const deleteClick = (Vcard) => {
           />
           <field-error-message :errors="errors" fieldName="password_confirmation"></field-error-message>
         </div>
-        <div class="mb-3"  v-if="inserting">
+        <div class="mb-3"  v-if="inserindo === true">
           <label for="inputConfirmation_Code" class="form-label">Confirmation Code</label>
           <input
               type="password"
