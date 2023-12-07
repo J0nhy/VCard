@@ -157,7 +157,7 @@ const deleteClick = (Vcard) => {
   >
   </confirmation-dialog>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">Vcard #</h3>
+    <h3 class="mt-5 mb-3">Vcard of {{ editingVcard.phone_number  }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -177,6 +177,7 @@ const deleteClick = (Vcard) => {
             placeholder="Vcard Phone Number"
             required
             v-model="editingVcard.phone_number"
+            :readonly="inserting"
           />
           <field-error-message :errors="errors" fieldName="phone_number"></field-error-message>
         </div>
