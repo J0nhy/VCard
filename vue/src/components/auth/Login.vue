@@ -27,7 +27,7 @@ const login = async () => {
     await userStore.loadUser()
     //console.log('userStore.user:', userStore.user)
     emit('login')
-    router.back()
+    router.push({ name: 'Dashboard' })
   }
   catch (error) {
     console.log('error login.vue:', error)

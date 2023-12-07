@@ -39,12 +39,30 @@ const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the project (new or edit)
 let originalValueStr = ''
 
+const routeName = router.currentRoute.value.name;
+//console.log("Rota Atual:", routeName);
+
+const inserindo = ref(false)
+
 const inserting = (id) => !id || (id < 0)
+
 const loadVcard = async (phoneNumber) => {
   originalValueStr = ''
   errors.value = null
+  
+  if(routeName == 'Vcard') {
+    //inserting.value = false
+    inserindo.value = false
+    //console.log('Vcard.vue: inserting.value = false', inserting.value)
+  }else if(routeName == 'NewVcard'){
+    //inserting.value = true  
+    inserindo.value = true
+    //console.log('Vcard.vue: inserting.value = true', inserting.value)
+  }
+
   if (!phoneNumber || (phoneNumber < 0)) {
     vcard.value = newVcard()
+
   } else {
       try {
         const response = await axios.get('vcard/' + phoneNumber)
@@ -56,13 +74,12 @@ const loadVcard = async (phoneNumber) => {
   }
 }
 
-const routeName = router.currentRoute.value.name;
-console.log("Rota Atual:", routeName);
+
 
 const save = async (vcardToSave) => {
   errors.value = null
-  console.log(vcardToSave)
-  console.log(props.id)
+  //console.log(vcardToSave)
+  //console.log(props.id)
   if (routeName == 'NewVcard') {
     try {
       const response = await axios.post('vcard', vcardToSave)
@@ -130,6 +147,7 @@ const leaveConfirmed = () => {
     :vcard="vcard"
     :errors="errors"
     :inserting="inserting(id)"
+    :inserindo="inserindo"
     @save="save"
     @cancel="cancel"
   ></vcard-detail>
