@@ -36,6 +36,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showDeleteButton: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["edit"]);
@@ -75,12 +79,15 @@ const editClick = (admin) => {
         <td v-if="showGender" class="align-middle">{{ admin.gender_name }}</td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-xs btn-light"
-              @click="editClick(admin)"
-              v-if="showEditButton"
-            >
+            <button class="btn btn-xs btn-light" @click="editClick(admin)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
+            </button>
+          </div>
+        </td>
+        <td class="text-end align-middle" v-if="showDeleteButton">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="editClick(admin)" v-if="showDeleteButton">
+              <i class="bi bi-trash"></i>
             </button>
           </div>
         </td>
