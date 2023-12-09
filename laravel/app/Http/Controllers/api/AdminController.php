@@ -15,10 +15,11 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function show($id)
+    public function show(Admin $admin, $id)
     {
         $admin = Admin::find($id);
         return new AdminResource($admin);
+       // return ($admin);
     }
 
     public function update(UpdateAdminRequest $request, Admin $u, $id)
@@ -92,5 +93,22 @@ class AdminController extends Controller
     {
         print_r($request . 'teste');
         return new AdminResource($request->user());
+    }
+
+    public function show_all()
+    {
+        // $admin = User::all();
+        //print($admin);
+        $admin =  Admin::all();
+        return AdminResource::collection($admin);
+    }
+
+    public function delete($id)
+    {
+        // Delete the product
+        $admin = Admin::find($id);
+        $deletedUser=$admin;
+        $admin->delete();
+        return new AdminResource($deletedUser);
     }
 }

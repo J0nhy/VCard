@@ -20,6 +20,10 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  inserindo: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["save", "cancel", "delete"]);
@@ -31,6 +35,11 @@ const vcardStore = useVcardStore()
 const toast = useToast()
 const router = useRouter()
 
+//const inserindo = ref(props.inserting)
+//const insert = inserindo.value
+//
+//console.log("inserindo: " + insert)
+//console.log(props.inserindo)
 
 const vCardToDeleteDescription = computed(() => VcardToDelete.value
     ? `#${VcardToDelete.value.id} (${VcardToDelete.value.name})`
@@ -48,8 +57,15 @@ watch(
   (newVcard) => {
     editingVcard.value = newVcard
   },
-  { immediate: true }
+  { immediate: true },
+  () => props.inserting,
+  (newInserting) => {
+    console.log("Valor de inserting em VcardDetail.vue mudou para:", newInserting);
+  }
+  
 )
+
+
 
 const photoFullUrl = computed(() => {
   if (deletePhotoOnTheServer.value) {
@@ -129,6 +145,7 @@ const deleteClick = (Vcard) => {
     
   }  
 }
+
 </script>
 
 <template>
@@ -140,7 +157,7 @@ const deleteClick = (Vcard) => {
   >
   </confirmation-dialog>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">Vcard #</h3>
+    <h3 class="mt-5 mb-3">Vcard of {{ editingVcard.phone_number  }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -160,6 +177,7 @@ const deleteClick = (Vcard) => {
             placeholder="Vcard Phone Number"
             required
             v-model="editingVcard.phone_number"
+            :readonly="inserting"
           />
           <field-error-message :errors="errors" fieldName="phone_number"></field-error-message>
         </div>
@@ -171,7 +189,7 @@ const deleteClick = (Vcard) => {
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
 
-        <div class="mb-3" v-if="inserting">
+        <div class="mb-3"  v-if="inserindo === true">
           <label for="inputPassword" class="form-label">Password</label>
           <input
               type="password"
@@ -182,7 +200,7 @@ const deleteClick = (Vcard) => {
           />
           <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
-        <div class="mb-3"  v-if="inserting">
+        <div class="mb-3"   v-if="inserindo === true">
           <label for="inputPasswordConfirmation" class="form-label">Password Confirmation</label>
           <input
               type="password"
@@ -193,7 +211,7 @@ const deleteClick = (Vcard) => {
           />
           <field-error-message :errors="errors" fieldName="password_confirmation"></field-error-message>
         </div>
-        <div class="mb-3"  v-if="inserting">
+        <div class="mb-3"  v-if="inserindo === true">
           <label for="inputConfirmation_Code" class="form-label">Confirmation Code</label>
           <input
               type="password"

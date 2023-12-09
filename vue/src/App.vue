@@ -52,7 +52,7 @@ const clickMenuOption = () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-
+          <!--
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'NewAdmin' }" :to="{ name: 'NewAdmin' }"
               @click="clickMenuOption">
@@ -60,7 +60,7 @@ const clickMenuOption = () => {
               Register Admin
             </router-link>
           </li>
-
+-->
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard' }" :to="{ name: 'NewVcard' }"
               @click="clickMenuOption">
@@ -87,27 +87,36 @@ const clickMenuOption = () => {
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link v-if="userStore.userType === 'A'" class="dropdown-item"
-    :class="{ active: $route.name == 'Admin' && $route.params.id == userStore.userId }"
-    :to="{ name: 'Admin', params: { id: userStore.userId } }" @click="clickMenuOption">
-    <i class="bi bi-person-square"></i>
-    Profile (Admin)
-</router-link>
+                  :class="{ active: $route.name == 'Admin' && $route.params.id == userStore.userId }"
+                  :to="{ name: 'Admin', params: { id: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>
+                  Profile (Admin)
 
-<router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
-    :class="{ active: $route.name == 'Vcard' && $route.params.phone_number == userStore.userId }"
-    :to="{ name: 'Vcard', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
-    <i class="bi bi-person-square"></i>
-    Profile (Vcard)
-</router-link>
+                </router-link>
+
+                <router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
+                  :class="{ active: $route.name == 'Vcard' && $route.params.phone_number == userStore.userId }"
+                  :to="{ name: 'Vcard', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-person-square"></i>
+                  Profile (Vcard)
+                </router-link>
               </li>
               <li>
 
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
-                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                  :to="{ name: 'ChangePassword' }" @click="clickMenuOption">
+                <router-link v-if="userStore.userType === 'A'" class="dropdown-item"
+                  :class="{ active: $route.name === 'aPassword' && $route.params.id == userStore.userId}"
+                  :to="{ name: 'AdminPassword', params: { id: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
-                  Change password
+                  Change password (Admin)
+                </router-link>
+
+                <router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
+                  :class="{ active: $route.name === 'vPassword' && $route.params.phone_number == userStore.userId } "
+                  :to="{ name: 'VcardPassword', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
+                  <i class="bi bi-key-fill"></i>
+                  Change password (Vcard)
                 </router-link>
               </li>
               <li>
@@ -161,10 +170,10 @@ const clickMenuOption = () => {
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                teste6
-              </a>
-            </li>
+        <router-link to="/admin/gerir" class="nav-link">
+          Gerir Admins
+        </router-link>
+      </li>
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">

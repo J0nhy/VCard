@@ -17,6 +17,8 @@ Route::post('vcard', [VcardController::class, 'store']);
 Route::post('admin', [AdminController::class, 'store']);
 
 
+Route::get('admins/gerir', [AdminController::class, 'show_all']);
+Route::delete('admins/gerir/{id}', [AdminController::class, 'delete']);
 
 
 
