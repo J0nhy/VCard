@@ -8,6 +8,7 @@ import User from "../components/users/User.vue"
 import Vcard from "../components/vcards/Vcard.vue"
 import vPassword from "../components/vcards/Password.vue"
 import aPassword from "../components/users/Password.vue"
+import Transactions from "../components/transactions/Transaction.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +100,28 @@ const router = createRouter({
       name: 'VcardDelete'
       //props: true
       // Replaced with the following line to ensure that id is a number
+    },
+    {
+      path: '/transactions/new',
+      name: 'NewTransaction',
+      component: Transactions,
+      props: route => ({ id: -1, phone_number: parseInt(route.params.phone_number) })
+    },
+    {
+      path: '/transactions/:phone_number',
+      name: 'Transactions',
+      component: Transactions,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
+    },
+    {
+      path: '/transaction/:id',
+      name: 'Transaction',
+      component: Transactions,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ id: parseInt(route.params.id) })
     },
 
   ]
