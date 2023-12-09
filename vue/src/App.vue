@@ -52,7 +52,7 @@ const clickMenuOption = () => {
 
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
-
+          <!--
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'NewAdmin' }" :to="{ name: 'NewAdmin' }"
               @click="clickMenuOption">
@@ -60,7 +60,7 @@ const clickMenuOption = () => {
               Register Admin
             </router-link>
           </li>
-
+-->
           <li class="nav-item" v-show="!userStore.user">
             <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard' }" :to="{ name: 'NewVcard' }"
               @click="clickMenuOption">
@@ -91,6 +91,7 @@ const clickMenuOption = () => {
                   :to="{ name: 'Admin', params: { id: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-person-square"></i>
                   Profile (Admin)
+
                 </router-link>
 
                 <router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
