@@ -173,6 +173,11 @@ const clickMenuOption = () => {
           Gerir Admins
         </router-link>
       </li>
+      <li class="nav-item">
+        <router-link to="/users" class="nav-link">
+          Gerir vcards
+        </router-link>
+      </li>
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">

@@ -21,6 +21,19 @@ class VcardController extends Controller
         $Vcard = Vcard::find($phoneNumber);
         return new VcardResource($Vcard);
     }
+    public function show_all()
+    {
+        $perPage = request()->input('per_page', 10); // Adjust the default per page as needed
+        $vcards = Vcard::withTrashed()->paginate($perPage);
+
+        return VcardResource::collection($vcards);
+    }
+
+    public function search($name)
+    {
+        $vcards = Vcard::where('email', 'like', $name . '%')->paginate(10);
+        return VcardResource::collection($vcards);
+    }
 
     private function storeBase64AsFile($phone_number, String $base64String)
     {
@@ -28,6 +41,31 @@ class VcardController extends Controller
         $newfilename = $phone_number . "_" . rand(1000, 9999);
         $base64Service = new Base64Services();
         return $base64Service->saveFile($base64String, $targetDir, $newfilename);
+    }
+    public function updateBlockedStatus($phoneNumber)
+    {
+        $Vcard = Vcard::find($phoneNumber);
+        if ($Vcard->blocked == 0) {
+
+            $Vcard->blocked = 1;
+        } else {
+            $Vcard->blocked = 0;
+        }
+        $Vcard->save();
+
+        return new VcardResource($Vcard);
+    }
+    public function editMaxDebit($phoneNumber,Request $request)
+    {
+        $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
+        $Vcard = Vcard::find($phoneNumber);
+        //se for menor n muda
+        if($newMaxDebit<$Vcard->balance)return new VcardResource($Vcard);
+        
+        $Vcard->max_debit =$newMaxDebit;
+        $Vcard->save();
+
+        return new VcardResource($Vcard);
     }
 
     public function update(UpdateVcardRequest $request, Vcard $v, $phone_number)
@@ -49,7 +87,7 @@ class VcardController extends Controller
             $dataToSave['photo_url'] = $this->storeBase64AsFile($phone_number, $base64ImagePhoto);
         }
 
-        if($deletePhotoOnServer){
+        if ($deletePhotoOnServer) {
             $dataToSave['photo_url'] = "";
         }
 
@@ -68,7 +106,7 @@ class VcardController extends Controller
     {
         $Vcard = Vcard::find($request->get('phone_number'));
 
-        if(!$Vcard){
+        if (!$Vcard) {
             return response()->json(['error' => 'Usuário não encontrado'], 401);
         }
 
@@ -133,8 +171,9 @@ class VcardController extends Controller
     public function destroy($phone_number)
     {
         $Vcard = Vcard::find($phone_number);
+        $vcardUser = $Vcard;
         $Vcard->delete();
-        return response()->json(null, 204);
+        return new VcardResource($vcardUser);
     }
 
     public function show_me(Request $request)

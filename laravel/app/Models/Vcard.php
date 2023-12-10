@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vcard extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
     protected $table = 'vcards';
     protected $primaryKey = 'phone_number';
     public $incrementing = false; // If the primary key is not auto-incrementing

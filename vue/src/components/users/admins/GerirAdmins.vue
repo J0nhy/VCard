@@ -29,6 +29,8 @@ const editUser = (user) => {
 }
 const deleteAdmin = async (user) => {
     const response = await axios.delete('admins/gerir/' + user.id)
+    loadUsers()
+
 }
 
 onMounted (() => {
@@ -46,7 +48,7 @@ onMounted (() => {
     :showAdmin="false"
     :showEditButton="false"
     :showDeleteButton="true"
-    @edit="deleteAdmin"
+    @delete="deleteAdmin"
   ></user-table>
 </template>
 

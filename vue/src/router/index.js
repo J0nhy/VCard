@@ -9,7 +9,7 @@ import Vcard from "../components/vcards/Vcard.vue"
 import vPassword from "../components/vcards/Password.vue"
 import aPassword from "../components/users/Password.vue"
 import GerirAdmins from "../components/users/admins/GerirAdmins.vue"
-
+import GerirUsers from "../components/users/admins/GerirUsers.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -105,6 +105,13 @@ const router = createRouter({
       path: '/admin/gerir',
       name: 'GerirAdmins',
       component: GerirAdmins
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+    },
+    {
+      path: '/users',
+      name: 'GerirUsers',
+      component: GerirUsers
       //props: true
       // Replaced with the following line to ensure that id is a number
     },

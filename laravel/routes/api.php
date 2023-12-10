@@ -17,6 +17,14 @@ Route::post('admin', [AdminController::class, 'store']);
 
 Route::get('admins/gerir', [AdminController::class, 'show_all']);
 Route::delete('admins/gerir/{id}', [AdminController::class, 'delete']);
+Route::patch('users/block/{phone_number}', [VcardController::class, 'updateBlockedStatus']);
+
+Route::get('users', [VcardController::class, 'show_all']);
+Route::delete('users/{email}', [VcardController::class, 'destroy']);
+Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
+
+
+Route::get('users/{email}', [VcardController::class, 'search']);
 
 
 
