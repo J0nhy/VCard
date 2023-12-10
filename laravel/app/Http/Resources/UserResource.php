@@ -14,6 +14,8 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $this->load('vcard');
+
         return [
             'id' => $this->id,
             'user_type' => $this->user_type,
@@ -21,6 +23,9 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'password' => $this->password,
             'photo_url' => $this->photo_url,
+            'balance' => $this->vcard ? $this->vcard->balance : null,
+
+
         ];
     }
 }

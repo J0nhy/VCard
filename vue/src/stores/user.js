@@ -15,6 +15,9 @@ export const useUserStore = defineStore('user', () => {
 
     const userType = computed(() => user.value?.user_type ?? 'V')
 
+    const userBalance = computed(() => user.value?.balance ?? 0)
+
+
 
     const userPhotoUrl = computed(() =>
         user.value?.photo_url
@@ -26,6 +29,7 @@ export const useUserStore = defineStore('user', () => {
         try {
             const response = await axios.get('users/me')
             user.value = response.data.data
+            //console.log(user.value.balance)
             //console.log("user.js: ", response.data.data)
 
         } catch (error) {
@@ -89,6 +93,7 @@ export const useUserStore = defineStore('user', () => {
         userName,
         userType,
         userPhotoUrl,
+        userBalance,
         loadUser,
         clearUser,
         login,

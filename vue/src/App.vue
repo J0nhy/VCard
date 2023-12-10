@@ -50,18 +50,19 @@ const clickMenuOption = () => {
         <span class="navbar-toggler-icon"></span>
       </button>
 
+
       <div class="collapse navbar-collapse justify-content-end">
+
+
+        <div v-show="userStore.user && userStore.userType === 'V'" class="text-white">
+          <h5 class="mt-3">Balance: {{ userStore.userBalance }}</h5>
+        </div>
+
         <ul class="navbar-nav">
-          <!--
+
+
           <li class="nav-item" v-show="!userStore.user">
-            <router-link class="nav-link" :class="{ active: $route.name === 'NewAdmin' }" :to="{ name: 'NewAdmin' }"
-              @click="clickMenuOption">
-              <i class="bi bi-person-check-fill"></i>
-              Register Admin
-            </router-link>
-          </li>
--->
-          <li class="nav-item" v-show="!userStore.user">
+
             <router-link class="nav-link" :class="{ active: $route.name === 'NewVcard' }" :to="{ name: 'NewVcard' }"
               @click="clickMenuOption">
               <i class="bi bi-person-check-fill"></i>
@@ -106,14 +107,14 @@ const clickMenuOption = () => {
                 <!-- Quando as sessoes tiverem arranjadas, verificar se é Admin ou Vcard com um if e redirecionar para as respetivas paginas -->
 
                 <router-link v-if="userStore.userType === 'A'" class="dropdown-item"
-                  :class="{ active: $route.name === 'aPassword' && $route.params.id == userStore.userId}"
+                  :class="{ active: $route.name === 'aPassword' && $route.params.id == userStore.userId }"
                   :to="{ name: 'AdminPassword', params: { id: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
                   Change password (Admin)
                 </router-link>
 
                 <router-link v-else-if="userStore.userType === 'V'" class="dropdown-item"
-                  :class="{ active: $route.name === 'vPassword' && $route.params.phone_number == userStore.userId } "
+                  :class="{ active: $route.name === 'vPassword' && $route.params.phone_number == userStore.userId }"
                   :to="{ name: 'VcardPassword', params: { phone_number: userStore.userId } }" @click="clickMenuOption">
                   <i class="bi bi-key-fill"></i>
                   Change password (Vcard)
@@ -169,20 +170,17 @@ const clickMenuOption = () => {
               </a>
             </li>
 
-            <li class="nav-item">
-        <router-link to="/admin/gerir" class="nav-link">
-          Gerir Admins
-        </router-link>
-      </li>
+
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>My Projects</span>
-
+            <span>Adminstrator Menu</span>
           </h6>
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
-
+              <router-link to="/admin/gerir" class="nav-link">
+                Gerir Admins
+              </router-link>
             </li>
           </ul>
 
