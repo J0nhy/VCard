@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class Vcard extends Model
 {
     use HasFactory;
@@ -23,5 +24,10 @@ class Vcard extends Model
         'password',
         'confirmation_code',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id', 'phone_number');
+    }
 }
 

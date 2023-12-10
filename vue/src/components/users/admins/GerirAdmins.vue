@@ -15,7 +15,7 @@ const totalUsers = computed(() => {
 })
 
 const loadUsers = async () => {
-    try {
+  try {
     const response = await axios.get('admins/gerir')
     users.value = response.data.data
 
@@ -28,17 +28,40 @@ const editUser = (user) => {
   router.push({ name: 'Users', params: { id: user.id } })
 }
 const deleteAdmin = async (user) => {
+<<<<<<< HEAD
     const response = await axios.delete('admins/gerir/' + user.id)
     loadUsers()
 
+=======
+  const response = await axios.delete('admins/gerir/' + user.id)
+  loadUsers()
+>>>>>>> dae995043f2c60242dd4fa58f8a58bc610aaeacf
 }
 
-onMounted (() => {
+onMounted(() => {
   loadUsers()
 })
+
+const clickMenuOption = () => {
+  const domReference = document.getElementById('buttonSidebarExpandId')
+  if (domReference) {
+    if (window.getComputedStyle(domReference).display !== "none") {
+      domReference.click()
+    }
+  }
+}
 </script>
 
 <template>
+  <!--button to create admin-->
+  <div class="mt-5 mb-3">
+    <router-link class="btn btn-success" :class="{ active: $route.name === 'NewAdmin' }" :to="{ name: 'NewAdmin' }"
+      @click="clickMenuOption">
+      <i class="bi bi-person-check-fill"></i>
+      Create Admin
+    </router-link>
+  </div>
+
   <h3 class="mt-5 mb-3">Admins</h3>
   <hr>
   <user-table
@@ -56,6 +79,7 @@ onMounted (() => {
 .filter-div {
   min-width: 12rem;
 }
+
 .total-filtro {
   margin-top: 2.3rem;
 }

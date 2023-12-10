@@ -8,8 +8,14 @@ import User from "../components/users/User.vue"
 import Vcard from "../components/vcards/Vcard.vue"
 import vPassword from "../components/vcards/Password.vue"
 import aPassword from "../components/users/Password.vue"
+import Transactions from "../components/transactions/Transaction.vue"
 import GerirAdmins from "../components/users/admins/GerirAdmins.vue"
+<<<<<<< HEAD
 import GerirUsers from "../components/users/admins/GerirUsers.vue"
+=======
+import Credit from "../components/transactions/Credit.vue"
+
+>>>>>>> dae995043f2c60242dd4fa58f8a58bc610aaeacf
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -102,6 +108,28 @@ const router = createRouter({
       // Replaced with the following line to ensure that id is a number
     },
     {
+      path: '/transactions/new',
+      name: 'NewTransaction',
+      component: Transactions,
+      props: route => ({ id: -1, phone_number: parseInt(route.params.phone_number) })
+    },
+    {
+      path: '/transactions/:phone_number',
+      name: 'Transactions',
+      component: Transactions,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
+    },
+    {
+      path: '/transaction/:id',
+      name: 'Transaction',
+      component: Transactions,
+      //props: true
+      // Replaced with the following line to ensure that id is a number
+      props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
       path: '/admin/gerir',
       name: 'GerirAdmins',
       component: GerirAdmins
@@ -114,6 +142,13 @@ const router = createRouter({
       component: GerirUsers
       //props: true
       // Replaced with the following line to ensure that id is a number
+    },
+    {
+      path: '/credit/:phone_number',
+      name: 'Credit',
+      component: Credit,
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
+
     },
 
   ]

@@ -29,6 +29,7 @@ const inputPhotoFile = ref(null)
 const editingImageAsBase64 = ref(null)
 const deletePhotoOnTheServer = ref(false)
 
+
 watch(
   () => props.admin,
   (newAdmin) => {

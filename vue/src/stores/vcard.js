@@ -13,6 +13,8 @@ export const useVcardStore = defineStore('vcard', () => {
 
     const vcardId = computed(() => vcard.value?.id ?? -1)
 
+    const vcardBalance = computed(() => vcard.value?.balance ?? 0)
+
 
 
     const vcardPhotoUrl = computed(() =>
@@ -102,6 +104,7 @@ export const useVcardStore = defineStore('vcard', () => {
         vcardId,
         vcardName,
         vcardPhotoUrl,
+        vcardBalance,
         loadVcard,
         clearVcard,
         restoreToken,

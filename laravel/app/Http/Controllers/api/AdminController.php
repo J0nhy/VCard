@@ -15,11 +15,11 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function show(Admin $admin)
+    public function show(Admin $admin, $id)
     {
-        /*$admin = Admin::find($id);
-        return new AdminResource($admin);*/
-        return ($admin);
+        $admin = Admin::find($id);
+        return new AdminResource($admin);
+       // return ($admin);
     }
 
     public function update(UpdateAdminRequest $request, Admin $u, $id)

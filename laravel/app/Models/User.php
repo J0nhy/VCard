@@ -15,7 +15,10 @@ class User extends Authenticatable
 
     protected $table = 'view_auth_users';
 
-
+    public function vcard()
+    {
+        return $this->hasOne(Vcard::class, 'phone_number', 'id');
+    }
 
     public function findForPassport(string $username):User
     {
