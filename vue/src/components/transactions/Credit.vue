@@ -56,7 +56,7 @@ const cancel = () => {
 <template>
 
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" >Credit {{ vCard.vcardId }}</h3>
+    <h3 class="mt-5 mb-3" >Credit</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
