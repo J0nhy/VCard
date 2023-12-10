@@ -10,12 +10,9 @@ import vPassword from "../components/vcards/Password.vue"
 import aPassword from "../components/users/Password.vue"
 import Transactions from "../components/transactions/Transaction.vue"
 import GerirAdmins from "../components/users/admins/GerirAdmins.vue"
-<<<<<<< HEAD
 import GerirUsers from "../components/users/admins/GerirUsers.vue"
-=======
 import Credit from "../components/transactions/Credit.vue"
 
->>>>>>> dae995043f2c60242dd4fa58f8a58bc610aaeacf
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

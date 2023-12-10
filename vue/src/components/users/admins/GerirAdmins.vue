@@ -28,14 +28,9 @@ const editUser = (user) => {
   router.push({ name: 'Users', params: { id: user.id } })
 }
 const deleteAdmin = async (user) => {
-<<<<<<< HEAD
     const response = await axios.delete('admins/gerir/' + user.id)
     loadUsers()
 
-=======
-  const response = await axios.delete('admins/gerir/' + user.id)
-  loadUsers()
->>>>>>> dae995043f2c60242dd4fa58f8a58bc610aaeacf
 }
 
 onMounted(() => {
