@@ -28,6 +28,7 @@ Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
 Route::get('users/{email}', [VcardController::class, 'search']);
 
+Route::get('transactions/{phone_number}', [TransactionController::class, 'show']);
 
 
 Route::middleware('auth:api')->group(function () {
@@ -53,7 +54,6 @@ Route::middleware('auth:api')->group(function () {
     Route::put('vcard/password/{phone_number}', [VcardController::class, 'updatePassword']);
 
 
-    Route::get('transactions/{phone_number}', [TransactionController::class, 'show']);
     Route::get('transaction/{id}', [TransactionController::class, 'show_specific']);
     Route::put('transaction/{id}', [TransactionController::class, 'update']);
     //Route::delete('transactions/{phoneNumber}', [TransactionController::class, 'destroy']);

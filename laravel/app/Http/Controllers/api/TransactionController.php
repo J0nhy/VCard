@@ -20,8 +20,9 @@ class TransactionController extends Controller
 
     public function show($phoneNumber)
     {
-        $Transaction = Transaction::where('vcard', $phoneNumber)->get();
-        return new TransactionResource($Transaction);
+
+        $Transactions = Transaction::where('vcard', $phoneNumber)->get();
+        return TransactionResource::collection($Transactions);
     }
     public function show_specific($id)
     {
