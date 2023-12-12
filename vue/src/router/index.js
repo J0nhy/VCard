@@ -12,7 +12,7 @@ import Transactions from "../components/transactions/Transaction.vue"
 import GerirAdmins from "../components/users/admins/GerirAdmins.vue"
 import GerirUsers from "../components/users/admins/GerirUsers.vue"
 import Credit from "../components/transactions/Credit.vue"
-
+import History from "../components/transactions/History.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -111,12 +111,12 @@ const router = createRouter({
       props: route => ({ id: -1, phone_number: parseInt(route.params.phone_number) })
     },
     {
-      path: '/transactions/:phone_number',
-      name: 'Transactions',
-      component: Transactions,
+      path: '/transactions',
+      name: 'History',
+      component: History,
       //props: true
       // Replaced with the following line to ensure that id is a number
-      props: route => ({ phone_number: parseInt(route.params.phone_number) })
+      //props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
     {
       path: '/transaction/:id',

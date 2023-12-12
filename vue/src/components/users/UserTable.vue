@@ -101,7 +101,7 @@ const resetInputBoxModalClick = () => {
 
 <template>
   <div v-if="showSearchVCard" class="filter-container">
-    <input v-model="searchQuery" type="text" placeholder="Search Name">
+    <input v-model="searchQuery" type="text" placeholder="Search Name/Phone Number">
     <button @click="search_vcard">Search</button>
   </div>
   <table class="table">

@@ -141,44 +141,25 @@ const clickMenuOption = () => {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                teste1
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                teste2
-              </a>
-            </li>
-
-            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-              <a class="nav-link" href="#">
-                teste3
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                teste4
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                teste5
-              </a>
+              <router-link to="/transactions/new" class="nav-link">
+                Enviar Dinheiro
+              </router-link>
             </li>
             <li class="nav-item">
-        <router-link to="/admin/gerir" class="nav-link">
-          Gerir Admins
-        </router-link>
-      </li>
-      <li class="nav-item">
-        <router-link to="/users" class="nav-link">
-          Gerir vcards
-        </router-link>
-      </li>
+              <router-link to="/transactions" class="nav-link">
+                Transações
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/admin/gerir" class="nav-link">
+                Gerir Admins
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/users" class="nav-link">
+                Gerir vcards
+              </router-link>
+            </li>
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
