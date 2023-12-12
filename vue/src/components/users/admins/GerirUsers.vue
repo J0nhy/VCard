@@ -8,7 +8,6 @@ const router = useRouter()
 
 const users = ref([])
 const currentPage = ref(1)
-const perPage = 10 // Adjust this based on your desired number of items per page
 
 const isLoading = ref(false);
 const errorOccurred = ref(false);
@@ -20,11 +19,10 @@ const totalUsers = computed(() => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get(`users?page=${currentPage.value}&per_page=${perPage}`)
-    users.value = response.data.data
+    const response = await axios.get(`users?page=${currentPage.value}`)
+    users.value = response.data
     // Assuming your API response includes pagination information
     // You may need to adjust this based on the actual structure of your API response
-    currentPage.value = response.data.current_page
   } catch (error) {
     console.log(error)
   }
@@ -87,10 +85,8 @@ const search = async (searchQuery) => {
   if (!searchQuery) return loadUsers();
   isLoading.value = true;
   try {
-    const response = await axios.get(`users/${searchQuery}?page=1&per_page=${perPage}`);
-    users.value = response.data.data
-    currentPage.value = response.data.current_page
-
+    const response = await axios.get(`users/${searchQuery}?page=1`);
+    users.value = response.data
     // Now you can use currentItems as your collection of items on the current page
 
     //loadUsers()
@@ -102,9 +98,10 @@ const search = async (searchQuery) => {
   }
 };
 
-const pageChanged = (newPage) => {
-  currentPage.value = newPage
-  loadUsers()
+const page_changed = (page) => {
+
+currentPage.value = page
+loadUsers();
 }
 
 onMounted(() => {
@@ -120,11 +117,12 @@ onMounted(() => {
     <user-table :admins="users" :showId="false" :showPhoneNumber="true" :showAdmin="false" :showEditButton="false"
       :showDeleteButton="true" :showSearchVCard="true" :showSaldo="true" :showLimiteDebito="true" :showBloqueado="true"
       :showApagado="true" :showPhoto="true" @edit="editMaxDebit" @search="search" @delete="delete_user"
-      @updateBlockedStatus="updateBlockedStatus">
+      @updateBlockedStatus="updateBlockedStatus"
+      @page-changed="page_changed">
     </user-table>
 
     <!-- Pagination component -->
-    <pagination :total="totalUsers" :current="currentPage" :per-page="perPage" @pagination-change="pageChanged">
+    <pagination :total="totalUsers" :current="currentPage">
     </pagination>
   </div>
 </template>

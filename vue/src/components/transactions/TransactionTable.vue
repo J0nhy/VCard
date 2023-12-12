@@ -1,17 +1,16 @@
 <script setup>
 import { inject, ref } from "vue";
-import { useAdminStore } from "../../stores/admin.js"
 
 import avatarNoneUrl from '@/assets/avatar-none.png'
+import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const serverBaseUrl = inject("serverBaseUrl");
-const adminStore = useAdminStore()
 const searchQuery = ref('');
 const newMaxDebit = ref('');
 
 const props = defineProps({
     transactions: {
-        type: Array,
+        type: Object,
         default: () => [],
     },
     show: {
@@ -21,7 +20,7 @@ const props = defineProps({
 
 });
 
-const emit = defineEmits(["edit"]);
+const emit = defineEmits(["edit","page-changed"]);
 
 
 
@@ -29,7 +28,9 @@ const editClick = (admin) => {
     emit("edit", admin);
 };
 
-
+const pageChanged=(page)=>{
+ emit("page-changed", page);
+};
 </script>
 
 <template>
@@ -47,7 +48,7 @@ const editClick = (admin) => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="transaction in transactions" :key="transaction.id">
+            <tr v-for="transaction in transactions.data" :key="transaction.id">
                 <td v-if="show" class="align-middle">{{ transaction.payment_type }}</td>
                 <td v-if="show" class="align-middle">{{ transaction.payment_reference }}</td>
                 <td v-if="show" class="align-middle"> {{ transaction.type == 'D' ? 'Debit' : 'Credit' }}</td>
@@ -62,6 +63,8 @@ const editClick = (admin) => {
             </tr>
         </tbody>
     </table>
+    <Bootstrap5Pagination :data="transactions" @pagination-change-page="pageChanged"/>
+
 </template>
 
 <style scoped>

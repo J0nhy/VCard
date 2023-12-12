@@ -7,6 +7,7 @@ import UserTable from "../UserTable.vue"
 const axios = inject('axios')
 
 const router = useRouter()
+const currentPage = ref(1)
 
 const users = ref([])
 
@@ -16,8 +17,8 @@ const totalUsers = computed(() => {
 
 const loadUsers = async () => {
   try {
-    const response = await axios.get('admins/gerir')
-    users.value = response.data.data
+    const response = await axios.get(`admins/gerir?page=${currentPage.value}`)
+    users.value = response.data
 
   } catch (error) {
     console.log(error)
@@ -36,6 +37,12 @@ const deleteAdmin = async (user) => {
 onMounted(() => {
   loadUsers()
 })
+
+const page_changed = (page) => {
+
+currentPage.value = page
+loadUsers();
+}
 
 const clickMenuOption = () => {
   const domReference = document.getElementById('buttonSidebarExpandId')
@@ -67,6 +74,7 @@ const clickMenuOption = () => {
     :showEditButton="false"
     :showDeleteButton="true"
     @delete="deleteAdmin"
+    @page-changed="page_changed"
   ></user-table>
 </template>
 

@@ -99,8 +99,10 @@ class AdminController extends Controller
     {
         // $admin = User::all();
         //print($admin);
-        $admin =  Admin::all();
-        return AdminResource::collection($admin);
+        $admins = Admin::paginate(5);
+        return AdminResource::collection($admins);
+
+
     }
 
     public function delete($id)

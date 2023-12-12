@@ -1,6 +1,7 @@
 <script setup>
 import { inject, ref } from "vue";
 import { useAdminStore } from "../../stores/admin.js"
+import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
@@ -11,7 +12,7 @@ const newMaxDebit=ref('');
 
 const props = defineProps({
   admins: {
-    type: Array,
+    type: Object,
     default: () => [],
   },
   showId: {
@@ -68,7 +69,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["edit", "search", "delete", "updateBlockedStatus"]);
+const emit = defineEmits(["edit", "search", "delete", "updateBlockedStatus","page-changed"]);
 
 
 const photoFullUrl = (admin) => {
@@ -95,6 +96,9 @@ const updateBlockedStatusClick = (admin) => {
 };
 const resetInputBoxModalClick = () => {
   newMaxDebit.value = '';
+};
+const pageChanged=(page)=>{
+ emit("page-changed", page);
 };
 
 </script>
@@ -126,7 +130,7 @@ const resetInputBoxModalClick = () => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="admin in admins" :key="admin.id">
+      <tr v-for="admin in admins.data" :key="admin.id">
         <td v-if="showId" class="align-middle">{{ admin.id }}</td>
         <td v-if="showPhoneNumber" class="align-middle">{{ admin.phone_number }}</td>
 
@@ -211,6 +215,8 @@ const resetInputBoxModalClick = () => {
       </tr>
     </tbody>
   </table>
+  <Bootstrap5Pagination :data="admins" @pagination-change-page="pageChanged"/>
+
 </template>
 
 <style scoped>

@@ -26,7 +26,6 @@ Route::delete('users/{email}', [VcardController::class, 'destroy']);
 Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
 
-Route::get('users/{email}', [VcardController::class, 'search']);
 
 Route::get('transactions/{phone_number}', [TransactionController::class, 'show']);
 
@@ -59,4 +58,7 @@ Route::middleware('auth:api')->group(function () {
     //Route::delete('transactions/{phoneNumber}', [TransactionController::class, 'destroy']);
     Route::post('transaction', [TransactionController::class, 'store']);
 });
+
+Route::get('users/{email}', [VcardController::class, 'search']);
+
 

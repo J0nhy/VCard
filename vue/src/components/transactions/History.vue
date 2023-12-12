@@ -9,6 +9,7 @@ const axios = inject('axios')
 const router = useRouter()
 
 const transactions = ref([])
+const currentPage = ref(1) // Add this line to keep track of the current page
 
 const totalTransactions = computed(() => {
   return transactions.value.length
@@ -16,8 +17,8 @@ const totalTransactions = computed(() => {
 
 const loadTransactions = async () => {
   try {
-    const response = await axios.get('transactions/900000001')
-    transactions.value = response.data.data
+    const response = await axios.get(`transactions/900000001?page=${currentPage.value}`) // Use currentPage
+    transactions.value = response.data
 
   } catch (error) {
     console.log(error)
@@ -42,17 +43,22 @@ const clickMenuOption = () => {
     }
   }
 }
+const page_changed = (page) => {
+
+  currentPage.value = page
+  loadTransactions();
+}
 </script>
 
 <template>
 
 
-  <h3 class="mt-5 mb-3">Admins</h3>
+  <h3 class="mt-5 mb-3">Transações</h3>
   <hr>
   <transaction-table
     :transactions="transactions"
     :show="true"
-    
+    @page-changed="page_changed"
   ></transaction-table>
 </template>
 
