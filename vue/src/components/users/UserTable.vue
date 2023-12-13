@@ -98,11 +98,7 @@ const resetInputBoxModalClick = () => {
   newMaxDebit.value = '';
 };
 const pageChanged = (page) => {
-<<<<<<< HEAD
-  emit("page-changed", page);
-=======
   emit("page-changed", page, searchQuery.value);
->>>>>>> 661c2068e18b6b701e1482c5d39559af9338c05f
 };
 
 </script>
