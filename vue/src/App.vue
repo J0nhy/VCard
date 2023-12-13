@@ -48,7 +48,7 @@ onMounted(() => {
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
-      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3" :to="{ name: 'home' }" @click="clickMenuOption">
+      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3 navbar-dark bg-dark" :to="{ name: 'home' }" @click="clickMenuOption">
         <img src="@/assets/logo1.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
         VCard
       </router-link>
@@ -86,7 +86,7 @@ onMounted(() => {
           <li class="nav-item dropdown" v-show="userStore.user">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
+              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img " alt="avatar image">
               <span class="avatar-text">{{ userStore.userName }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
