@@ -1,59 +1,71 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch,computed } from 'vue';
 import * as Chart from 'chart.js/auto';
 import axios from 'axios';
+import { useUserStore } from '../../stores/user';
 
-const transactions = ref({ data: [] });
-const vcards = ref({ data: [] });
+const transactions = ref([]);
+const vcards = ref([]);
 let myPieChart = null;
 const totalVcardBalance = ref(0);
 const totalTransactionAmount = ref(0);
+const userStore = useUserStore();
+const averageTransactionsPerMonth = ref(0);
+const monthlyExpenses = ref({});
+const selectedYear = ref(new Date().getFullYear()); 
+const years = ref([2021,2022,2023])
+let myBarChart = null;
+
 
 const loadTransactions = async () => {
     try {
-        const response = await axios.get("http://laravel.test/api/transactions/900000001");
-        transactions.value = response.data || { data: [] };
+        if (userStore.user && userStore.userType === 'V') {
+            const response = await axios.get("http://laravel.test/api/transactions/" + userStore.user.id);
+            transactions.value = Array.isArray(response.data.data) ? response.data.data : [];
+        }
+        if (userStore.user && userStore.userType === 'A') {
+            const response = await axios.get("http://laravel.test/api/transactions");
+            transactions.value = Array.isArray(response.data.data) ? response.data.data : [];
+        }
+        
 
-        // Log the type of transactions.value
-        console.log('Type of transactions.value:', typeof transactions.value);
-
-        // Call the function to update the pie chart with the new data
         updatePieChart();
         calculateTotals();
+        calculateAverageTransactionsPerMonth();
+        calculateMonthlyExpenses();
+        updateBarChart()
     } catch (error) {
         console.error(error);
     }
 };
+
+
 
 const loadVcards = async () => {
     try {
         const response = await axios.get("http://laravel.test/api/users");
-        vcards.value = response.data || { data: [] };
-        console.log('Vcards:', vcards.value);
+        vcards.value = Array.isArray(response.data.data) ? response.data.data : [];
 
         calculateTotals();
     } catch (error) {
         console.error(error);
     }
-};
 
+};
 const updatePieChart = () => {
     if (myPieChart) {
         myPieChart.destroy();
     }
 
-    // Extract payment types and count occurrences
     const paymentTypes = {};
-    transactions.value.data.forEach(transaction => {
+    transactions.value.forEach(transaction => {
         const paymentType = transaction.payment_type || 'Unknown';
         paymentTypes[paymentType] = (paymentTypes[paymentType] || 0) + 1;
     });
 
-    // Extract labels and data for the chart
     const labels = Object.keys(paymentTypes);
     const data = Object.values(paymentTypes);
 
-    // Create the pie chart
     const ctxP = document.getElementById("pieChart").getContext('2d');
     myPieChart = new Chart.Chart(ctxP, {
         type: 'pie',
@@ -61,8 +73,8 @@ const updatePieChart = () => {
             labels: labels,
             datasets: [{
                 data: data,
-                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"],
+                backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#72AD75"],
+                hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774", "#5d917d"],
             }]
         },
         options: {
@@ -71,47 +83,133 @@ const updatePieChart = () => {
     });
 };
 
-const calculateTotals = () => {
-    // Calculate totalVcardBalance
-    
-    totalVcardBalance.value = vcards.value.data.reduce((total, vcard) => total + parseFloat(vcard.balance), 0);
+const calculateAverageTransactionsPerMonth = () => {
+    const transactionMonths = new Set();
+    transactions.value.forEach(transaction => {
+        const transactionDate = new Date(transaction.date);
+        const monthYear = `${transactionDate.getMonth() + 1}-${transactionDate.getFullYear()}`;
+        transactionMonths.add(monthYear);
+    });
 
-    // Calculate totalTransactionAmount
-    const xDaysAgo = new Date();
-    xDaysAgo.setDate(xDaysAgo.getDate() - 7);
-
-    
-    console.log('xDaysAgo:', xDaysAgo);
-
-    const currentDate = new Date();
-
-  totalTransactionAmount.value = transactions.value.data
-    .filter(transaction => {
-      const transactionDate = new Date(transaction.date);
-      const timeDifference = currentDate - transactionDate;
-      const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
-      return daysDifference <= 7;
-    })
-    .reduce((sum, transaction) => {
-      return sum + parseFloat(transaction.value);
-    }, 0);
-
-    console.log('Total Transaction Amount in the last 7 days:', totalTransactionAmount.value);
+    averageTransactionsPerMonth.value = transactionMonths.size > 0
+        ? transactions.value.length / transactionMonths.size
+        : 0;
 };
 
 
+
+const calculateTotals = () => {
+    totalVcardBalance.value = vcards.value.reduce((total, vcard) => total + parseFloat(vcard.balance), 0);
+
+    const xDaysAgo = new Date();
+    xDaysAgo.setDate(xDaysAgo.getDate() - 7);
+
+    const currentDate = new Date();
+
+    totalTransactionAmount.value = transactions.value
+        .filter(transaction => {
+            const transactionDate = new Date(transaction.date);
+            const timeDifference = currentDate - transactionDate;
+            const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+            return daysDifference <= 7;
+        })
+        .reduce((sum, transaction) => {
+            return sum + parseFloat(transaction.value);
+        }, 0);
+};
+
+const calculateMonthlyExpenses = () => {
+    transactions.value.forEach(transaction => {
+        if (transaction.type === 'D') {
+            const transactionDate = new Date(transaction.date);
+            const monthYear = `${transactionDate.getMonth() + 1}-${transactionDate.getFullYear()}`;
+            monthlyExpenses.value[monthYear] = (monthlyExpenses.value[monthYear] || 0) + parseFloat(transaction.value);
+        }
+    });
+};
+
+const updateBarChart = () => {
+    if (myBarChart) {
+        myBarChart.destroy();
+    }
+
+    const ctxB = document.getElementById('barChart');
+    myBarChart = new Chart.Chart(ctxB, {
+        type: 'bar',
+        data: {
+            labels: getMonthsOfYear(),
+            datasets: [
+                {
+                    label: 'Number of Transactions per Month',
+                    data: getTransactionsPerMonth(),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Months',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Transactions',
+                    },
+                },
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+            },
+        },
+    });
+};
+
+const getMonthsOfYear = () => {
+    const months = [];
+    for (let i = 1; i <= 12; i++) {
+        months.push(`${i}-${selectedYear.value}`);
+    }
+    return months;
+};
+
+const getTransactionsPerMonth = () => {
+    const transactionsPerMonth = Array(12).fill(0);
+
+    transactions.value.forEach(transaction => {
+        const transactionDate = new Date(transaction.date);
+        if (transactionDate.getFullYear() === selectedYear.value) {
+            transactionsPerMonth[transactionDate.getMonth()] += 1;
+        }
+    });
+
+    return transactionsPerMonth;
+};
+
+
+
 onMounted(async () => {
-    await Promise.all([loadTransactions(), loadVcards()]);
+    loadTransactions();
+    loadVcards();
 });
 
 watch(transactions, () => {
-    // Update the pie chart and totals whenever transactions change
     updatePieChart();
     calculateTotals();
+    calculateMonthlyExpenses();
 });
 
 watch(vcards, () => {
-    // Recalculate the totalVcardBalance whenever vcards change
     calculateTotals();
 });
 </script>
@@ -126,5 +224,16 @@ watch(vcards, () => {
         <h5 class="mt-5 mb-3">Totais</h5>
         <p>Total dos saldos dos vcards: {{ totalVcardBalance }}</p>
         <p>Total das transações nos últimos 7 dias: {{ totalTransactionAmount }}</p>
+        <p>Média de transações por mês: {{ averageTransactionsPerMonth }}</p>
+        <p>Total de Transações: {{ transactions.length }}</p>
+        <h5 class="mt-5 mb-3">Despesas mensais</h5>
+        <div>
+            <label for="year">Selecionar Ano:</label>
+            <select id="year" v-model="selectedYear">
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+        </div>
+        <canvas id="barChart" style="max-width: 800px; max-height: 400px; margin-top: 20px;"></canvas>
     </div>
 </template>
+«

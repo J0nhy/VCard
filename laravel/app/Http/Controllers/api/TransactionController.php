@@ -27,6 +27,13 @@ class TransactionController extends Controller
         $Transactions = Transaction::where('vcard', $phoneNumber)->paginate($perPage);
         return TransactionResource::collection($Transactions);
     }
+
+    public function show_all()
+    {
+        $Transactions = Transaction::all();
+        return TransactionResource::collection($Transactions);
+    }
+
     public function show_specific($id)
     {
         $Transaction = Transaction::find($id);

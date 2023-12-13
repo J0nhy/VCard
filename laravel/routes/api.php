@@ -33,6 +33,8 @@ Route::get('default_categories', [DefaultCategoryController::class, 'index']);
 
 Route::get('transactions/{phone_number}', [TransactionController::class, 'show']);
 
+Route::get('transactions', [TransactionController::class, 'show_all']);
+
 
 Route::middleware('auth:api')->group(function () {
 
