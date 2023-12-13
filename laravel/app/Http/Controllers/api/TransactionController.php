@@ -20,13 +20,9 @@ class TransactionController extends Controller
 
     public function show($phoneNumber)
     {
-
-        //$Transactions = Transaction::where('vcard', $phoneNumber)->get();
-        //return TransactionResource::collection($Transactions);
         $perPage = request()->input('per_page', 10); // Adjust the default per page as needed
         $Transactions = Transaction::where('vcard', $phoneNumber)->paginate($perPage);
         return TransactionResource::collection($Transactions);
-
     }
     public function show_specific($id)
     {

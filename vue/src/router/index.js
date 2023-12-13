@@ -14,6 +14,9 @@ import GerirUsers from "../components/users/admins/GerirUsers.vue"
 import Credit from "../components/transactions/Credit.vue"
 import History from "../components/transactions/History.vue"
 import Statistics from "../components/statistics/Statistics.vue"
+import Default_Categories from "../components/categories/AdminCategories.vue"
+import VcardCategories from "../components/categories/VcardCategories.vue"
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -152,7 +155,17 @@ const router = createRouter({
       path: '/statistics',
       name: 'Statistics',
       component: Statistics
-    }
+    },
+    {
+      path: '/default_categories',
+      name: 'Default_Categories',
+      component: Default_Categories
+    },
+    {
+      path: '/categories',
+      name: 'Categories',
+      component: VcardCategories
+    },
 
   ]
 })

@@ -165,6 +165,11 @@ const clickMenuOption = () => {
                 Estatísticas
               </router-link>
             </li>
+            <li class="nav-item">
+              <router-link to="/categories" class="nav-link">
+                Categorias
+              </router-link>
+            </li>
           </ul>
 
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -176,8 +181,12 @@ const clickMenuOption = () => {
                 Gerir Admins
               </router-link>
             </li>
+            <li class="nav-item">
+              <router-link to="/default_categories" class="nav-link">
+                Default Categorias
+              </router-link>
+            </li>
           </ul>
-
 
 
         </div>
