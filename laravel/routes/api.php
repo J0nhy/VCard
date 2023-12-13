@@ -16,11 +16,10 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('vcard', [VcardController::class, 'store']);
 
 
-Route::post('admin', [AdminController::class, 'store']);
 
 
-Route::get('admins/gerir', [AdminController::class, 'show_all']);
-Route::delete('admins/gerir/{id}', [AdminController::class, 'delete']);
+
+
 Route::patch('users/block/{phone_number}', [VcardController::class, 'updateBlockedStatus']);
 
 Route::get('users', [VcardController::class, 'show_all']);
@@ -45,10 +44,13 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::get('admin/{id}', [AdminController::class, 'show']);
+    Route::post('admin', [AdminController::class, 'store']);
     Route::put('admin/{id}', [AdminController::class, 'update']);
     Route::delete('admin/{id}', [AdminController::class, 'destroy']);
     Route::get('admin/password/{id}', [AdminController::class, 'showPassword']);
     Route::put('admin/password/{id}', [AdminController::class, 'updatePassword']);
+    Route::get('admins/gerir', [AdminController::class, 'show_all']);
+Route::delete('admins/gerir/{id}', [AdminController::class, 'delete']);
 
 
     Route::get('vcard/{phone_number}', [VcardController::class, 'show']);

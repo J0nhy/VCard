@@ -15,6 +15,11 @@ import History from "../components/transactions/History.vue"
 import Statistics from "../components/statistics/Statistics.vue"
 import Default_Categories from "../components/categories/AdminCategories.vue"
 import VcardCategories from "../components/categories/VcardCategories.vue"
+import { useUserStore } from '../stores/user.js'
+
+
+let handlingFirstRoute = true
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -168,5 +173,31 @@ const router = createRouter({
 
   ]
 })
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+  if (handlingFirstRoute) {
+    handlingFirstRoute = false
+    await userStore.restoreToken()
+  }
+  if ((to.name == 'Login') || (to.name == 'home') || (to.name == 'NewVcard')) {
+    next()
+    return
+  }
+  if (!userStore.user) {
+    next({ name: 'Login' })
+    return
+  }
+  if (to.name == 'GerirAdmins' || to.name == 'GerirUsers' || to.name == 'NewAdmin' || to.name == 'Admin' || to.name == 'AdminPassword' || to.name == 'Default_Categories' || to.name == 'Credit') {
+    if ((userStore.user.user_type == 'A')) {
+      next()
+      return
+    }
+    next({ name: 'home' })
+    return
+  }
+  next()
+})
+
 
 export default router
