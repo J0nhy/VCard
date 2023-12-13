@@ -50,13 +50,13 @@ const login = async () => {
     <div class="mb-3">
       <div class="mb-3">
         <label for="inputUsername" class="form-label">Username</label>
-        <input type="text" class="form-control" id="inputUsername" required v-model="credentials.username">
+        <input type="text" class="form-control" id="inputUsername" @keyup.enter="login"  required v-model="credentials.username">
       </div>
     </div>
     <div class="mb-3">
       <div class="mb-3">
         <label for="inputPassword" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword" required v-model="credentials.password">
+        <input type="password" class="form-control" id="inputPassword" @keyup.enter="login" required v-model="credentials.password">
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-center">
