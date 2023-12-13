@@ -98,16 +98,24 @@ const resetInputBoxModalClick = () => {
   newMaxDebit.value = '';
 };
 const pageChanged = (page) => {
+<<<<<<< HEAD
   emit("page-changed", page);
+=======
+  emit("page-changed", page, searchQuery.value);
+>>>>>>> 661c2068e18b6b701e1482c5d39559af9338c05f
 };
 
 </script>
 
 <template>
-  <div v-if="showSearchVCard" class="filter-container">
-    <input v-model="searchQuery" type="text" placeholder="Search Name/Phone Number">
-    <button @click="search_vcard">Search</button>
+ <div v-if="showSearchVCard" class="input-group mb-3">
+  <input v-model="searchQuery" type="text" class="form-control" placeholder="Search Name/Phone Number"
+    aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search_vcard">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" @click="search_vcard" type="button">Search</button>
   </div>
+</div>
+
   <table class="table">
     <thead>
       <tr>
@@ -173,7 +181,7 @@ const pageChanged = (page) => {
                 </div>
                 <div class="modal-body">
                   <!-- Input box -->
-                  <input v-model="newMaxDebit" type="text" class="form-control" placeholder="Enter new Max Debit...">
+                  <input v-model="newMaxDebit" type="text" class="form-control" @keyup.enter="editMaxDebit(admin)" placeholder="Enter new Max Debit...">
                 </div>
                 <div class="modal-footer">
                   <!-- Confirm button -->
@@ -241,5 +249,4 @@ button {
 .img_photo {
   width: 3.2rem;
   height: 3.2rem;
-}
-</style>
+}</style>

@@ -11,74 +11,53 @@ const currentPage = ref(1)
 
 const isLoading = ref(false);
 const errorOccurred = ref(false);
-let searchQueryGlobal = null
 
 const totalUsers = computed(() => {
   return users.value.length
 })
 
-const loadUsers = async () => {
+const loadUsers = async (search = null) => {
   try {
-    const response = await axios.get(`users?page=${currentPage.value}`)
+    let response;
+    if (search) {
+      response = await axios.get(`users/${search}?page=${currentPage.value}`);
+    }
+    else {
+      response = await axios.get(`users?page=${currentPage.value}`)
+    }
     users.value = response.data
-    // Assuming your API response includes pagination information
-    // You may need to adjust this based on the actual structure of your API response
   } catch (error) {
     console.log(error)
   }
 }
 
 const editMaxDebit = async (user, newMaxDebit) => {
-  const userToUpdate = user.phone_number;
-  const response = await axios.patch(`users/${userToUpdate}`, {
+  const response = await axios.patch(`users/${user.phone_number}`, {
     newMaxDebit: newMaxDebit.value,
   });
 
-  let userrr = response.data.data;
-  const updatedUsers = users.value.map(existingUser => {
-    // Check if the user ID matches
-    if (existingUser.phone_number === userrr.phone_number) {
-      // Update the user with the information from the new user
-      return { ...existingUser, ...userrr };
-    }
-    // If the user ID doesn't match, return the existing user as is
-    return existingUser;
-  });
-  users.value = updatedUsers;
+  updateTable(response.data.data);
 }
 
 const delete_user = async (user) => {
-  const userToUpdate = user.phone_number;
   const response = await axios.delete(`users/` + user.phone_number)
-  let userrr = response.data.data;
-  const updatedUsers = users.value.map(existingUser => {
-    // Check if the user ID matches
-    if (existingUser.phone_number === userrr.phone_number) {
-      // Update the user with the information from the new user
-      return { ...existingUser, ...userrr };
-    }
-    // If the user ID doesn't match, return the existing user as is
-    return existingUser;
-  });
-  users.value = updatedUsers;
-
+  updateTable(response.data.data);
 }
 const updateBlockedStatus = async (user) => {
-  const userToUpdate = user.phone_number;
   const response = await axios.patch(`users/block/` + user.phone_number)
-  let userrr = response.data.data;
-  const updatedUsers = users.value.map(existingUser => {
+  updateTable(response.data.data);
+}
+const updateTable = (user) => {
+  const updatedUsers = users.value.data.map(existingUser => {
     // Check if the user ID matches
-    if (existingUser.phone_number === userrr.phone_number) {
+    if (existingUser.phone_number === user.phone_number) {
       // Update the user with the information from the new user
-      return { ...existingUser, ...userrr };
+      return { ...existingUser, ...user };
     }
     // If the user ID doesn't match, return the existing user as is
     return existingUser;
   });
-  users.value = updatedUsers;
-
-
+  users.value.data = updatedUsers;
 }
 
 const search = async (searchQuery) => {
@@ -98,15 +77,14 @@ const search = async (searchQuery) => {
   }
 };
 
-const page_changed = (page) => {
+const page_changed = (page, searchQuery) => {
 
-currentPage.value = page
-loadUsers();
+  currentPage.value = page
+  loadUsers(searchQuery);
 }
 
 onMounted(() => {
   loadUsers()
-  console.log(users)
 })
 </script>
 
@@ -116,14 +94,9 @@ onMounted(() => {
     <hr>
     <user-table :admins="users" :showId="false" :showPhoneNumber="true" :showAdmin="false" :showEditButton="false"
       :showDeleteButton="true" :showSearchVCard="true" :showSaldo="true" :showLimiteDebito="true" :showBloqueado="true"
-      :showApagado="true" :showPhoto="true" @edit="editMaxDebit" @search="search" @delete="delete_user"
-      @updateBlockedStatus="updateBlockedStatus"
-      @page-changed="page_changed">
+      :showApagado="true" :showPhoto="true" @edit="editMaxDebit" @search="loadUsers" @delete="delete_user"
+      @updateBlockedStatus="updateBlockedStatus" @page-changed="page_changed">
     </user-table>
-
-    <!-- Pagination component -->
-    <pagination :total="totalUsers" :current="currentPage">
-    </pagination>
   </div>
 </template>
 

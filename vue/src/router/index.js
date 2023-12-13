@@ -12,6 +12,7 @@ import Transactions from "../components/transactions/Transaction.vue"
 import GerirAdmins from "../components/users/admins/GerirAdmins.vue"
 import GerirUsers from "../components/users/admins/GerirUsers.vue"
 import History from "../components/transactions/History.vue"
+import Statistics from "../components/statistics/Statistics.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -146,6 +147,11 @@ const router = createRouter({
       props: route => ({ phone_number: parseInt(route.params.phone_number) })
 
     },
+    {
+      path: '/statistics',
+      name: 'Statistics',
+      component: Statistics
+    }
 
   ]
 })

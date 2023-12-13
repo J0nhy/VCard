@@ -15,9 +15,17 @@ const totalUsers = computed(() => {
   return users.value.length
 })
 
-const loadUsers = async () => {
+const loadUsers = async (search =null) => {
   try {
-    const response = await axios.get(`admins/gerir?page=${currentPage.value}`)
+    //se houver algo na input box do search
+    let response;
+    if (search) {
+       response = await axios.get(`admins/gerir?page=${currentPage.value}&search=${search}`)
+    }
+    else{
+       response = await axios.get(`admins/gerir?page=${currentPage.value}`)
+    }
+  
     users.value = response.data
 
   } catch (error) {
