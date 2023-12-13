@@ -180,8 +180,23 @@ class VcardController extends Controller
         $Vcard = Vcard::find($phone_number);
 
         $vcardUser = $Vcard;
-        if($Vcard->balance>0)return response()->json(['error' => 'Usuário com saldo positivo'], 401);
-        $Vcard->delete();
+        if (!$Vcard) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
+
+        if ($Vcard->balance > 0) {
+            return response()->json(['error' => 'Usuário com saldo positivo'], 401);
+        }
+
+        if ($Vcard->transactions()->exists()) {
+            // Soft delete se houver transações associadas
+            $Vcard->delete();
+        } else {
+            // Delete normal se não houver transações
+            $Vcard->forceDelete();
+        }
+
+
         return new VcardResource($vcardUser);
     }
 

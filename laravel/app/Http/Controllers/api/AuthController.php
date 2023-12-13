@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -24,7 +25,12 @@ class AuthController extends Controller
         try {
 
 
+            $user = User::where('username', $request->username)->first();
 
+            if ($user && $user->deleted_at !== null) {
+                // Usuário removido, retornar uma resposta indicando que o login falhou
+                return response()->json('User apagado', 401);
+            }
 
             //print_r("username:" . $request->username);
             request()->request->add(

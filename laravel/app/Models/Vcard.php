@@ -29,5 +29,9 @@ class Vcard extends Model
     {
         return $this->belongsTo(User::class, 'id', 'phone_number');
     }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'vcard', 'phone_number');
+    }
 }
 

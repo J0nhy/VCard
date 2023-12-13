@@ -169,7 +169,7 @@ const deleteClick = (Vcard) => {
         </div>
         <div class="mb-3">
           <label for="inputPhoneNumber" class="form-label">Phone Number</label>
-          <input
+          <input v-if="inserindo === true"
             type="text"
             class="form-control"
             :class="{ 'is-invalid': errors ? errors['phone_number'] : false }"
@@ -177,7 +177,17 @@ const deleteClick = (Vcard) => {
             placeholder="Vcard Phone Number"
             required
             v-model="editingVcard.phone_number"
-            :readonly="inserting"
+          
+          />
+          <input v-if="inserindo === false"
+            type="text"
+            class="form-control"
+            :class="{ 'is-invalid': errors ? errors['phone_number'] : false }"
+            id="inputPhoneNumber"
+            placeholder="Vcard Phone Number"
+            required
+            v-model="editingVcard.phone_number"
+            :readonly="inserindo"
           />
           <field-error-message :errors="errors" fieldName="phone_number"></field-error-message>
         </div>

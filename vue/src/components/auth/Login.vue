@@ -33,9 +33,12 @@ const login = async () => {
     //console.log('error login.vue:', error)
     delete axios.defaults.headers.common.Authorization
     userStore.clearUser()
-
     credentials.value.password = ''
-    toast.error('User credentials are invalid!')
+    console.log('error.response.data:', error.response.data.message)
+    if(error.response.data)
+      toast.error(error.response.data)
+    else
+      toast.error(error.response.data.message)
   }
 }
 </script>
