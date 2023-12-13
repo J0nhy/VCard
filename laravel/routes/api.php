@@ -66,4 +66,6 @@ Route::middleware('auth:api')->group(function () {
 
 Route::get('users/{email}', [VcardController::class, 'search']);
 
+Route::post('transactionCredit', [TransactionController::class, 'storeCredit']);
+
 

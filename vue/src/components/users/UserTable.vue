@@ -145,7 +145,18 @@ const pageChanged = (page) => {
         <td v-if="showGender" class="align-middle">{{ admin.gender_name }}</td>
 
 
-        <td v-if="showSaldo" class="align-middle">{{ admin.balance }}€</td>
+        <td v-if="showSaldo" class="align-middle">
+          <div class="d-flex align-items-center">
+            <span class="mr-2">{{ admin.balance }}€</span>
+            <router-link class="dropdown-item"
+              :class="{ active: $route.name === 'Credit' && $route.params.phone_number == admin.phone_number }"
+              :to="{ name: 'Credit', params: { phone_number: admin.phone_number } }" @click="clickMenuOption">
+              <i class="bi bi-plus-square-fill" style="color: green;"></i>
+            </router-link>
+          </div>
+        </td>
+
+
 
 
         <td v-if="showLimiteDebito" class="align-middle">{{ admin.max_debit }}€

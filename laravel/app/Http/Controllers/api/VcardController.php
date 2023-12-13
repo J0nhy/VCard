@@ -35,11 +35,16 @@ class VcardController extends Controller
         ->where(function($query) use ($name) {
             $query->where('name', 'like', $name . '%')
                   ->orWhere('phone_number', 'like', $name . '%');
+<<<<<<< HEAD
         })
         ->paginate(10);
     
         
     
+=======
+        })->paginate(10);
+
+>>>>>>> 02f72cd7fee69b3f7b3134e43e07ed73652812fa
         return VcardResource::collection($vcards);
     }
 
@@ -69,7 +74,7 @@ class VcardController extends Controller
         $Vcard = Vcard::find($phoneNumber);
         //se for menor n muda
         if($newMaxDebit<$Vcard->balance)return new VcardResource($Vcard);
-        
+
         $Vcard->max_debit =$newMaxDebit;
         $Vcard->save();
 
@@ -178,7 +183,10 @@ class VcardController extends Controller
 
     public function destroy($phone_number)
     {
+
+
         $Vcard = Vcard::find($phone_number);
+
         $vcardUser = $Vcard;
         $Vcard->delete();
         return new VcardResource($vcardUser);

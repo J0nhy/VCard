@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted} from 'vue'
+
 import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
 import { useVcardStore } from './stores/vcard.js'
@@ -34,6 +36,11 @@ const clickMenuOption = () => {
     }
   }
 }
+
+onMounted(() => {
+ userStore.restoreToken()
+})
+
 
 </script>
 
