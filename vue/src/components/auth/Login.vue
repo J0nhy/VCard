@@ -30,7 +30,7 @@ const login = async () => {
     router.push({ name: 'Dashboard' })
   }
   catch (error) {
-    console.log('error login.vue:', error)
+    //console.log('error login.vue:', error)
     delete axios.defaults.headers.common.Authorization
     userStore.clearUser()
 
