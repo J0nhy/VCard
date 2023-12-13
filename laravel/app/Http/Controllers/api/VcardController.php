@@ -31,12 +31,20 @@ class VcardController extends Controller
 
     public function search($name)
     {
-        //$vcards = Vcard::where('email', 'like', $name . '%')->paginate(10);
-        $vcards = Vcard::where(function($query) use ($name) {
-            $query->where('email', 'like', $name . '%')
+        $vcards = Vcard::withTrashed()
+        ->where(function($query) use ($name) {
+            $query->where('name', 'like', $name . '%')
                   ->orWhere('phone_number', 'like', $name . '%');
+<<<<<<< HEAD
+        })
+        ->paginate(10);
+    
+        
+    
+=======
         })->paginate(10);
 
+>>>>>>> 02f72cd7fee69b3f7b3134e43e07ed73652812fa
         return VcardResource::collection($vcards);
     }
 

@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\CategoryController;
+use App\Http\Controllers\api\DefaultCategoryController;
 use App\Http\Controllers\api\UsersController;
 use App\Http\Controllers\api\VcardController;
 use App\Http\Controllers\api\TransactionController;
@@ -25,6 +27,9 @@ Route::get('users', [VcardController::class, 'show_all']);
 Route::delete('users/{email}', [VcardController::class, 'destroy']);
 Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
+Route::get('categories/{phone_number}', [CategoryController::class, 'index']);
+
+Route::get('default_categories', [DefaultCategoryController::class, 'index']);
 
 
 Route::get('transactions/{phone_number}', [TransactionController::class, 'show']);
