@@ -8,25 +8,23 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCreditTransactionRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Http\Resources\CreditTransactionResource;
 
+use function Psy\debug;
 
 class TransactionController extends Controller
 {
 
     public function show($phoneNumber)
     {
-
-        //$Transactions = Transaction::where('vcard', $phoneNumber)->get();
-        //return TransactionResource::collection($Transactions);
-        $perPage = request()->input('per_page', 10); // Adjust the default per page as needed
-        $Transactions = Transaction::where('vcard', $phoneNumber)->paginate($perPage);
-        return TransactionResource::collection($Transactions);
-
+        $Transaction = Transaction::where('vcard', $phoneNumber)->get();
+        return new TransactionResource($Transaction);
     }
     public function show_specific($id)
     {
@@ -52,6 +50,7 @@ class TransactionController extends Controller
         $sender = Auth::id();
         $sender = Vcard::find($sender);
         $reciever = Vcard::where('phone_number', $dataToSave['payment_reference'])->first();
+
 
         if ($dataToSave['payment_type'] != "VCARD") {
             // API validation for non vcard operations
@@ -145,6 +144,53 @@ class TransactionController extends Controller
         }
         return new TransactionResource($transactionSender);
     }
+
+    public function storeCredit(StoreCreditTransactionRequest $request)
+    {
+
+        $dataToSave = $request->validated();
+
+        $reciever = Vcard::where('phone_number', $dataToSave['phone_number'])->first();
+
+                $response = Http::post(
+                    'https://dad-202324-payments-api.vercel.app/api/debit',
+                    [
+                        'type' => $dataToSave['payment_type'],
+                        'reference' => $dataToSave['payment_reference'],
+                        'value' => (float) $dataToSave['value'],
+                    ]
+                );
+
+
+
+            // Check the response status
+            if (!$response->successful()) {
+                $responseData = $response->json();
+                $message = isset($responseData['message']) ? $responseData['message'] : 'Error: API transaction validation failed';
+                return response()->json(['message' => $message], $response->status());
+            }
+
+
+
+                $transactionReciever = new Transaction();
+
+                $transactionReciever->vcard = $dataToSave['phone_number'];
+                $transactionReciever->date = date('Y-m-d');
+                $transactionReciever->datetime = date('Y-m-d H:i:s');
+                $transactionReciever->type = 'C';
+                $transactionReciever->value = $dataToSave['value'];
+                $transactionReciever->old_balance = $reciever->balance;
+                $transactionReciever->new_balance = $reciever->balance + floatval($dataToSave['value']);
+                $transactionReciever->payment_type = $dataToSave['payment_type'];
+                $transactionReciever->payment_reference = $dataToSave['payment_reference'];
+
+            $reciever->balance = $reciever->balance + floatval($dataToSave['value']);
+            $reciever->save();
+            $transactionReciever->save();
+
+        return new CreditTransactionResource($transactionReciever);
+    }
+
 
     /*public function destroy($phone_number)
     {

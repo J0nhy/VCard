@@ -8,7 +8,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 const serverBaseUrl = inject("serverBaseUrl");
 const adminStore = useAdminStore()
 const searchQuery = ref('');
-const newMaxDebit=ref('');
+const newMaxDebit = ref('');
 
 const props = defineProps({
   admins: {
@@ -69,7 +69,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["edit", "search", "delete", "updateBlockedStatus","page-changed"]);
+const emit = defineEmits(["edit", "search", "delete", "updateBlockedStatus", "page-changed"]);
 
 
 const photoFullUrl = (admin) => {
@@ -82,7 +82,7 @@ const editClick = (admin) => {
   emit("edit", admin);
 };
 const editMaxDebit = (admin) => {
-  emit("edit", admin,newMaxDebit);
+  emit("edit", admin, newMaxDebit);
 };
 const deleteClick = (admin) => {
   emit("delete", admin);
@@ -97,8 +97,8 @@ const updateBlockedStatusClick = (admin) => {
 const resetInputBoxModalClick = () => {
   newMaxDebit.value = '';
 };
-const pageChanged=(page)=>{
- emit("page-changed", page);
+const pageChanged = (page) => {
+  emit("page-changed", page);
 };
 
 </script>
@@ -141,17 +141,30 @@ const pageChanged=(page)=>{
         <td v-if="showGender" class="align-middle">{{ admin.gender_name }}</td>
 
 
-        <td v-if="showSaldo" class="align-middle">{{ admin.balance }}€</td>
-     
+        <td v-if="showSaldo" class="align-middle">
+          <div class="d-flex align-items-center">
+            <span class="mr-2">{{ admin.balance }}€</span>
+            <router-link class="dropdown-item"
+              :class="{ active: $route.name === 'Credit' && $route.params.phone_number == admin.phone_number }"
+              :to="{ name: 'Credit', params: { phone_number: admin.phone_number } }" @click="clickMenuOption">
+              <i class="bi bi-plus-square-fill" style="color: green;"></i>
+            </router-link>
+          </div>
+        </td>
+
+
+
 
         <td v-if="showLimiteDebito" class="align-middle">{{ admin.max_debit }}€
-          <button @click="resetInputBoxModalClick()" class="btn btn-xs btn-light"  data-bs-toggle="modal" :data-bs-target="'#editModal' + admin.phone_number"
+          <button @click="resetInputBoxModalClick()" class="btn btn-xs btn-light" data-bs-toggle="modal"
+            :data-bs-target="'#editModal' + admin.phone_number"
             v-if="showLimiteDebito && admin.blocked == 0 && admin.deleted_at == null">
             <i class="bi bi-xs bi-pencil"></i>
           </button>
 
           <!-- Modal -->
-          <div class="modal fade" :id="'editModal' + admin.phone_number"  tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+          <div class="modal fade" :id="'editModal' + admin.phone_number" tabindex="-1" aria-labelledby="editModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -164,7 +177,8 @@ const pageChanged=(page)=>{
                 </div>
                 <div class="modal-footer">
                   <!-- Confirm button -->
-                  <button type="button" class="btn btn-primary" @click="editMaxDebit(admin)" data-bs-dismiss="modal">Confirm</button>
+                  <button type="button" class="btn btn-primary" @click="editMaxDebit(admin)"
+                    data-bs-dismiss="modal">Confirm</button>
                   <!-- Close button -->
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
@@ -215,8 +229,7 @@ const pageChanged=(page)=>{
       </tr>
     </tbody>
   </table>
-  <Bootstrap5Pagination :data="admins" @pagination-change-page="pageChanged"/>
-
+  <Bootstrap5Pagination :data="admins" @pagination-change-page="pageChanged" />
 </template>
 
 <style scoped>

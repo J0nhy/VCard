@@ -11,7 +11,6 @@ import aPassword from "../components/users/Password.vue"
 import Transactions from "../components/transactions/Transaction.vue"
 import GerirAdmins from "../components/users/admins/GerirAdmins.vue"
 import GerirUsers from "../components/users/admins/GerirUsers.vue"
-import Credit from "../components/transactions/Credit.vue"
 import History from "../components/transactions/History.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -143,7 +142,7 @@ const router = createRouter({
     {
       path: '/credit/:phone_number',
       name: 'Credit',
-      component: Credit,
+      component: Transactions,
       props: route => ({ phone_number: parseInt(route.params.phone_number) })
 
     },
