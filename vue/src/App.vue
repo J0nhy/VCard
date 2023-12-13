@@ -157,16 +157,7 @@ onMounted(() => {
                 Transações
               </router-link>
             </li>
-            <li class="nav-item">
-              <router-link to="/admin/gerir" class="nav-link">
-                Gerir Admins
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/users" class="nav-link">
-                Gerir vcards
-              </router-link>
-            </li>
+            
             <li class="nav-item">
               <router-link to="/statistics" class="nav-link">
                 Estatísticas
@@ -189,10 +180,16 @@ onMounted(() => {
               </router-link>
             </li>
             <li class="nav-item">
+              <router-link to="/users" class="nav-link">
+                Gerir vcards
+              </router-link>
+            </li>
+            <li class="nav-item">
               <router-link to="/default_categories" class="nav-link">
                 Default Categorias
               </router-link>
             </li>
+            
           </ul>
 
 
