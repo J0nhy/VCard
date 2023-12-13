@@ -180,6 +180,7 @@ class VcardController extends Controller
         $Vcard = Vcard::find($phone_number);
 
         $vcardUser = $Vcard;
+        if($Vcard->balance>0)return response()->json(['error' => 'Usuário com saldo positivo'], 401);
         $Vcard->delete();
         return new VcardResource($vcardUser);
     }
