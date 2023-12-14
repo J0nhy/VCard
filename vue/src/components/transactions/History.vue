@@ -17,7 +17,7 @@ const totalTransactions = computed(() => {
 
 const loadTransactions = async () => {
   try {
-    const response = await axios.get(`transactions/900000001?page=${currentPage.value}`) // Use currentPage
+    const response = await axios.get(`transactions?page=${currentPage.value}`) // Use currentPage
     transactions.value = response.data
 
   } catch (error) {

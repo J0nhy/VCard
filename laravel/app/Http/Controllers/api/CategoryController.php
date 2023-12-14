@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\UserResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +14,11 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($phoneNumber)
+    public function index(Request $request)
     {
-        $categories = Category::where('vcard', $phoneNumber)->paginate(10);
+        $userId = optional(Auth::user())->id;
+
+        $categories = Category::where('vcard', $userId)->paginate(10);
 
         return CategoryResource::collection($categories);
     }
@@ -32,12 +35,12 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($phoneNumber, $search)
+    public function show(Request $request, $search)
     {
-        $user = Auth::user();
-                print_r( $user);
-        $categories = Category::where( "vcard","900000001")
-            ->where('name','like', $search.'%') 
+        $userId = optional(Auth::user())->id;
+
+        $categories = Category::where("vcard", $userId)
+            ->where('name', 'like', $search . '%')
             ->paginate(10);
 
         return CategoryResource::collection($categories);

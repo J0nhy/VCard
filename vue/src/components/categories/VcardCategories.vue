@@ -17,12 +17,13 @@ const totalCategorias = computed(() => {
 
 const loadCategorias = async (search = null) => {
   try {
+    
     let response;
     if (search) {
-      response  = await axios.get(`categories/900000001/${search}?page=${currentPage.value}`);
+      response  = await axios.get(`categories/${search}?page=${currentPage.value}`);
     }
     else {
-      response = await axios.get(`categories/900000001?page=${currentPage.value}`)
+      response = await axios.get(`categories?page=${currentPage.value}`)
     }
 
     categorias.value = response.data

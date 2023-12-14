@@ -21,15 +21,17 @@ use function Psy\debug;
 class TransactionController extends Controller
 {
 
-    public function show($phoneNumber)
+    public function show()
     {
-        $perPage = request()->input('per_page', 10); // Adjust the default per page as needed
-        $Transactions = Transaction::where('vcard', $phoneNumber)->paginate($perPage);
+        $phone_number = optional(Auth::user())->id;
+        $perPage = request()->input('per_page', 10); 
+        $Transactions = Transaction::where('vcard', $phone_number)->paginate($perPage);
         return TransactionResource::collection($Transactions);
     }
 
     public function show_all()
     {
+        //isto em principio vai ser inutil
         $Transactions = Transaction::all();
         return TransactionResource::collection($Transactions);
     }
