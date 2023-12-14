@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Vcard;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\VcardResource;
+use App\Http\Resources\TransactionResource;
 use App\Http\Requests\UpdateVcardRequest;
 use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardPasswordRequest;
@@ -221,5 +223,11 @@ class VcardController extends Controller
     {
         print_r($request . 'teste');
         return new VcardResource($request->user());
+    }
+
+    public function getVcardTransactions(Vcard $vcard)
+    {
+        $transactions = Transaction::where('vcard', $vcard->phone_number)->get();
+        return TransactionResource::collection($transactions);
     }
 }
