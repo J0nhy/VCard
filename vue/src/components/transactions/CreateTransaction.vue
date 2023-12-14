@@ -51,7 +51,7 @@ const cancel = () => {
 <template>
 
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="!inserting">Vcard #{{ editingTransaction.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="!inserting">Transaction #{{ editingTransaction.id }}</h3>
     <h3 class="mt-5 mb-3" v-if="inserting">Vcard #{{ userStore.userId }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
@@ -111,7 +111,9 @@ const cancel = () => {
 
     </div>
     <div class="mb-3 d-flex justify-content-start">
-      <button type="button" class="btn btn-primary px-5" @click="save">Enviar</button>
+      <button v-if="inserting" type="button" class="btn btn-primary px-5" @click="save">Enviar</button>
+      <button v-if="!inserting" type="button" class="btn btn-primary px-5" @click="save">Guardar</button>
+
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
       <button type="button" class="btn btn-xs btn-light" @click="deleteClick(editingTransaction)"><i
           class="bi bi-xs bi-x-square-fill"></i></button>
