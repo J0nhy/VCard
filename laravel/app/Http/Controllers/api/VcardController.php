@@ -21,10 +21,9 @@ use function Psy\debug;
 class VcardController extends Controller
 {
 
-    public function show($phoneNumber)
+    public function show(Vcard $vcard)
     {
-        $Vcard = Vcard::find($phoneNumber);
-        return new VcardResource($Vcard);
+        return new VcardResource($vcard);
     }
     public function show_all()
     {

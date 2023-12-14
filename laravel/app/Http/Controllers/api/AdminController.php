@@ -15,16 +15,16 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function show(Admin $admin, $id)
+    public function show(Admin $admin)
     {
-        $admin = Admin::find($id);
+
         return new AdminResource($admin);
        // return ($admin);
     }
 
-    public function update(UpdateAdminRequest $request, Admin $u, $id)
+    public function update(UpdateAdminRequest $request, Admin $admin)
     {
-        $admin = Admin::find($id);
+
         $dataToSave = $request->only(['name', 'email']);
 
         $admin->update($dataToSave);

@@ -10,6 +10,7 @@ use App\Http\Controllers\api\VcardController;
 use App\Http\Controllers\api\TransactionController;
 use App\Models\Transaction;
 
+
 Route::post('login', [AuthController::class, 'login']);
 
 
@@ -42,18 +43,20 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users/me', [UsersController::class, 'show_me']);
     Route::get('vcard/me', [VcardController::class, 'show_me']);
 
+    Route::resource('admin', AdminController::class)->middleware('can:update,admin');
 
-    Route::get('admin/{id}', [AdminController::class, 'show']);
-    Route::post('admin', [AdminController::class, 'store']);
-    Route::put('admin/{id}', [AdminController::class, 'update']);
-    Route::delete('admin/{id}', [AdminController::class, 'destroy']);
+
+
     Route::get('admin/password/{id}', [AdminController::class, 'showPassword']);
     Route::put('admin/password/{id}', [AdminController::class, 'updatePassword']);
     Route::get('admins/gerir', [AdminController::class, 'show_all']);
     Route::delete('admins/gerir/{id}', [AdminController::class, 'delete']);
 
 
-    Route::get('vcard/{phone_number}', [VcardController::class, 'show']);
+    Route::get('vcard/{vcard}', [VcardController::class, 'show'])
+        ->middleware('can:view,vcard');
+
+
     Route::put('vcard/{phone_number}', [VcardController::class, 'update']);
     Route::delete('vcard/{phoneNumber}', [VcardController::class, 'destroy']);
     Route::get('vcard/password/{phone_number}', [VcardController::class, 'showPassword']);
