@@ -11,7 +11,10 @@ use App\Http\Requests\UpdateVcardRequest;
 use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardPasswordRequest;
 use App\Services\Base64Services;
+use App\Models\DefaultCategory;
+use Illuminate\Contracts\Database\Eloquent\DeviatesCastableAttributes;
 
+use function Psy\debug;
 
 class VcardController extends Controller
 {
@@ -32,11 +35,11 @@ class VcardController extends Controller
     public function search($name)
     {
         $vcards = Vcard::withTrashed()
-        ->where(function($query) use ($name) {
-            $query->where('name', 'like', $name . '%')
-                  ->orWhere('phone_number', 'like', $name . '%');
-        })
-        ->paginate(10);
+            ->where(function ($query) use ($name) {
+                $query->where('name', 'like', $name . '%')
+                    ->orWhere('phone_number', 'like', $name . '%');
+            })
+            ->paginate(10);
 
 
 
@@ -63,14 +66,14 @@ class VcardController extends Controller
 
         return new VcardResource($Vcard);
     }
-    public function editMaxDebit($phoneNumber,Request $request)
+    public function editMaxDebit($phoneNumber, Request $request)
     {
         $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
         $Vcard = Vcard::find($phoneNumber);
         //se for menor n muda
-        if($newMaxDebit<$Vcard->balance)return new VcardResource($Vcard);
+        if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
 
-        $Vcard->max_debit =$newMaxDebit;
+        $Vcard->max_debit = $newMaxDebit;
         $Vcard->save();
 
         return new VcardResource($Vcard);
@@ -172,6 +175,17 @@ class VcardController extends Controller
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
         $vcard->save();
+
+        // Associar categorias padrão ao vcard com type 'D'
+        $defaultCategories = DefaultCategory::all();
+
+        // Mapear apenas os nomes das categorias
+        $categoryNames = $defaultCategories->pluck('name')->toArray();
+
+        // Adicionar o valor 'D' para a coluna type
+        $categoryData = array_fill_keys($categoryNames, ['type' => 'D']);
+
+        $vcard->categories()->sync($categoryData);
 
         return new VcardResource($vcard);
     }

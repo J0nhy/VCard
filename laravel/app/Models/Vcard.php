@@ -33,5 +33,9 @@ class Vcard extends Model
     {
         return $this->hasMany(Transaction::class, 'vcard', 'phone_number');
     }
+    public function categories()
+    {
+        return $this->belongsToMany(DefaultCategory::class, 'categories', 'vcard', 'name');
+    }
 }
 

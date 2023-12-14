@@ -19,6 +19,12 @@ class DefaultCategoryController extends Controller
         return DefaultCategoryResource::collection($categories);
     }
 
+    public function show_all(){
+        $categories = DefaultCategory::all();
+
+        return DefaultCategoryResource::collection($categories);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
