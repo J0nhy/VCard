@@ -59,6 +59,7 @@ const page_changed = (page) => {
     :showName="true"
     @page-changed="page_changed"
     @delete="deleteCategoria"
+    @search="loadCategorias"
   ></category-table>
 </template>
 

@@ -28,8 +28,6 @@ Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
 
 
-Route::get('default_categories', [DefaultCategoryController::class, 'index']);
-Route::delete('default_categories/{category}', [DefaultCategoryController::class, 'destroy']);
 
 
 
@@ -62,22 +60,27 @@ Route::middleware('auth:api')->group(function () {
     Route::get('vcards/{vcard}/transactions', [VcardController::class, 'getVcardTransactions']);
 
 
+    //transacoes
 
-    Route::get('transaction/{id}', [TransactionController::class, 'show_specific']);
-    Route::put('transaction/{id}', [TransactionController::class, 'update']);
+    //Route::get('transaction/{id}', [TransactionController::class, 'show_specific']);
+    //Route::put('transaction/{id}', [TransactionController::class, 'update']);
     //Route::delete('transactions/{phoneNumber}', [TransactionController::class, 'destroy']);
     Route::post('transaction', [TransactionController::class, 'store']);
+    Route::get('vcard/{user}/transactions/search', [TransactionController::class, 'search']);
+
+    Route::get('vcard/{user}/transactions', [TransactionController::class, 'index']);
 
     //categorias
     Route::get('categories/{search}', [CategoryController::class, 'show']);
     Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
-    
     Route::get('categories', [CategoryController::class, 'index']);
+    //categorias default
+    Route::get('default_categories/{search}', [DefaultCategoryController::class, 'show']);
 
-    //transacoes
-    Route::get('transactions', [TransactionController::class, 'show']);
+    Route::get('default_categories', [DefaultCategoryController::class, 'index']);
+    Route::delete('default_categories/{category}', [DefaultCategoryController::class, 'destroy']);
 
-    Route::get('alltransactions', [TransactionController::class, 'show_all']);
+
 });
 
 Route::get('users/{email}', [VcardController::class, 'search']);

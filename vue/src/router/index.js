@@ -119,13 +119,13 @@ const router = createRouter({
       props: route => ({ id: -1, phone_number: parseInt(route.params.phone_number) })
     },
     {
-      path: '/transactions',
+      path: '/vcard/transactions/:phone_number',
       name: 'History',
       component: History,
-      //props: true
-      // Replaced with the following line to ensure that id is a number
-      //props: route => ({ phone_number: parseInt(route.params.phone_number) })
-    },
+      props: true // or props: route => ({ phone_number: route.params.phone_number })
+  },
+  
+  
     {
       path: '/transaction/:id',
       name: 'Transaction',

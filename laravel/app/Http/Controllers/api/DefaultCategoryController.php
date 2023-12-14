@@ -36,9 +36,12 @@ class DefaultCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($search)
     {
-        //
+        $categories = DefaultCategory::where('name', 'like', $search . '%')
+            ->paginate(10);
+
+        return DefaultCategoryResource::collection($categories);
     }
 
     /**

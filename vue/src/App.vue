@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted} from 'vue'
+import { onMounted } from 'vue'
 
 import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
@@ -38,7 +38,7 @@ const clickMenuOption = () => {
 }
 
 onMounted(() => {
- userStore.restoreToken()
+  userStore.restoreToken()
 })
 
 
@@ -48,7 +48,8 @@ onMounted(() => {
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
-      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3 navbar-dark bg-dark" :to="{ name: 'home' }" @click="clickMenuOption">
+      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3 navbar-dark bg-dark" :to="{ name: 'home' }"
+        @click="clickMenuOption">
         <img src="@/assets/logo1.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
         VCard
       </router-link>
@@ -142,8 +143,8 @@ onMounted(() => {
     </div>
   </nav>
 
-  <div class="container-fluid" >
-    <div class="row" >
+  <div class="container-fluid">
+    <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" v-if="userStore.user">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
@@ -153,11 +154,12 @@ onMounted(() => {
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/transactions" class="nav-link">
-                Transações
-              </router-link>
+              <router-link v-if="userStore.userType === 'V'" class="nav-link"
+                  :to="{ name: 'History', params: { phone_number: userStore.userId } }">
+                  Transações
+                </router-link>
             </li>
-            
+
             <li class="nav-item">
               <router-link to="/statistics" class="nav-link">
                 Estatísticas
@@ -171,28 +173,28 @@ onMounted(() => {
           </ul>
 
           <div v-show="userStore.userType === 'A'">
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Adminstrator Menu</span>
-          </h6>
-          <ul class="nav flex-column mb-2" >
-            <li class="nav-item">
-              <router-link to="/admin/gerir" class="nav-link">
-                Gerir Admins
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/users" class="nav-link">
-                Gerir vcards
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/default_categories" class="nav-link">
-                Default Categorias
-              </router-link>
-            </li>
-            
-          </ul>
-</div>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Adminstrator Menu</span>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <router-link to="/admin/gerir" class="nav-link">
+                  Gerir Admins
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/users" class="nav-link">
+                  Gerir vcards
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/default_categories" class="nav-link">
+                  Default Categorias
+                </router-link>
+              </li>
+
+            </ul>
+          </div>
 
         </div>
       </nav>

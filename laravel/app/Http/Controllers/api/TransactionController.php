@@ -21,21 +21,24 @@ use function Psy\debug;
 class TransactionController extends Controller
 {
 
-    public function show()
+    public function index(User $user, Request $request)
     {
-        $phone_number = optional(Auth::user())->id;
-        $perPage = request()->input('per_page', 10); 
-        $Transactions = Transaction::where('vcard', $phone_number)->paginate($perPage);
-        return TransactionResource::collection($Transactions);
-    }
+        $query = Transaction::where('vcard', $user->id);
 
-    public function show_all()
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('payment_reference', 'like',  $searchTerm . '%');
+        }
+
+        $transactions = $query->paginate(10);
+
+        return TransactionResource::collection($transactions);
+    }
+    public function show(Transaction $transaction)
     {
-        //isto em principio vai ser inutil
-        $Transactions = Transaction::all();
-        return TransactionResource::collection($Transactions);
+        return TransactionResource::collection($transaction);
     }
-
     public function show_specific($id)
     {
         $Transaction = Transaction::find($id);
@@ -162,41 +165,41 @@ class TransactionController extends Controller
 
         $reciever = Vcard::where('phone_number', $dataToSave['phone_number'])->first();
 
-                $response = Http::post(
-                    'https://dad-202324-payments-api.vercel.app/api/debit',
-                    [
-                        'type' => $dataToSave['payment_type'],
-                        'reference' => $dataToSave['payment_reference'],
-                        'value' => (float) $dataToSave['value'],
-                    ]
-                );
+        $response = Http::post(
+            'https://dad-202324-payments-api.vercel.app/api/debit',
+            [
+                'type' => $dataToSave['payment_type'],
+                'reference' => $dataToSave['payment_reference'],
+                'value' => (float) $dataToSave['value'],
+            ]
+        );
 
 
 
-            // Check the response status
-            if (!$response->successful()) {
-                $responseData = $response->json();
-                $message = isset($responseData['message']) ? $responseData['message'] : 'Error: API transaction validation failed';
-                return response()->json(['message' => $message], $response->status());
-            }
+        // Check the response status
+        if (!$response->successful()) {
+            $responseData = $response->json();
+            $message = isset($responseData['message']) ? $responseData['message'] : 'Error: API transaction validation failed';
+            return response()->json(['message' => $message], $response->status());
+        }
 
 
 
-                $transactionReciever = new Transaction();
+        $transactionReciever = new Transaction();
 
-                $transactionReciever->vcard = $dataToSave['phone_number'];
-                $transactionReciever->date = date('Y-m-d');
-                $transactionReciever->datetime = date('Y-m-d H:i:s');
-                $transactionReciever->type = 'C';
-                $transactionReciever->value = $dataToSave['value'];
-                $transactionReciever->old_balance = $reciever->balance;
-                $transactionReciever->new_balance = $reciever->balance + floatval($dataToSave['value']);
-                $transactionReciever->payment_type = $dataToSave['payment_type'];
-                $transactionReciever->payment_reference = $dataToSave['payment_reference'];
+        $transactionReciever->vcard = $dataToSave['phone_number'];
+        $transactionReciever->date = date('Y-m-d');
+        $transactionReciever->datetime = date('Y-m-d H:i:s');
+        $transactionReciever->type = 'C';
+        $transactionReciever->value = $dataToSave['value'];
+        $transactionReciever->old_balance = $reciever->balance;
+        $transactionReciever->new_balance = $reciever->balance + floatval($dataToSave['value']);
+        $transactionReciever->payment_type = $dataToSave['payment_type'];
+        $transactionReciever->payment_reference = $dataToSave['payment_reference'];
 
-            $reciever->balance = $reciever->balance + floatval($dataToSave['value']);
-            $reciever->save();
-            $transactionReciever->save();
+        $reciever->balance = $reciever->balance + floatval($dataToSave['value']);
+        $reciever->save();
+        $transactionReciever->save();
 
         return new CreditTransactionResource($transactionReciever);
     }
