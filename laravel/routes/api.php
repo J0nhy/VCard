@@ -30,6 +30,7 @@ Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
 
 Route::get('default_categories', [DefaultCategoryController::class, 'index']);
+Route::delete('default_categories/{category}', [DefaultCategoryController::class, 'destroy']);
 
 
 
@@ -72,6 +73,8 @@ Route::middleware('auth:api')->group(function () {
 
     //categorias
     Route::get('categories/{search}', [CategoryController::class, 'show']);
+    Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
+    
     Route::get('categories', [CategoryController::class, 'index']);
 
     //transacoes

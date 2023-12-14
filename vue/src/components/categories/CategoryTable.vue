@@ -23,15 +23,19 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    showDelete: {
+        type: Boolean,
+        default: true,
+    },
 
 });
 
-const emit = defineEmits(["edit", "page-changed","search"]);
+const emit = defineEmits(["edit", "page-changed", "search","delete"]);
 
 
 
-const editClick = (admin) => {
-    emit("edit", admin);
+const editClick = (categoria) => {
+    emit("edit", categoria);
 };
 
 const pageChanged = (page) => {
@@ -39,6 +43,9 @@ const pageChanged = (page) => {
 };
 const search = () => {
     emit("search", searchQuery.value);
+};
+const deleteButton = (categoria) => {
+    emit("delete", categoria,searchQuery.value);
 };
 </script>
 
@@ -64,7 +71,16 @@ const search = () => {
         <tbody>
             <tr v-for="categoria in categorias.data" :key="categoria.id">
                 <td v-if="showName" class="align-middle">{{ categoria.name }}</td>
-                <td v-if="showType" class="align-middle">{{   categoria.type == "D" ? "Debit" : "Credit"}}</td>
+                <td v-if="showType" class="align-middle">{{ categoria.type == "D" ? "Debit" : "Credit" }}</td>
+                <td class="text-end align-middle" v-if="showDelete">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-xs btn-light" @click="deleteButton(categoria)"
+                            v-if="showDelete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>

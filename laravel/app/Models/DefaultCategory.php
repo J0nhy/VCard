@@ -10,8 +10,11 @@ class DefaultCategory extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    public $timestamps = false;
+
     protected $table = 'default_categories';
     protected $primaryKey = 'id';
+    
     protected $fillable = [
         'type',
         'name',

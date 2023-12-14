@@ -31,10 +31,9 @@ const loadCategorias = async (search=null) => {
   }
 }
 
-const deleteAdmin = async (user) => {
-    const response = await axios.delete('admins/gerir/' + user.id)
-    loadUsers()
-
+const deleteCategoria = async (categoria,search=null) => {
+  const response = await axios.delete(`default_categories/` + categoria.id)
+  loadCategorias(search);
 }
 
 onMounted(() => {
@@ -52,12 +51,14 @@ const page_changed = (page) => {
 
 
   <h3 class="mt-5 mb-3">Default Categories</h3>
+  <button class="btn btn-secondary" @click="search" type="button">Adicionar Categoria</button>
   <hr>
   <category-table
     :categorias="categorias"
     :showType="true"
     :showName="true"
     @page-changed="page_changed"
+    @delete="deleteCategoria"
   ></category-table>
 </template>
 
