@@ -1,7 +1,6 @@
 <script setup>
-import { onMounted, ref, watch,computed } from 'vue';
+import { onMounted, ref, watch,computed,inject } from 'vue';
 import * as Chart from 'chart.js/auto';
-import axios from 'axios';
 import { useUserStore } from '../../stores/user';
 
 const transactions = ref([]);
@@ -13,18 +12,19 @@ const userStore = useUserStore();
 const averageTransactionsPerMonth = ref(0);
 const monthlyExpenses = ref({});
 const selectedYear = ref(new Date().getFullYear()); 
-const years = ref([2021,2022,2023])
 let myBarChart = null;
+const axios = inject('axios')
+const years = computed(() => getUniqueYearsFromTransactions());
 
 
 const loadTransactions = async () => {
     try {
         if (userStore.user && userStore.userType === 'V') {
-            const response = await axios.get("http://laravel.test/api/transactions/" + userStore.user.id);
+            const response = await axios.get("http://laravel.test/api/vcards/" + userStore.user.id+"/transactions");
             transactions.value = Array.isArray(response.data.data) ? response.data.data : [];
         }
         if (userStore.user && userStore.userType === 'A') {
-            const response = await axios.get("http://laravel.test/api/transactions");
+            const response = await axios.get("http://laravel.test/api/alltransactions");
             transactions.value = Array.isArray(response.data.data) ? response.data.data : [];
         }
         
@@ -196,44 +196,112 @@ const getTransactionsPerMonth = () => {
     return transactionsPerMonth;
 };
 
+const getUniqueYearsFromTransactions = () => {
+  const uniqueYears = new Set();
+  transactions.value.forEach(transaction => {
+    const transactionDate = new Date(transaction.date);
+    const year = transactionDate.getFullYear();
+    uniqueYears.add(year);
+  });
+  return Array.from(uniqueYears);
+};
+
 
 
 onMounted(async () => {
-    loadTransactions();
-    loadVcards();
+    await loadTransactions();
+    await loadVcards();
 });
 
 watch(transactions, () => {
     updatePieChart();
     calculateTotals();
     calculateMonthlyExpenses();
+    updateBarChart();
 });
 
 watch(vcards, () => {
     calculateTotals();
 });
+
+watch(selectedYear, () => {
+    updateBarChart();
+});
 </script>
 
 <template>
-    <div>
-        <h3 class="mt-5 mb-3">Estatísticas</h3>
-        <hr>
-        <h5 class="mt-5 mb-3">Tipos de pagamento</h5>
-        <canvas id="pieChart" style="max-width: 600px; max-height: 400px; margin-top: 20px;"></canvas>
-
-        <h5 class="mt-5 mb-3">Totais</h5>
-        <p>Total dos saldos dos vcards: {{ totalVcardBalance }}</p>
-        <p>Total das transações nos últimos 7 dias: {{ totalTransactionAmount }}</p>
-        <p>Média de transações por mês: {{ averageTransactionsPerMonth }}</p>
-        <p>Total de Transações: {{ transactions.length }}</p>
-        <h5 class="mt-5 mb-3">Despesas mensais</h5>
-        <div>
-            <label for="year">Selecionar Ano:</label>
-            <select id="year" v-model="selectedYear">
-                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-            </select>
+    <div class="container mt-5">
+      <h3 class="mb-3">Estatísticas</h3>
+      <hr>
+  
+      <!-- Totals Section -->
+      <div class="row">
+      <div class="col-md-6">
+        <div class="card border-info">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Totais</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total dos saldos dos vcards
+                <span class="badge badge-primary badge-pill text-dark">{{ totalVcardBalance }}€</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total das transações nos últimos 7 dias
+                <span class="badge badge-primary badge-pill text-dark">{{ totalTransactionAmount }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Média de transações por mês
+                <span class="badge badge-primary badge-pill text-dark">{{ averageTransactionsPerMonth.toFixed(2) }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total de Transações
+                <span class="badge badge-primary badge-pill text-dark">{{ transactions.length }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <canvas id="barChart" style="max-width: 800px; max-height: 400px; margin-top: 20px;"></canvas>
+      </div>
     </div>
-</template>
-«
+  
+      <!-- Charts Section -->
+      <div class="row mt-4">
+        <!-- Pie Chart -->
+        <div class="col-md-6">
+          <h5 class="mb-3">Tipos de pagamento</h5>
+          <canvas id="pieChart" style="max-width: 100%; max-height: 400px;"></canvas>
+        </div>
+  
+        <!-- Bar Chart -->
+        <div class="col-md-6">
+          <h5 class="mb-3">Despesas mensais</h5>
+          <div v-if="years.length > 0" class="mb-3">
+            <label for="year">Selecionar Ano:</label>
+            <select id="year" v-model="selectedYear" class="form-control">
+              <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+            </select>
+          </div>
+          <canvas id="barChart" style="max-width: 100%; max-height: 400px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <style scoped>
+  /* Styling for Totals Section */
+  .row > .col-md-6 {
+    margin-bottom: 20px;
+  }
+  
+  /* Styling for Charts Section */
+  .row > .col-md-6 > h5 {
+    margin-top: 10px;
+  }
+
+  
+  /* Add more styles as needed */
+  </style>
+  
+  
+  
