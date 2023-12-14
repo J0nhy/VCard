@@ -34,13 +34,7 @@ const loadCategorias = async (search = null) => {
   }
 }
 
-const deleteAdmin = async (user) => {
-  const response = await axios.delete('admins/gerir/' + user.id)
-  loadUsers()
-
-}
 const deleteCategoria = async (categoria,search=null) => {
-  console.log(categoria);
   const response = await axios.delete(`categories/` + categoria.id)
   loadCategorias(search);
 }
