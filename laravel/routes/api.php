@@ -29,6 +29,7 @@ Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
 
 Route::get('default_categories', [DefaultCategoryController::class, 'index']);
+Route::delete('default_categories/{category}', [DefaultCategoryController::class, 'destroy']);
 
 
 

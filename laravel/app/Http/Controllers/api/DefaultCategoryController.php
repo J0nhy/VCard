@@ -52,8 +52,10 @@ class DefaultCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DefaultCategory $category)
     {
-        //
+        $category->delete();
+        return new DefaultCategoryResource($category);
+
     }
 }

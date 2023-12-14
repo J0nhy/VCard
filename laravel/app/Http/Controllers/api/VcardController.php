@@ -197,7 +197,7 @@ class VcardController extends Controller
 
 
         $Vcard = Vcard::find($phone_number);
-
+        
         $vcardUser = $Vcard;
         if (!$Vcard) {
             return response()->json(['error' => 'Usuário não encontrado'], 404);
