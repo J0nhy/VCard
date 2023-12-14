@@ -26,6 +26,8 @@ Route::get('users', [VcardController::class, 'show_all']);
 Route::delete('users/{email}', [VcardController::class, 'destroy']);
 Route::patch('users/{email}', [VcardController::class, 'editMaxDebit']);
 
+Route::get('categories/{phone_number}/{search}', [CategoryController::class, 'show']);
+
 Route::get('categories/{phone_number}', [CategoryController::class, 'index']);
 
 Route::get('default_categories', [DefaultCategoryController::class, 'index']);

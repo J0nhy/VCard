@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -17,7 +18,6 @@ class CategoryController extends Controller
         $categories = Category::where('vcard', $phoneNumber)->paginate(10);
 
         return CategoryResource::collection($categories);
-
     }
 
     /**
@@ -26,14 +26,21 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($phoneNumber, $search)
     {
-        //
+        $user = Auth::user();
+                print_r( $user);
+        $categories = Category::where( "vcard","900000001")
+            ->where('name','like', $search.'%') 
+            ->paginate(10);
+
+        return CategoryResource::collection($categories);
     }
 
     /**
