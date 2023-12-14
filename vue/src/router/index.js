@@ -196,6 +196,14 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'home' })
     return
   }
+  if (to.name == 'Vcard') {
+    if ((userStore.user.type == 'A') || (userStore.user.userId == to.params.id)) {
+      next()
+      return
+    }
+    next({ name: 'home' })
+    return
+  }
   next()
 })
 

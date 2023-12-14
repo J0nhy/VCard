@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Providers;
+use App\Models\Vcard;
+use App\Models\User;
+use App\Policies\VcardPolicy;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -14,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
+
     ];
 
     /**
