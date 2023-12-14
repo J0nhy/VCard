@@ -25,6 +25,7 @@ const loadCategorias = async (search = null) => {
     else {
       response = await axios.get(`categories?page=${currentPage.value}`)
     }
+    console.log(categorias);
 
     categorias.value = response.data
 
@@ -38,7 +39,11 @@ const deleteAdmin = async (user) => {
   loadUsers()
 
 }
-
+const deleteCategoria = async (categoria,search=null) => {
+  console.log(categoria);
+  const response = await axios.delete(`categories/` + categoria.id)
+  loadCategorias(search);
+}
 onMounted(() => {
   loadCategorias()
 })
@@ -54,7 +59,8 @@ const page_changed = (page) => {
   <h3 class="mt-5 mb-3">Categorias</h3>
   <hr>
   <category-table :categorias="categorias" :showType="true" :showName="true" @page-changed="page_changed"
-    @search="loadCategorias"></category-table>
+    @search="loadCategorias"
+    @delete="deleteCategoria"></category-table>
 </template>
 
 <style scoped>
