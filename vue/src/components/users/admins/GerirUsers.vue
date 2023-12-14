@@ -60,23 +60,6 @@ const updateTable = (user) => {
   users.value.data = updatedUsers;
 }
 
-const search = async (searchQuery) => {
-  if (!searchQuery) return loadUsers();
-  isLoading.value = true;
-  try {
-    const response = await axios.get(`users/${searchQuery}?page=1`);
-    users.value = response.data
-    // Now you can use currentItems as your collection of items on the current page
-
-    //loadUsers()
-
-  } catch (error) {
-    errorOccurred.value = true;
-  } finally {
-    isLoading.value = false;
-  }
-};
-
 const page_changed = (page, searchQuery) => {
 
   currentPage.value = page

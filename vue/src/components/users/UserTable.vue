@@ -152,18 +152,9 @@ const pageChanged = (page) => {
               :class="{ active: $route.name === 'Credit' && $route.params.phone_number == admin.phone_number }"
               :to="{ name: 'Credit', params: { phone_number: admin.phone_number } }" @click="clickMenuOption">
               <i class="bi bi-plus-square-fill" style="color: green;" ></i>
-
-
-
-
-
             </router-link>
           </div>
         </td>
-
-
-
-
         <td v-if="showLimiteDebito" class="align-middle">{{ admin.max_debit }}€
           <button @click="resetInputBoxModalClick()" class="btn btn-xs btn-light" data-bs-toggle="modal"
             :data-bs-target="'#editModal' + admin.phone_number"

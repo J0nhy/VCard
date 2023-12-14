@@ -15,17 +15,17 @@ const totalCategorias = computed(() => {
   return categorias.value.length
 })
 
-const loadCategorias = async (search=null) => {
+const loadCategorias = async (search = null) => {
   try {
     let response;
     if (search) {
-      response = await axios.get(`categories/900000001${search}?page=${currentPage.value}`);
+      response  = await axios.get(`categories/900000001/${search}?page=${currentPage.value}`);
     }
     else {
       response = await axios.get(`categories/900000001?page=${currentPage.value}`)
     }
 
-     categorias.value = response.data
+    categorias.value = response.data
 
   } catch (error) {
     console.log(error)
@@ -33,8 +33,8 @@ const loadCategorias = async (search=null) => {
 }
 
 const deleteAdmin = async (user) => {
-    const response = await axios.delete('admins/gerir/' + user.id)
-    loadUsers()
+  const response = await axios.delete('admins/gerir/' + user.id)
+  loadUsers()
 
 }
 
@@ -50,16 +50,10 @@ const page_changed = (page) => {
 </script>
 
 <template>
-
-
   <h3 class="mt-5 mb-3">Categorias</h3>
   <hr>
-  <category-table
-    :categorias="categorias"
-    :showType="true"
-    :showName="true"
-    @page-changed="page_changed"
-  ></category-table>
+  <category-table :categorias="categorias" :showType="true" :showName="true" @page-changed="page_changed"
+    @search="loadCategorias"></category-table>
 </template>
 
 <style scoped>
