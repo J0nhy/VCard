@@ -20,10 +20,10 @@ const loadUsers = async (search =null) => {
     //se houver algo na input box do search
     let response;
     if (search) {
-       response = await axios.get(`admins/gerir?page=${currentPage.value}&search=${search}`)
+       response = await axios.get(`admins?search=${search}&page=${currentPage.value}`)
     }
     else{
-       response = await axios.get(`admins/gerir?page=${currentPage.value}`)
+       response = await axios.get(`admins?page=${currentPage.value}`)
     }
   
     users.value = response.data
@@ -32,12 +32,15 @@ const loadUsers = async (search =null) => {
     console.log(error)
   }
 }
-
+const search  =  (search) => {
+  currentPage.value=1;
+  loadUsers(search);
+}
 const editUser = (user) => {
   router.push({ name: 'Users', params: { id: user.id } })
 }
 const deleteAdmin = async (user) => {
-    const response = await axios.delete('admins/gerir/' + user.id)
+    const response = await axios.delete('admins/' + user.id)
     loadUsers()
 
 }
@@ -81,7 +84,9 @@ const clickMenuOption = () => {
     :showAdmin="false"
     :showEditButton="false"
     :showDeleteButton="true"
+    :showSearchAdmin="true"
     @delete="deleteAdmin"
+    @search="search"
     @page-changed="page_changed"
   ></user-table>
 </template>

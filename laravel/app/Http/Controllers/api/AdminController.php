@@ -12,14 +12,32 @@ use App\Http\Requests\UpdateAdminRequest;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminPasswordRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    public function index(Request $request)
+    {
+        $authenticatedAdmin = Auth::user();
+
+        $query = Admin::query()
+            ->where('id', '!=', $authenticatedAdmin->id);    
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', $searchTerm . '%');
+                }
+    
+        $users = $query->paginate(10);
+    
+        return AdminResource::collection($users);
+    }
+    
     public function show(Admin $admin)
     {
 
         return new AdminResource($admin);
-       // return ($admin);
+        // return ($admin);
     }
 
     public function update(UpdateAdminRequest $request, Admin $admin)
@@ -95,21 +113,11 @@ class AdminController extends Controller
         return new AdminResource($request->user());
     }
 
-    public function show_all()
-    {
-        // $admin = User::all();
-        //print($admin);
-        $admins = Admin::paginate(5);
-        return AdminResource::collection($admins);
-
-
-    }
-
     public function delete($id)
     {
         // Delete the product
         $admin = Admin::find($id);
-        $deletedUser=$admin;
+        $deletedUser = $admin;
         $admin->delete();
         return new AdminResource($deletedUser);
     }

@@ -14,6 +14,7 @@ use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardPasswordRequest;
 use App\Services\Base64Services;
 use App\Models\DefaultCategory;
+use App\Models\User;
 use Illuminate\Contracts\Database\Eloquent\DeviatesCastableAttributes;
 
 use function Psy\debug;
@@ -21,16 +22,25 @@ use function Psy\debug;
 class VcardController extends Controller
 {
 
+    public function index(Request $request)
+    {           
+        $query = Vcard::withTrashed();
+        
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', $searchTerm . '%')
+                    ->orWhere('phone_number', 'like', $searchTerm . '%');
+        }
+
+        $users = $query->paginate(10);
+
+        return VcardResource::collection($users);
+    }
+
     public function show(Vcard $vcard)
     {
         return new VcardResource($vcard);
-    }
-    public function show_all()
-    {
-        $perPage = request()->input('per_page', 10); // Adjust the default per page as needed
-        $vcards = Vcard::withTrashed()->paginate($perPage);
-
-        return VcardResource::collection($vcards);
     }
 
     public function search($name)
@@ -54,31 +64,30 @@ class VcardController extends Controller
         $base64Service = new Base64Services();
         return $base64Service->saveFile($base64String, $targetDir, $newfilename);
     }
-    public function updateBlockedStatus($phoneNumber)
-    {
-        $Vcard = Vcard::find($phoneNumber);
-        if ($Vcard->blocked == 0) {
-
-            $Vcard->blocked = 1;
-        } else {
-            $Vcard->blocked = 0;
-        }
-        $Vcard->save();
-
-        return new VcardResource($Vcard);
-    }
-    public function editMaxDebit($phoneNumber, Request $request)
+    public function updateByAdmin(Request $request,$phoneNumber)
     {
         $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
+        $block = $request->input('block'); // Adjusted to match the axios payload key
         $Vcard = Vcard::find($phoneNumber);
-        //se for menor n muda
-        if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
 
-        $Vcard->max_debit = $newMaxDebit;
-        $Vcard->save();
-
+        if($newMaxDebit){
+            //se for menor n muda
+            if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
+            $Vcard->max_debit = $newMaxDebit;
+            $Vcard->save();
+        }
+        else{
+            if ($Vcard->blocked == 0) {
+    
+                $Vcard->blocked = 1;
+            } else {
+                $Vcard->blocked = 0;
+            }
+            $Vcard->save();
+        }
         return new VcardResource($Vcard);
     }
+
 
     public function update(UpdateVcardRequest $request, Vcard $v, $phone_number)
     {

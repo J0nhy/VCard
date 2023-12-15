@@ -19,10 +19,10 @@ const loadCategorias = async (search=null) => {
   try {
     let response;
     if (search) {
-      response = await axios.get(`default_categories/${search}?page=${currentPage.value}`);
+      response = await axios.get(`admin/default_categories?search=${search}&page=${currentPage.value}`);
     }
     else {
-      response = await axios.get(`default_categories?page=${currentPage.value}`)
+      response = await axios.get(`admin/default_categories?page=${currentPage.value}`)
     }
      categorias.value = response.data
 
@@ -32,10 +32,13 @@ const loadCategorias = async (search=null) => {
 }
 
 const deleteCategoria = async (categoria,search=null) => {
-  const response = await axios.delete(`default_categories/` + categoria.id)
+  const response = await axios.delete(`admin/default_categories/` + categoria.id)
   loadCategorias(search);
 }
-
+const search  =  (search) => {
+  currentPage.value=1;
+  loadCategorias(search);
+}
 onMounted(() => {
   loadCategorias()
 })
@@ -59,7 +62,7 @@ const page_changed = (page) => {
     :showName="true"
     @page-changed="page_changed"
     @delete="deleteCategoria"
-    @search="loadCategorias"
+    @search="search"
   ></category-table>
 </template>
 

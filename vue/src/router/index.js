@@ -119,7 +119,7 @@ const router = createRouter({
       props: route => ({ id: -1, phone_number: parseInt(route.params.phone_number) })
     },
     {
-      path: '/vcard/transactions/:phone_number',
+      path: '/vcard/:phone_number/transactions/',
       name: 'History',
       component: History,
       props: true // or props: route => ({ phone_number: route.params.phone_number })
@@ -142,7 +142,7 @@ const router = createRouter({
       // Replaced with the following line to ensure that id is a number
     },
     {
-      path: '/users',
+      path: '/admin/vcards',
       name: 'GerirUsers',
       component: GerirUsers
       //props: true
@@ -166,9 +166,10 @@ const router = createRouter({
       component: Default_Categories
     },
     {
-      path: '/categories',
+      path: '/vcard/:phone_number/categories',
       name: 'Categories',
-      component: VcardCategories
+      component: VcardCategories,
+      props: true
     },
 
   ]

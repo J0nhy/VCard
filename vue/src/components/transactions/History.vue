@@ -35,13 +35,9 @@ onMounted(() => {
   loadTransactions()
 })
 
-const clickMenuOption = () => {
-  const domReference = document.getElementById('buttonSidebarExpandId')
-  if (domReference) {
-    if (window.getComputedStyle(domReference).display !== "none") {
-      domReference.click()
-    }
-  }
+const search  =  (search) => {
+  currentPage.value=1;
+  loadTransactions(search);
 }
 const page_changed = (page) => {
 
@@ -59,7 +55,7 @@ const page_changed = (page) => {
     :transactions="transactions"
     :show="true"
     @page-changed="page_changed"
-    @search="loadTransactions"
+    @search="search"
   ></transaction-table>
 </template>
 

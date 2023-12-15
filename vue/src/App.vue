@@ -166,7 +166,8 @@ onMounted(() => {
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/categories" class="nav-link">
+              <router-link v-if="userStore.userType === 'V'" class="nav-link"
+                  :to="{ name: 'Categories', params: { phone_number: userStore.userId } }">
                 Categorias
               </router-link>
             </li>
@@ -183,7 +184,7 @@ onMounted(() => {
                 </router-link>
               </li>
               <li class="nav-item">
-                <router-link to="/users" class="nav-link">
+                <router-link to="/admin/vcards" class="nav-link">
                   Gerir vcards
                 </router-link>
               </li>

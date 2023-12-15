@@ -35,6 +35,7 @@ class TransactionController extends Controller
 
         return TransactionResource::collection($transactions);
     }
+    //ainda n
     public function show(Transaction $transaction)
     {
         return TransactionResource::collection($transaction);
