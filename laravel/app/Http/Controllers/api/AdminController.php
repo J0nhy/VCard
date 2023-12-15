@@ -21,18 +21,18 @@ class AdminController extends Controller
         $authenticatedAdmin = Auth::user();
 
         $query = Admin::query()
-            ->where('id', '!=', $authenticatedAdmin->id);    
+            ->where('id', '!=', $authenticatedAdmin->id);
         // Check if the 'search' parameter is present in the request
         if ($request->has('search')) {
             $searchTerm = $request->input('search');
             $query->where('name', 'like', $searchTerm . '%');
                 }
-    
+
         $users = $query->paginate(10);
-    
+
         return AdminResource::collection($users);
     }
-    
+
     public function show(Admin $admin)
     {
 

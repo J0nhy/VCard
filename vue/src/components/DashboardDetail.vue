@@ -72,7 +72,7 @@ onMounted(() => {
     <h1 class="h2">Dashboard</h1>
   </div>
   <div class="flex">
-    
+
     <div class="chart">
       <Statistics />
     </div>
@@ -84,13 +84,12 @@ onMounted(() => {
       </div>
       <hr /><br>
       <div v-show="userStore.user && userStore.userType === 'V'">
-        <h4 class="mt-3">{{ userStore.vcardPiggy != null ? "Saldo Piggy: " + editingVcard.piggyBalance + "€" : "Piggy desativado, pretende ativar ? " }}</h4>
-        <button v-show="userStore.vcardPiggy == null" @click="ativarPiggy">Ativar</button>
-        <div v-show="userStore.vcardPiggy != null" id="piggy">
-          <form class="row g-3 needs-validation">
+        <h4 class="mt-3">{{ editingVcard.piggyBalance != null ? "Saldo Piggy: " + editingVcard.piggyBalance + "€" : "Piggy desativado, pretende ativar ? " }}</h4>
+        <button type="button" class="btn btn-primary inline" v-show="editingVcard.piggyBalance == null" @click="ativarPiggy">Ativar</button>
+        <div v-show="editingVcard.piggyBalance != null" id="piggy">
+          <form class="row g-3 needs-validation" style="margin-top: 1em;">
             <label for="quantidade">Quantidade:</label>
-            <input class="form-control" name="valor" id="valor" type="text" v-model="editingVcard.valor" min="0.01"
-              required style="width: 85%" />
+            <input class="form-control" name="valor" id="valor" type="text" v-model="editingVcard.valor" min="0.01" required style="width: 85%" />
             <button type="button" class="btn btn-primary inline" @click="debitar">Debitar</button>
             <button type="button" class="btn btn-primary inline" @click="depositar">Depositar</button>
           </form>
@@ -98,7 +97,7 @@ onMounted(() => {
       </div>
       <br>
       <hr /><br>
-      <div v-show="userStore.user && userStore.userType === 'V' && userStore.vcardPiggy != null">
+      <div v-show="userStore.user && userStore.userType === 'V' && editingVcard.piggyBalance != null">
         <h4 class="mt-3">Saldo Total: {{ Number(editingVcard.piggyBalance) + Number(editingVcard.userBalance) }}€</h4>
       </div>
     </div>
