@@ -41,9 +41,18 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users/me', [UsersController::class, 'show_me']);
     Route::get('vcard/me', [VcardController::class, 'show_me']);
 
-    Route::resource('admin', AdminController::class)->middleware('can:update,admin');
+    //Route::resource('admin', AdminController::class)->middleware('can:manage,admin');
+    Route::get('admin/{admin}', [AdminController::class, 'show'])
+        ->middleware('can:view,admin');
 
+    Route::put('admin/{admin}', [AdminController::class, 'update'])
+        ->middleware('can:update,admin');
 
+    Route::post('admin', [AdminController::class, 'store'])
+        ->middleware('can:create,App\Models\Admin');
+
+    Route::delete('admin/{admin}', [AdminController::class, 'destroy'])
+        ->middleware('can:delete');
 
     Route::get('admin/password/{id}', [AdminController::class, 'showPassword']);
     Route::put('admin/password/{id}', [AdminController::class, 'updatePassword']);

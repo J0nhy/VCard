@@ -13,4 +13,10 @@ class VcardPolicy
         return $vcard->phone_number == $user->id;
     }
 
+    public function update(User $user, Vcard $vcard)
+    {
+        return $vcard->phone_number == $user->id;
+    }
+
+
 }
