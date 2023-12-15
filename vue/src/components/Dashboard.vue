@@ -50,12 +50,14 @@ console.log("Rota Atual:", routeName);
 
 
 
-const ativarPiggy = async () => {
+const ativarPiggy = async (data) => {
   originalValueStr = ''
   errors.value = null
   try {
     const response = await axios.put('activatePiggy/' + userStore.user.id)
-    vcard.value = response.data.data
+    console.log(response.data);
+    data.piggyBalance = response.data.data.custom_data
+    data.userBalance = response.data.data.balance
     originalValueStr = JSON.stringify(vcard.value)
     toast.success('Vcard #' + vcard.value.phone_number + ', Piggy was updated successfully.')
 
@@ -79,7 +81,7 @@ const depositar = async (data) => {
     });
     data.piggyBalance = response.data.data.custom_data
     data.userBalance = response.data.data.balance
-    userStore.updateUserBalance(data.userBalance);
+    //userStore.updateUserBalance(data.userBalance);
     
     originalValueStr = JSON.stringify(vcard.value)
     console.log(response.data);

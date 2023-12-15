@@ -249,8 +249,9 @@ class VcardController extends Controller
 
     public function ActivatePiggy(Request $request, Vcard $vcard)
     {
-        $vcard->custom_data = 0.00;
-        $vcard->save();
+        $vcard->update([
+            'custom_data' => 0.00,
+        ]);
 
         return new VcardResource($vcard);
     }
