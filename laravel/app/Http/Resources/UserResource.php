@@ -24,8 +24,7 @@ class UserResource extends JsonResource
             'password' => $this->password,
             'photo_url' => $this->photo_url,
             'balance' => $this->vcard ? $this->vcard->balance : null,
-
-
+            'custom_data' => $this->vcard ? $this->vcard->custom_data : null,
         ];
     }
 }

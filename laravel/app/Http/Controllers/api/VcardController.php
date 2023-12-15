@@ -4,13 +4,14 @@ namespace App\Http\Controllers\api;
 
 use App\Models\Vcard;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\VcardResource;
-use App\Http\Requests\UpdateVcardRequest;
-use App\Http\Requests\StoreVcardRequest;
-use App\Http\Requests\UpdateVcardPasswordRequest;
 use App\Services\Base64Services;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\VcardResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreVcardRequest;
+use App\Http\Requests\UpdateVcardRequest;
+use App\Http\Requests\UpdateVcardPasswordRequest;
 
 
 class VcardController extends Controller
@@ -32,11 +33,11 @@ class VcardController extends Controller
     public function search($name)
     {
         $vcards = Vcard::withTrashed()
-        ->where(function($query) use ($name) {
-            $query->where('name', 'like', $name . '%')
-                  ->orWhere('phone_number', 'like', $name . '%');
-        })
-        ->paginate(10);
+            ->where(function ($query) use ($name) {
+                $query->where('name', 'like', $name . '%')
+                    ->orWhere('phone_number', 'like', $name . '%');
+            })
+            ->paginate(10);
 
 
 
@@ -63,14 +64,14 @@ class VcardController extends Controller
 
         return new VcardResource($Vcard);
     }
-    public function editMaxDebit($phoneNumber,Request $request)
+    public function editMaxDebit($phoneNumber, Request $request)
     {
         $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
         $Vcard = Vcard::find($phoneNumber);
         //se for menor n muda
-        if($newMaxDebit<$Vcard->balance)return new VcardResource($Vcard);
+        if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
 
-        $Vcard->max_debit =$newMaxDebit;
+        $Vcard->max_debit = $newMaxDebit;
         $Vcard->save();
 
         return new VcardResource($Vcard);
@@ -207,5 +208,44 @@ class VcardController extends Controller
     {
         print_r($request . 'teste');
         return new VcardResource($request->user());
+    }
+
+    public function ActivatePiggy(Request $request, Vcard $vcard)
+    {
+        $vcard->custom_data = 0.00;
+        $vcard->save();
+
+        return new VcardResource($vcard);
+    }
+
+    public function add(Request $request, Vcard $vcard)
+    {
+        $value = $request->input('valor');
+
+        if ($vcard->balance < floatval($value)) {
+            return response()->json(['error' => 'Saldo insuficiente'], 401);
+        }
+
+        $vcard->update([
+            'custom_data' => floatval($vcard->custom_data) + floatval($value),
+            'balance' => floatval($vcard->balance) - floatval($value),
+        ]);
+
+        return new VcardResource($vcard);
+    }
+    public function remove(Request $request, Vcard $vcard)
+    {
+        $value = $request->input('valor');
+
+        if (floatval($value) > floatval($vcard->custom_data)) {
+            return response()->json(['error' => 'Saldo insuficiente'], 401);
+        }
+
+        $vcard->update([
+            'custom_data' => floatval($vcard->custom_data) - floatval($value),
+            'balance' => floatval($vcard->balance) + floatval($value),
+        ]);
+
+        return new VcardResource($vcard);
     }
 }

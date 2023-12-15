@@ -40,7 +40,7 @@ class CategoryController extends Controller
         $userId = optional(Auth::user())->id;
 
         $categories = Category::where("vcard", $userId)
-            ->where('name', 'like', $search . '%')
+            ->where('name', 'like', '%' . $search . '%')
             ->paginate(10);
 
         return CategoryResource::collection($categories);

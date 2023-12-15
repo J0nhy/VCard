@@ -23,6 +23,7 @@ class Vcard extends Model
         'max_debit',
         'password',
         'confirmation_code',
+        'custom_data'
     ];
 
     public function user()

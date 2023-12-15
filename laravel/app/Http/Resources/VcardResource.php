@@ -25,8 +25,8 @@ class VcardResource extends JsonResource
             'balance' => $this->balance,
             'max_debit' => $this->max_debit,
             'deleted_at' => $this->deleted_at,
+            'custom_data' => $this->custom_data,
 
-            
         ];
     }
 }

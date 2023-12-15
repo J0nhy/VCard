@@ -1,29 +1,142 @@
 <script setup>
-import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
-import { useVcardStore } from '../stores/vcard.js'
-import { useAdminStore } from '../stores/admin.js'
-import { useUserStore } from '../stores/user.js'
+import { ref, watch, inject } from 'vue'
+import DashboardDetail from "./DashboardDetail.vue"
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useVcardStore } from "../stores/vcard"
+import { useUserStore } from "../stores/user"
 
 const toast = useToast()
-const vcardStore = useVcardStore()
-const adminStore = useAdminStore()
-const userStore = useUserStore()
 const router = useRouter()
+const vcardStore = useVcardStore()
+const userStore = useUserStore()
+
+const axios = inject('axios')
+
+const props = defineProps({
+  phone_number: {
+    type: Number,
+    default: null
+  },
+  id: {
+    type: Number,
+    default: null
+  },
+
+})
+
+const newVcard = () => {
+  return {
+      name: '',
+      email: '',
+      photo_url: '',
+      password: '',
+      confirmation_number: '',
+      valor: 0,
+      piggyBalance: userStore.vcardPiggy,
+      userBalance: userStore.userBalance,
+    }
+  }
+
+const vcard = ref(newVcard())
+const errors = ref(null)
+const confirmationLeaveDialog = ref(null)
+// String with the JSON representation after loading the project (new or edit)
+let originalValueStr = ''
+
+const routeName = router.currentRoute.value.name;
+console.log("Rota Atual:", routeName);
+
+
+
+
+const ativarPiggy = async () => {
+  originalValueStr = ''
+  errors.value = null
+  try {
+    const response = await axios.put('activatePiggy/' + userStore.user.id)
+    vcard.value = response.data.data
+    originalValueStr = JSON.stringify(vcard.value)
+    toast.success('Vcard #' + vcard.value.phone_number + ', Piggy was updated successfully.')
+
+  } catch (error) {
+    console.log(error)
+    if (error.response.status == 422) {
+      errors.value = error.response.data.errors
+      toast.error('Piggy was not updated due to validation errors!')
+    } else {
+      toast.error('Piggy was not updated due to unknown server error!')
+    }
+  }
+}
+
+const depositar = async (data) => {
+  originalValueStr = ''  
+  errors.value = null
+  try {
+    const response = await axios.put('depositar/' + userStore.user.id, {
+      valor: data.valor,
+    });
+    data.piggyBalance = response.data.data.custom_data
+    data.userBalance = response.data.data.balance
+    userStore.updateUserBalance(data.userBalance);
+    
+    originalValueStr = JSON.stringify(vcard.value)
+    console.log(response.data);
+    toast.success('Piggy was updated successfully.');
+
+  } catch (error) {
+    console.log(error)
+    if (error.response.status == 422) {
+      errors.value = error.response.data.errors
+      toast.error('Piggy was not updated due to validation errors!')
+    } else {
+      toast.error('Piggy was not updated due to unknown server error!')
+    }
+  }
+}
+
+const debitar = async (data) => {
+  originalValueStr = ''
+  errors.value = null
+  try {
+    const response = await axios.put('debitar/' + userStore.user.id, {
+      valor: data.valor,
+    });
+
+    data.piggyBalance = response.data.data.custom_data
+    data.userBalance = response.data.data.balance
+    originalValueStr = JSON.stringify(vcard.value)
+    console.log(response.data);
+    toast.success('Piggy was updated successfully.');
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+
+    if (error.response && error.response.status === 401) {
+      toast.error('Insufficient balance!');
+    } else if (error.response && error.response.status === 422) {
+      toast.error('Piggy was not updated due to validation errors!');
+    } else {
+      toast.error('Piggy was not updated due to an unknown server error!');
+    }
+  }
+}
+
+
+let nextCallBack = null
+const leaveConfirmed = () => {
+  if (nextCallBack) {
+    nextCallBack()
+  }
+}
+
+
+
+
 </script>
 
 <template>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Dashboard</h1>
-    </div>
-    <div>
-      <div v-show="userStore.user && userStore.userType === 'V'">
-          <h4 class="mt-3">Balance: {{ userStore.userBalance }}</h4>
-        </div>
-      
-    </div>
-    <div>
-      
-    </div>
+  <dashboard-detail :vcard="vcard" :errors="errors" @debitar="debitar" @depositar="depositar"
+    @ativarPiggy="ativarPiggy"></dashboard-detail>
 </template>
-  

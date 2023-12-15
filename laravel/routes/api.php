@@ -38,6 +38,10 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('logout', [AuthController::class, 'logout']);
 
+    Route::put('activatePiggy/{vcard}', [VcardController::class, 'ActivatePiggy']);
+    Route::put('depositar/{vcard}', [VcardController::class, 'add']);
+    Route::put('debitar/{vcard}', [VcardController::class, 'remove']);
+
     Route::get('admins/me', [AdminController::class, 'show_me']);
     Route::get('users/me', [UsersController::class, 'show_me']);
     Route::get('vcard/me', [VcardController::class, 'show_me']);

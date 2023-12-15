@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted} from 'vue'
+import {onMounted} from 'vue'
 
 import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useToast } from "vue-toastification"
@@ -17,6 +17,8 @@ const vcardStore = useVcardStore()
 const adminStore = useAdminStore()
 const userStore = useUserStore()
 const router = useRouter()
+const routeName = router.currentRoute.value.name
+console.log("Rota Atual:", routeName)
 
 const logout = async () => {
   if (await userStore.logout()) {
@@ -48,7 +50,7 @@ onMounted(() => {
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top flex-md-nowrap p-0 shadow">
     <div class="container-fluid">
-      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3 navbar-dark bg-dark" :to="{ name: 'home' }" @click="clickMenuOption">
+      <router-link class="navbar-brand col-md-3 col-lg-2 me-0 px-3 navbar-dark bg-dark" :to="{ name: 'Dashboard' }" @click="clickMenuOption">
         <img src="@/assets/logo1.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
         VCard
       </router-link>
@@ -61,7 +63,7 @@ onMounted(() => {
       <div class="collapse navbar-collapse justify-content-end">
 
 
-        <div v-show="userStore.user && userStore.userType === 'V'" class="text-white">
+        <div v-show="userStore.user && userStore.userType === 'V' && routeName != 'Dashboard'" class="text-white">
           <h5 class="mt-3">Balance: {{ userStore.userBalance }}</h5>
         </div>
 
