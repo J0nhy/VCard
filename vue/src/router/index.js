@@ -120,13 +120,13 @@ const router = createRouter({
       props: route => ({ id: -1, phone_number: parseInt(route.params.phone_number) })
     },
     {
-      path: '/transactions',
+      path: '/vcard/:phone_number/transactions/',
       name: 'History',
       component: History,
-      //props: true
-      // Replaced with the following line to ensure that id is a number
-      //props: route => ({ phone_number: parseInt(route.params.phone_number) })
-    },
+      props: true // or props: route => ({ phone_number: route.params.phone_number })
+  },
+  
+  
     {
       path: '/transaction/:id',
       name: 'Transaction',
@@ -136,14 +136,14 @@ const router = createRouter({
       props: route => ({ id: parseInt(route.params.id) })
     },
     {
-      path: '/admin/gerir',
+      path: '/admins',
       name: 'GerirAdmins',
       component: GerirAdmins
       //props: true
       // Replaced with the following line to ensure that id is a number
     },
     {
-      path: '/users',
+      path: '/admin/vcards',
       name: 'GerirUsers',
       component: GerirUsers
       //props: true
@@ -167,9 +167,10 @@ const router = createRouter({
       component: Default_Categories
     },
     {
-      path: '/categories',
+      path: '/vcard/:phone_number/categories',
       name: 'Categories',
-      component: VcardCategories
+      component: VcardCategories,
+      props: true
     },
 
   ]
@@ -191,6 +192,14 @@ router.beforeEach(async (to, from, next) => {
   }
   if (to.name == 'GerirAdmins' || to.name == 'GerirUsers' || to.name == 'NewAdmin' || to.name == 'Admin' || to.name == 'AdminPassword' || to.name == 'Default_Categories' || to.name == 'Credit') {
     if ((userStore.user.user_type == 'A')) {
+      next()
+      return
+    }
+    next({ name: 'home' })
+    return
+  }
+  if (to.name == 'Vcard') {
+    if ((userStore.user.type == 'A') || (userStore.user.userId == to.params.id)) {
       next()
       return
     }

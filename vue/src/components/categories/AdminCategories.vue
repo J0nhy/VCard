@@ -19,10 +19,10 @@ const loadCategorias = async (search=null) => {
   try {
     let response;
     if (search) {
-      response = await axios.get(`default_categories/${search}?page=${currentPage.value}`);
+      response = await axios.get(`admin/default_categories?search=${search}&page=${currentPage.value}`);
     }
     else {
-      response = await axios.get(`default_categories?page=${currentPage.value}`)
+      response = await axios.get(`admin/default_categories?page=${currentPage.value}`)
     }
      categorias.value = response.data
 
@@ -31,12 +31,14 @@ const loadCategorias = async (search=null) => {
   }
 }
 
-const deleteAdmin = async (user) => {
-    const response = await axios.delete('admins/gerir/' + user.id)
-    loadUsers()
-
+const deleteCategoria = async (categoria,search=null) => {
+  const response = await axios.delete(`admin/default_categories/` + categoria.id)
+  loadCategorias(search);
 }
-
+const search  =  (search) => {
+  currentPage.value=1;
+  loadCategorias(search);
+}
 onMounted(() => {
   loadCategorias()
 })
@@ -52,12 +54,15 @@ const page_changed = (page) => {
 
 
   <h3 class="mt-5 mb-3">Default Categories</h3>
+  <button class="btn btn-secondary" @click="search" type="button">Adicionar Categoria</button>
   <hr>
   <category-table
     :categorias="categorias"
     :showType="true"
     :showName="true"
     @page-changed="page_changed"
+    @delete="deleteCategoria"
+    @search="search"
   ></category-table>
 </template>
 

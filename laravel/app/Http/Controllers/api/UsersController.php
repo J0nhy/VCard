@@ -25,9 +25,17 @@ class UsersController extends Controller
         return $base64Service->saveFile($base64String, $targetDir, $newfilename);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(User::all());
+        $query = User::query();  
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', $searchTerm . '%')
+                    ->orWhere('phone_number', 'like', $searchTerm . '%');
+        }
+        $users = $query->paginate(10);
+        return UserResource::collection($users);
     }
 
     public function show($id)

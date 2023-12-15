@@ -17,16 +17,19 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    showSearch: {
+        type: Boolean,
+        default: true,
+    },
 
 });
 
-const emit = defineEmits(["edit","page-changed"]);
+const emit = defineEmits(["search","page-changed"]);
 
-
-
-const editClick = (admin) => {
-    emit("edit", admin);
+const search = () => {
+    emit("search", searchQuery.value);
 };
+
 
 const pageChanged=(page)=>{
  emit("page-changed", page);
@@ -34,7 +37,15 @@ const pageChanged=(page)=>{
 </script>
 
 <template>
+     <div v-if="showSearch" class="input-group mb-3">
+        <input v-model="searchQuery" type="text" class="form-control" placeholder="Search To/From"
+            aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" @click="search" type="button">Search</button>
+        </div>
+    </div>
     <table class="table">
+       
         <thead>
             <tr>
                 <th v-if="show" class="align-middle">Payment Type</th>

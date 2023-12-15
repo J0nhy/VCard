@@ -12,13 +12,20 @@ class DefaultCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = DefaultCategory::paginate(10);
-
+        $query = DefaultCategory::query(); // Initialize the query builder
+    
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', $searchTerm . '%');
+        }
+    
+        $categories = $query->paginate(10);
+    
         return DefaultCategoryResource::collection($categories);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -30,9 +37,8 @@ class DefaultCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($search)
     {
-        //
     }
 
     /**
@@ -46,8 +52,10 @@ class DefaultCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(DefaultCategory $category)
     {
-        //
+        $category->delete();
+        return new DefaultCategoryResource($category);
+
     }
 }

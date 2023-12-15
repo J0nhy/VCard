@@ -10,14 +10,19 @@ const router = useRouter()
 
 const transactions = ref([])
 const currentPage = ref(1) // Add this line to keep track of the current page
+const phone_number = ref(null);
 
 const totalTransactions = computed(() => {
   return transactions.value.length
 })
 
-const loadTransactions = async () => {
+const loadTransactions = async (search=null ) => {
   try {
-    const response = await axios.get(`transactions?page=${currentPage.value}`) // Use currentPage
+    let response;
+    if(search) response = await axios.get(`vcard/${phone_number.value}/transactions?search=${search}&page=${currentPage.value}`)
+    else response = await axios.get(`vcard/${phone_number.value}/transactions?page=${currentPage.value}`)
+  
+    
     transactions.value = response.data
 
   } catch (error) {
@@ -25,23 +30,14 @@ const loadTransactions = async () => {
   }
 }
 
-const deleteAdmin = async (user) => {
-    const response = await axios.delete('admins/gerir/' + user.id)
-    loadUsers()
-
-}
-
 onMounted(() => {
+  phone_number.value=router.currentRoute.value.params.phone_number;
   loadTransactions()
 })
 
-const clickMenuOption = () => {
-  const domReference = document.getElementById('buttonSidebarExpandId')
-  if (domReference) {
-    if (window.getComputedStyle(domReference).display !== "none") {
-      domReference.click()
-    }
-  }
+const search  =  (search) => {
+  currentPage.value=1;
+  loadTransactions(search);
 }
 const page_changed = (page) => {
 
@@ -59,6 +55,7 @@ const page_changed = (page) => {
     :transactions="transactions"
     :show="true"
     @page-changed="page_changed"
+    @search="search"
   ></transaction-table>
 </template>
 

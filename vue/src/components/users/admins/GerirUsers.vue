@@ -20,19 +20,22 @@ const loadUsers = async (search = null) => {
   try {
     let response;
     if (search) {
-      response = await axios.get(`users/${search}?page=${currentPage.value}`);
+      response = await axios.get(`admin/vcards?search=${search}&page=${currentPage.value}`);
     }
     else {
-      response = await axios.get(`users?page=${currentPage.value}`)
+      response = await axios.get(`admin/vcards?page=${currentPage.value}`)
     }
     users.value = response.data
   } catch (error) {
     console.log(error)
   }
 }
-
+const search  =  (search) => {
+  currentPage.value=1;
+  loadUsers(search);
+}
 const editMaxDebit = async (user, newMaxDebit) => {
-  const response = await axios.patch(`users/${user.phone_number}`, {
+  const response = await axios.patch(`admin/vcards/${user.phone_number}`, {
     newMaxDebit: newMaxDebit.value,
   });
 
@@ -40,11 +43,13 @@ const editMaxDebit = async (user, newMaxDebit) => {
 }
 
 const delete_user = async (user) => {
-  const response = await axios.delete(`users/` + user.phone_number)
+  const response = await axios.delete(`admin/vcards/` + user.phone_number)
   updateTable(response.data.data);
 }
 const updateBlockedStatus = async (user) => {
-  const response = await axios.patch(`users/block/` + user.phone_number)
+  const response = await axios.patch(`admin/vcards/${user.phone_number}`, {
+    block: "yes",
+  });
   updateTable(response.data.data);
 }
 const updateTable = (user) => {
@@ -77,7 +82,7 @@ onMounted(() => {
     <hr>
     <user-table :admins="users" :showId="false" :showPhoneNumber="true" :showAdmin="false" :showEditButton="false"
       :showDeleteButton="true" :showSearchVCard="true" :showSaldo="true" :showLimiteDebito="true" :showBloqueado="true"
-      :showApagado="true" :showPhoto="true" @edit="editMaxDebit" @search="loadUsers" @delete="delete_user"
+      :showApagado="true" :showPhoto="true" @edit="editMaxDebit" @search="search" @delete="delete_user"
       @updateBlockedStatus="updateBlockedStatus" @page-changed="page_changed">
     </user-table>
   </div>

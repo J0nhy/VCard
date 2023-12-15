@@ -40,7 +40,7 @@ const clickMenuOption = () => {
 }
 
 onMounted(() => {
- userStore.restoreToken()
+  userStore.restoreToken()
 })
 
 
@@ -144,8 +144,8 @@ onMounted(() => {
     </div>
   </nav>
 
-  <div class="container-fluid" >
-    <div class="row" >
+  <div class="container-fluid">
+    <div class="row">
       <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" v-if="userStore.user">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
@@ -155,46 +155,48 @@ onMounted(() => {
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/transactions" class="nav-link">
-                Transações
-              </router-link>
+              <router-link v-if="userStore.userType === 'V'" class="nav-link"
+                  :to="{ name: 'History', params: { phone_number: userStore.userId } }">
+                  Transações
+                </router-link>
             </li>
-            
+
             <li class="nav-item">
               <router-link to="/statistics" class="nav-link">
                 Estatísticas
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/categories" class="nav-link">
+              <router-link v-if="userStore.userType === 'V'" class="nav-link"
+                  :to="{ name: 'Categories', params: { phone_number: userStore.userId } }">
                 Categorias
               </router-link>
             </li>
           </ul>
 
           <div v-show="userStore.userType === 'A'">
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Adminstrator Menu</span>
-          </h6>
-          <ul class="nav flex-column mb-2" >
-            <li class="nav-item">
-              <router-link to="/admin/gerir" class="nav-link">
-                Gerir Admins
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/users" class="nav-link">
-                Gerir vcards
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/default_categories" class="nav-link">
-                Default Categorias
-              </router-link>
-            </li>
-            
-          </ul>
-</div>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Adminstrator Menu</span>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <router-link to="/admins" class="nav-link">
+                  Gerir Admins
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/admin/vcards" class="nav-link">
+                  Gerir vcards
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/default_categories" class="nav-link">
+                  Default Categorias
+                </router-link>
+              </li>
+
+            </ul>
+          </div>
 
         </div>
       </nav>

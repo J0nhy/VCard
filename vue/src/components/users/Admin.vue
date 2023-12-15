@@ -39,7 +39,7 @@ const loadAdmin = async (id) => {
   errors.value = null
   if (!id || (id < 0)) {
     admin.value = newAdmin()
-  } else {
+  } else {  
     try {
       const response = await axios.get('admin/' + id)
       admin.value = response.data.data

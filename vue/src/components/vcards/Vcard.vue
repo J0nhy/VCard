@@ -86,7 +86,7 @@ const save = async (vcardToSave) => {
       vcard.value = response.data.data
       originalValueStr = JSON.stringify(vcard.value)
       toast.success('User #' + vcard.value.id + ' was registered successfully.')
-      
+      //do login
       router.push({name: 'Dashboard'})
     } catch (error) {
       if (error.response.status == 422) {

@@ -3,31 +3,45 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Vcard;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
-use App\Services\Base64Services;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\VcardResource;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\StoreVcardRequest;
+use App\Http\Resources\TransactionResource;
 use App\Http\Requests\UpdateVcardRequest;
+use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardPasswordRequest;
+use App\Services\Base64Services;
+use App\Models\DefaultCategory;
+use App\Models\User;
+use Illuminate\Contracts\Database\Eloquent\DeviatesCastableAttributes;
 
+use function Psy\debug;
 
 class VcardController extends Controller
 {
 
-    public function show($phoneNumber)
+    public function index(Request $request)
     {
-        $Vcard = Vcard::find($phoneNumber);
-        return new VcardResource($Vcard);
-    }
-    public function show_all()
-    {
-        $perPage = request()->input('per_page', 10); // Adjust the default per page as needed
-        $vcards = Vcard::withTrashed()->paginate($perPage);
+        $query = Vcard::withTrashed();
 
-        return VcardResource::collection($vcards);
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', $searchTerm . '%')
+                    ->orWhere('phone_number', 'like', $searchTerm . '%');
+        }
+
+        $users = $query->paginate(10);
+
+        return VcardResource::collection($users);
+    }
+
+    public function show(Vcard $vcard)
+    {
+        return new VcardResource($vcard);
     }
 
     public function search($name)
@@ -64,9 +78,10 @@ class VcardController extends Controller
 
         return new VcardResource($Vcard);
     }
-    public function editMaxDebit($phoneNumber, Request $request)
+    public function updateByAdmin(Request $request,$phoneNumber)
     {
         $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
+        $block = $request->input('block'); // Adjusted to match the axios payload key
         $Vcard = Vcard::find($phoneNumber);
         //se for menor n muda
         if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
@@ -74,8 +89,24 @@ class VcardController extends Controller
         $Vcard->max_debit = $newMaxDebit;
         $Vcard->save();
 
+        if($newMaxDebit){
+            //se for menor n muda
+            if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
+            $Vcard->max_debit = $newMaxDebit;
+            $Vcard->save();
+        }
+        else{
+            if ($Vcard->blocked == 0) {
+
+                $Vcard->blocked = 1;
+            } else {
+                $Vcard->blocked = 0;
+            }
+            $Vcard->save();
+        }
         return new VcardResource($Vcard);
     }
+
 
     public function update(UpdateVcardRequest $request, Vcard $v, $phone_number)
     {
@@ -174,6 +205,17 @@ class VcardController extends Controller
         }
         $vcard->save();
 
+        // Associar categorias padrão ao vcard com type 'D'
+        $defaultCategories = DefaultCategory::all();
+
+        // Mapear apenas os nomes das categorias
+        $categoryNames = $defaultCategories->pluck('name')->toArray();
+
+        // Adicionar o valor 'D' para a coluna type
+        $categoryData = array_fill_keys($categoryNames, ['type' => 'D']);
+
+        $vcard->categories()->sync($categoryData);
+
         return new VcardResource($vcard);
     }
 
@@ -233,6 +275,7 @@ class VcardController extends Controller
 
         return new VcardResource($vcard);
     }
+
     public function remove(Request $request, Vcard $vcard)
     {
         $value = $request->input('valor');
@@ -247,5 +290,11 @@ class VcardController extends Controller
         ]);
 
         return new VcardResource($vcard);
+    }
+
+    public function getVcardTransactions(Vcard $vcard)
+    {
+        $transactions = Transaction::where('vcard', $vcard->phone_number)->get();
+        return TransactionResource::collection($transactions);
     }
 }

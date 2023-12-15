@@ -10,6 +10,8 @@ class Category extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    public $timestamps = false;
     protected $table = 'categories';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -17,4 +19,5 @@ class Category extends Model
         'type',
         'name',
     ];
+
 }

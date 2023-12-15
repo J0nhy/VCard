@@ -66,6 +66,10 @@ const props = defineProps({
   showApagado: {
     type: Boolean,
     default: false,
+  },
+  showSearchAdmin:{
+    type:Boolean,
+    default:false,
   }
 });
 
@@ -87,7 +91,7 @@ const editMaxDebit = (admin) => {
 const deleteClick = (admin) => {
   emit("delete", admin);
 };
-const search_vcard = () => {
+const search = () => {
   emit("search", searchQuery.value);
 };
 
@@ -106,9 +110,16 @@ const pageChanged = (page) => {
 <template>
  <div v-if="showSearchVCard" class="input-group mb-3">
   <input v-model="searchQuery" type="text" class="form-control" placeholder="Search Name/Phone Number"
-    aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search_vcard">
+    aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search">
   <div class="input-group-append">
-    <button class="btn btn-outline-secondary" @click="search_vcard" type="button">Search</button>
+    <button class="btn btn-outline-secondary" @click="search" type="button">Search</button>
+  </div>
+</div>
+<div v-if="showSearchAdmin" class="input-group mb-3">
+  <input v-model="searchQuery" type="text" class="form-control" placeholder="Search Name"
+    aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" @click="search" type="button">Search</button>
   </div>
 </div>
 

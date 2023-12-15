@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\UserResource;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,15 +15,28 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+  /*  public function index(Request $request)
     {
         $userId = optional(Auth::user())->id;
 
         $categories = Category::where('vcard', $userId)->paginate(10);
 
         return CategoryResource::collection($categories);
-    }
+    }*/
+    public function index(User $user, Request $request)
+    {
+        $query = Category::where('vcard', $user->id);
 
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like',  $searchTerm . '%');
+        }
+
+        $categories = $query->paginate(10);
+
+        return CategoryResource::collection($categories);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -57,8 +71,10 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user,Category $category)
     {
-        //
+        $category->delete();
+        return new CategoryResource($category);
+
     }
 }

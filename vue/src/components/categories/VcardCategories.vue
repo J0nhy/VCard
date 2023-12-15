@@ -10,6 +10,7 @@ const router = useRouter()
 
 const categorias = ref([])
 const currentPage = ref(1) // Add this line to keep track of the current page
+const phone_number = ref(null);
 
 const totalCategorias = computed(() => {
   return categorias.value.length
@@ -20,11 +21,12 @@ const loadCategorias = async (search = null) => {
     
     let response;
     if (search) {
-      response  = await axios.get(`categories/${search}?page=${currentPage.value}`);
+      response  = await axios.get(`vcard/${phone_number.value}/categories?search=${search}&page=${currentPage.value}`);
     }
     else {
-      response = await axios.get(`categories?page=${currentPage.value}`)
+      response = await axios.get(`vcard/${phone_number.value}/categories?page=${currentPage.value}`)
     }
+    console.log(categorias);
 
     categorias.value = response.data
 
@@ -32,14 +34,16 @@ const loadCategorias = async (search = null) => {
     console.log(error)
   }
 }
-
-const deleteAdmin = async (user) => {
-  const response = await axios.delete('admins/gerir/' + user.id)
-  loadUsers()
-
+const search  =  (search) => {
+  currentPage.value=1;
+  loadCategorias(search);
 }
-
+const deleteCategoria = async (categoria,search=null) => {
+  const response = await axios.delete(`vcard/${phone_number.value}/categories/` + categoria.id)
+  loadCategorias(search);
+}
 onMounted(() => {
+  phone_number.value=router.currentRoute.value.params.phone_number;
   loadCategorias()
 })
 
@@ -54,7 +58,8 @@ const page_changed = (page) => {
   <h3 class="mt-5 mb-3">Categorias</h3>
   <hr>
   <category-table :categorias="categorias" :showType="true" :showName="true" @page-changed="page_changed"
-    @search="loadCategorias"></category-table>
+    @search="search"
+    @delete="deleteCategoria"></category-table>
 </template>
 
 <style scoped>

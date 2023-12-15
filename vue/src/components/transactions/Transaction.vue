@@ -80,7 +80,7 @@ const loadTransaction = async () => {
         const response = await axios.get('transaction/' + props.id)
         transactionCredit.value = response.data.data
         originalValueStr = JSON.stringify(transactionCredit.value)
-      } else if (routeName == 'NewTransaction') {
+      } else if (routeName == 'NewTransaction' || routeName == 'Transaction') {
         const response = await axios.get('transaction/' + props.id)
         transaction.value = response.data.data
         originalValueStr = JSON.stringify(transaction.value)
@@ -129,8 +129,9 @@ const save = async (transactionToSave) => {
         toast.error('Transaction was not registered due to unknown server error!')
       }
     }
-  } else {
+  } else if (routeName == 'Transaction') {
     try {
+      console.log('transactionToSave:', transactionToSave)
       const response = await axios.put('transaction/' + props.id, transactionToSave)
       transaction.value = response.data.data
       originalValueStr = JSON.stringify(transaction.value)
@@ -173,6 +174,9 @@ const leaveConfirmed = () => {
 
 <template>
   <create-transaction v-if="routeName == 'NewTransaction'" :transaction="transaction" :errors="errors"
+    :inserting="inserting(id)" @save="save" @cancel="cancel"></create-transaction>
+
+    <create-transaction v-if="routeName == 'Transaction'" :transaction="transaction" :errors="errors"
     :inserting="inserting(id)" @save="save" @cancel="cancel"></create-transaction>
 
   <credit v-if="routeName == 'Credit'" :transactionCredit="transactionCredit" :errors="errors" :inserting="inserting(id)"
