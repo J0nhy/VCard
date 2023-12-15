@@ -231,11 +231,13 @@ watch(selectedYear, () => {
 
 <template>
     <div class="container mt-5">
-      <h3 class="mb-3">Estatísticas</h3>
-      <hr>
+        <div id="section0">
+            <h3 class="mb-3">Estatísticas</h3>
+            <hr>
+        </div>
   
       <!-- Totals Section -->
-      <div class="row">
+      <div class="row" id="section1">
       <div class="col-md-6">
         <div class="card border-info">
           <div class="card-header bg-info text-white">
@@ -268,13 +270,13 @@ watch(selectedYear, () => {
       <!-- Charts Section -->
       <div class="row mt-4">
         <!-- Pie Chart -->
-        <div class="col-md-6">
+        <div class="col-md-6" id="section2">
           <h5 class="mb-3">Tipos de pagamento</h5>
           <canvas id="pieChart" style="max-width: 100%; max-height: 400px;"></canvas>
         </div>
   
         <!-- Bar Chart -->
-        <div class="col-md-6">
+        <div class="col-md-6" id="section3">
           <h5 class="mb-3">Despesas mensais</h5>
           <div v-if="years.length > 0" class="mb-3">
             <label for="year">Selecionar Ano:</label>
