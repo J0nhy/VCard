@@ -37,19 +37,14 @@ class UsersController extends Controller
         $users = $query->paginate(10);
         return UserResource::collection($users);
     }
-
     public function show($id)
     {
         $user = User::find($id);
         $view = ViewAuthUsers::where('email', $user["email"])->first();
         return new ViewAuthUsersResource($view);
     }
-
-
-
     public function show_me(Request $request)
     {
-        //print_r($request->user()->data . 'teste');
         return new UserResource($request->user());
     }
 

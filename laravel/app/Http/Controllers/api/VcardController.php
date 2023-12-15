@@ -65,23 +65,10 @@ class VcardController extends Controller
         $base64Service = new Base64Services();
         return $base64Service->saveFile($base64String, $targetDir, $newfilename);
     }
-    public function updateBlockedStatus($phoneNumber)
-    {
-        $Vcard = Vcard::find($phoneNumber);
-        if ($Vcard->blocked == 0) {
-
-            $Vcard->blocked = 1;
-        } else {
-            $Vcard->blocked = 0;
-        }
-        $Vcard->save();
-
-        return new VcardResource($Vcard);
-    }
     public function updateByAdmin(Request $request,$phoneNumber)
     {
-        $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
-        $block = $request->input('block'); // Adjusted to match the axios payload key
+        $newMaxDebit = $request->input('newMaxDebit'); 
+        $block = $request->input('block');
         $Vcard = Vcard::find($phoneNumber);
 
         if($newMaxDebit){
@@ -243,7 +230,6 @@ class VcardController extends Controller
 
     public function show_me(Request $request)
     {
-        print_r($request . 'teste');
         return new VcardResource($request->user());
     }
 

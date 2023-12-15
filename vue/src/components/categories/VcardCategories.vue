@@ -18,10 +18,10 @@ const totalCategorias = computed(() => {
 
 const loadCategorias = async (search = null) => {
   try {
-    
+
     let response;
     if (search) {
-      response  = await axios.get(`vcard/${phone_number.value}/categories?search=${search}&page=${currentPage.value}`);
+      response = await axios.get(`vcard/${phone_number.value}/categories?search=${search}&page=${currentPage.value}`);
     }
     else {
       response = await axios.get(`vcard/${phone_number.value}/categories?page=${currentPage.value}`)
@@ -34,16 +34,16 @@ const loadCategorias = async (search = null) => {
     console.log(error)
   }
 }
-const search  =  (search) => {
-  currentPage.value=1;
+const search = (search) => {
+  currentPage.value = 1;
   loadCategorias(search);
 }
-const deleteCategoria = async (categoria,search=null) => {
+const deleteCategoria = async (categoria, search = null) => {
   const response = await axios.delete(`vcard/${phone_number.value}/categories/` + categoria.id)
   loadCategorias(search);
 }
 onMounted(() => {
-  phone_number.value=router.currentRoute.value.params.phone_number;
+  phone_number.value = router.currentRoute.value.params.phone_number;
   loadCategorias()
 })
 
@@ -56,9 +56,13 @@ const page_changed = (page) => {
 
 <template>
   <h3 class="mt-5 mb-3">Categorias</h3>
+  <button class="btn btn-secondary" type="button"> <router-link class="nav-link"
+      :to="{ name: 'VcardCategoriesNew' } ">
+      Adicionar Categoria
+    </router-link>
+</button>
   <hr>
-  <category-table :categorias="categorias" :showType="true" :showName="true" @page-changed="page_changed"
-    @search="search"
+  <category-table :categorias="categorias" :showType="true" :showName="true" @page-changed="page_changed" @search="search"
     @delete="deleteCategoria"></category-table>
 </template>
 

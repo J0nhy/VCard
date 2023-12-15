@@ -20,10 +20,10 @@ const loadUsers = async (search = null) => {
   try {
     let response;
     if (search) {
-      response = await axios.get(`admin/vcards?search=${search}&page=${currentPage.value}`);
+      response = await axios.get(`vcards?search=${search}&page=${currentPage.value}`);
     }
     else {
-      response = await axios.get(`admin/vcards?page=${currentPage.value}`)
+      response = await axios.get(`vcards?page=${currentPage.value}`)
     }
     users.value = response.data
   } catch (error) {
@@ -35,7 +35,7 @@ const search  =  (search) => {
   loadUsers(search);
 }
 const editMaxDebit = async (user, newMaxDebit) => {
-  const response = await axios.patch(`admin/vcards/${user.phone_number}`, {
+  const response = await axios.patch(`vcards/${user.phone_number}`, {
     newMaxDebit: newMaxDebit.value,
   });
 
@@ -43,11 +43,11 @@ const editMaxDebit = async (user, newMaxDebit) => {
 }
 
 const delete_user = async (user) => {
-  const response = await axios.delete(`admin/vcards/` + user.phone_number)
+  const response = await axios.delete(`vcards/` + user.phone_number)
   updateTable(response.data.data);
 }
 const updateBlockedStatus = async (user) => {
-  const response = await axios.patch(`admin/vcards/${user.phone_number}`, {
+  const response = await axios.patch(`vcards/${user.phone_number}`, {
     block: "yes",
   });
   updateTable(response.data.data);

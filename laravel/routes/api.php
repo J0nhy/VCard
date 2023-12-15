@@ -20,11 +20,13 @@ Route::post('vcard', [VcardController::class, 'store']);
 
 
 
-Route::get('admin/vcards', [VcardController::class, 'index']);
-Route::patch('admin/vcards/{phone_number}', [VcardController::class, 'updateByAdmin']);
+Route::get('vcards', [VcardController::class, 'index']);
+Route::patch('vcards/{phone_number}', [VcardController::class, 'updateByAdmin']);
 Route::delete('admin/{email}', [VcardController::class, 'destroy']);
 Route::get('admin/default_categories', [DefaultCategoryController::class, 'index']);
 Route::delete('admin/default_categories/{category}', [DefaultCategoryController::class, 'destroy']);
+Route::post('default_categories', [DefaultCategoryController::class, 'store']);
+
 
 //Route::patch('admin/{email}', [VcardController::class, 'editMaxDebit']);
 //
@@ -76,6 +78,8 @@ Route::middleware('auth:api')->group(function () {
     // Route::get('categories/{search}', [CategoryController::class, 'show']);
     Route::delete('vcard/{user}/categories/{category}', [CategoryController::class, 'destroy']);
     Route::get('vcard/{user}/categories', [CategoryController::class, 'index']);
+    Route::post('vcard/{user}/categories', [CategoryController::class, 'store']);
+
 
 
     //categorias default

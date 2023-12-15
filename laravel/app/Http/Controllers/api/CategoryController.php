@@ -40,10 +40,17 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(User $user,Request $request)
     {
         //
-
+        $name = $request->input('name'); 
+        $type = $request->input('type'); 
+        $newCategory = new Category();
+        $newCategory->vcard= $user->id;
+        $newCategory->name = $name;
+        $newCategory->type = $type;
+        $newCategory->save();
+        return new CategoryResource($newCategory);
     }
 
     /**

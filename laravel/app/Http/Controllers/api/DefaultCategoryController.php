@@ -32,6 +32,13 @@ class DefaultCategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $name = $request->input('name'); // Adjusted to match the axios payload key
+        $type = $request->input('type'); // Adjusted to match the axios payload key
+        $newDefaultCategory = new DefaultCategory();
+        $newDefaultCategory->name = $name;
+        $newDefaultCategory->type = $type;
+        $newDefaultCategory->save();
+        return new DefaultCategoryResource($newDefaultCategory);
     }
 
     /**
