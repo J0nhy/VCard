@@ -179,7 +179,7 @@ onMounted(() => {
             </h6>
             <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <router-link to="/admin/gerir" class="nav-link">
+                <router-link to="/admins" class="nav-link">
                   Gerir Admins
                 </router-link>
               </li>

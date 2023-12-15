@@ -135,7 +135,7 @@ const router = createRouter({
       props: route => ({ id: parseInt(route.params.id) })
     },
     {
-      path: '/admin/gerir',
+      path: '/admins',
       name: 'GerirAdmins',
       component: GerirAdmins
       //props: true
