@@ -16,7 +16,7 @@ import Statistics from "../components/statistics/Statistics.vue"
 import Default_Categories from "../components/categories/AdminCategories.vue"
 import VcardCategories from "../components/categories/VcardCategories.vue"
 import { useUserStore } from '../stores/user.js'
-
+import Default_CategoriesNew from "../components/categories/NewCategory.vue"
 
 let handlingFirstRoute = true
 
@@ -167,10 +167,25 @@ const router = createRouter({
       component: Default_Categories
     },
     {
+      path: '/default_categories/new',
+      name: 'Default_CategoriesNew',
+      component: Default_CategoriesNew,
+      props: {
+        insertingDefaultCategory: true,
+      },
+    },
+
+    {
       path: '/vcard/:phone_number/categories',
       name: 'Categories',
       component: VcardCategories,
       props: true
+    },
+    {
+      path: '/vcard/:phone_number/categories/new',
+      name: 'Categories',
+      component: VcardCategories,
+      props: route => ({ phone_number: parseInt(route.params.phone_number) })
     },
 
   ]
