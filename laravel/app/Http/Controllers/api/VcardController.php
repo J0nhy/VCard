@@ -83,11 +83,6 @@ class VcardController extends Controller
         $newMaxDebit = $request->input('newMaxDebit'); // Adjusted to match the axios payload key
         $block = $request->input('block'); // Adjusted to match the axios payload key
         $Vcard = Vcard::find($phoneNumber);
-        //se for menor n muda
-        if ($newMaxDebit < $Vcard->balance) return new VcardResource($Vcard);
-
-        $Vcard->max_debit = $newMaxDebit;
-        $Vcard->save();
 
         if($newMaxDebit){
             //se for menor n muda
