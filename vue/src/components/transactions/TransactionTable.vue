@@ -23,7 +23,6 @@ const props = defineProps({
     },
 
 });
-
 const emit = defineEmits(["search", "page-changed","show"]);
 
 const search = () => {
@@ -71,7 +70,7 @@ const pageChanged = (page) => {
                     (<span :style="{ color: transaction.type == 'D' ? 'red' : 'green' }">{{ transaction.new_balance
                     }}</span>)
                 </td>
-                <td v-if="show" class="align-middle">{{ transaction.category_id }}</td>
+                <td v-if="show" class="align-middle">{{ transaction.category== null ? 'Sem Categoria' : transaction.category.name }}</td>
                 <td v-if="show" class="align-middle">{{ transaction.datetime }}</td>
                 <td class="text-end align-middle" v-if="show">
                     <button class="btn btn-xs btn-light" @click="show(transaction)">

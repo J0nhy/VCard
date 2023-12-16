@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { ref, watch, computed, inject, onMounted } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from "../../stores/user";
 import { useToast } from 'vue-toastification';
@@ -7,6 +7,7 @@ import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 const serverBaseUrl = inject("serverBaseUrl");
 
+const axios = inject('axios')
 const props = defineProps({
   transaction: {
     type: Object,
@@ -28,7 +29,30 @@ const editingTransaction = ref(props.transaction)
 const userStore = useUserStore()
 const toast = useToast()
 const router = useRouter()
+const categories = ref([]);
+const loadingCategories = ref(false);
 
+
+
+const loadCategories = async () => {
+  try {
+    let response;
+
+    loadingCategories.value = true;
+    // Substitua 'seu-endpoint-de-categorias' pelo endpoint real em seu backend
+    response = await axios.get(`vcard/${userStore.userId}/categories`, {
+      params: {
+        disablePaginator: true,
+      },
+    });
+    console.log(response.data.data);
+    categories.value = response.data.data; // Assuming 'data' is the array of categories
+  } catch (error) {
+    console.error('Erro ao carregar categorias:', error.message);
+  } finally {
+    loadingCategories.value = false;
+  }
+};
 
 watch(
   () => props.transaction,
@@ -46,10 +70,13 @@ const cancel = () => {
   emit("cancel", editingTransaction.value);
 }
 
+onMounted(loadCategories);
+
+
+
 </script>
 
 <template>
-
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
     <h3 class="mt-5 mb-3" v-if="!inserting">Transaction #{{ editingTransaction.id }}</h3>
     <h3 class="mt-5 mb-3" v-if="inserting">Vcard #{{ userStore.userId }}</h3>
@@ -71,32 +98,27 @@ const cancel = () => {
         </div>
         <div class="mb-3" v-if="inserting">
           <label for="inputPaymentReference" class="form-label">Destinatário</label>
-          <input
-              type="text"
-              class="form-control"
-              :class="{ 'is-invalid': errors ? errors['payment_reference'] : false }"
-              id="inputPaymentReference"
-              placeholder="Destinatário"
-              required
-              v-model="editingTransaction.payment_reference"
-          />
+          <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['payment_reference'] : false }"
+            id="inputPaymentReference" placeholder="Destinatário" required
+            v-model="editingTransaction.payment_reference" />
           <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
-      </div>
+        </div>
         <div class="mb-3" v-if="inserting">
           <label for="inputValue" class="form-label">Valor</label>
-          <input type="text" 
-          class="form-control" 
-          :class="{ 'is-invalid': errors ? errors['value'] : false }"
-            id="inputValue" 
-            placeholder="Valor a enviar" 
-            required 
-            v-model="editingTransaction.value" />
+          <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['value'] : false }"
+            id="inputValue" placeholder="Valor a enviar" required v-model="editingTransaction.value" />
           <field-error-message :errors="errors" fieldName="value"></field-error-message>
         </div>
-        <div class="mb-3">
-          <label for="inputCategory_id" class="form-label">ID da Categoria</label>
-          <input type="text" class="form-control" :class="{ 'is-invalid': errors ? errors['category_id'] : false }"
-            id="inputCategory_id" placeholder="ID da Categoria" v-model="editingTransaction.category_id" />
+        <div class="mb-3" v-if="inserting">
+          <label for="inputCategory" class="form-label">Categoria</label>
+          <select class="form-select" :class="{ 'is-invalid': errors ? errors['category_id'] : false }" id="inputCategory"
+            required v-model="editingTransaction.category_id">
+            <option v-if="loadingCategories" disabled>Carregando...</option>
+            <option v-else value="" disabled>Selecione uma categoria</option>
+            <option v-for="category in categories" :key="category.id" :value="category.id">
+              {{ category.name }}
+            </option>
+          </select>
           <field-error-message :errors="errors" fieldName="category_id"></field-error-message>
         </div>
 

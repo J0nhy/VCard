@@ -72,7 +72,6 @@ Route::middleware('auth:api')->group(function () {
     Route::put('vcard/password/{phone_number}', [VcardController::class, 'updatePassword']);
     Route::get('vcards/{vcard}/transactions', [VcardController::class, 'getVcardTransactions']);
 
-
     //transacoes
 
     //Route::get('transaction/{id}', [TransactionController::class, 'show_specific']);
@@ -87,6 +86,7 @@ Route::middleware('auth:api')->group(function () {
     // Route::get('categories/{search}', [CategoryController::class, 'show']);
     Route::delete('vcard/{user}/categories/{category}', [CategoryController::class, 'destroy']);
     Route::get('vcard/{user}/categories', [CategoryController::class, 'index']);
+
     Route::post('vcard/{user}/categories', [CategoryController::class, 'store']);
 
 
