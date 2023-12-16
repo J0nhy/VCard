@@ -24,27 +24,24 @@ class TransactionController extends Controller
     public function index(User $user, Request $request)
     {
         $query = Transaction::with('category')
-        ->where('vcard', $user->id)
-        ->orderBy('datetime', 'desc');
-    
-    // Check if the 'search' parameter is present in the request
-    if ($request->has('search')) {
-        $searchTerm = $request->input('search');
-        $query->where('payment_reference', 'like', $searchTerm . '%');
-    }
-    
-    $transactions = $query->paginate(10);
-    
-    return TransactionResource::collection($transactions);
-    
+            ->where('vcard', $user->id)
+            ->orderBy('datetime', 'desc');
+
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('payment_reference', 'like', $searchTerm . '%');
+        }
+
+        $transactions = $query->paginate(10);
+
+        return TransactionResource::collection($transactions);
     }
     //ainda n
-    public function show(User $user,$transaction)
+    public function show(User $user, $transaction)
     {
         $query = Transaction::with('category')->where('id', $transaction)->first();
         return new TransactionResource($query);
-
-        
     }
     public function show_specific($id)
     {
@@ -52,16 +49,18 @@ class TransactionController extends Controller
         return new TransactionResource($Transaction);
     }
 
-    public function update(UpdateTransactionRequest $request, Transaction $v, $id)
+    public function update(UpdateTransactionRequest $request, Transaction $v, User $user, $transaction)
     {
         $dataToSave = $request->validated();
-        $Transaction = Transaction::find($id);
+        $transaction_to_edit = Transaction::find($transaction);
 
-        $Transaction->category_id = array_key_exists('category_id', $dataToSave) ? $dataToSave['category_id'] : null;
-        $Transaction->description = array_key_exists('description', $dataToSave) ? $dataToSave['description'] : null;
+        $transaction_to_edit->category_id = array_key_exists('category_id', $dataToSave) ? $dataToSave['category_id'] : null;
+        $transaction_to_edit->description = array_key_exists('description', $dataToSave) ? $dataToSave['description'] : null;
 
-        $Transaction->update($dataToSave);
-        return new TransactionResource($Transaction);
+
+
+        $transaction_to_edit->save();
+        return new TransactionResource($transaction_to_edit);
     }
 
     public function store(StoreTransactionRequest $request)
