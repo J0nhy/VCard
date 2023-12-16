@@ -33,8 +33,21 @@ io.on("connection", (socket) => {
   socket.on("sendmoneyTransaction", (data) => {
     console.log("Received sendMoney event:", data);
     console.log("vcard:", data.transactionData.vcard);
+    
     // Emita a notificação para o usuário específico usando o ID do usuário
     io.to(`user_${data.transactionData.pair_vcard}`).emit("notification", "Você recebeu " + data.transactionData.value  +  "€" + " de " + data.transactionData.vcard);
+  });
+
+  socket.on("Block", (data) => {
+    console.log("Received sendMoney event:", data);
+    console.log("data:", data.data);
+    // Emita a notificação para o usuário específico usando o ID do usuário
+    if(data.data === 0){
+      io.to(`user_${data.userId}`).emit("notification", "Você foi bloqueado");
+    }
+    else if(data.data === 1){
+      io.to(`user_${data.userId}`).emit("notification", "Você foi desbloqueado");
+    }
   });
 });
 
