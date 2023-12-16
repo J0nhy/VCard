@@ -108,15 +108,15 @@ const save = async (transactionToSave) => {
 
       socket.emit("sendmoneyTransaction", { transactionData: response.data.data, userId: userStore.userId });
 
-      
-      console.log("new balance" + response.data.data.new_balance)
+      userStore.updateUserBalance(response.data.data.new_balance);
+
       router.push({
         name: 'Dashboard',
-        params: { new_balance: response.data.data.new_balance, },
       });
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
+        console.log(errors.value)
         toast.error('VCard was not registered due to validation errors!')
       } else {
         toast.error('Transaction was not registered due to unknown server error!')

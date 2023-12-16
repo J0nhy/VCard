@@ -75,7 +75,7 @@ onMounted(() => {
 
 
         <div v-show="userStore.user && userStore.userType === 'V' && routeName != 'Dashboard'" class="text-white">
-          <h5 class="mt-3">Balance: {{ userStore.userBalance }}</h5>
+          <h5 class="mt-3">Saldo Atual: {{ userStore.userBalance }}€</h5>
         </div>
 
         <ul class="navbar-nav">

@@ -30,7 +30,7 @@ class TransactionController extends Controller
     // Check if the 'search' parameter is present in the request
     if ($request->has('search')) {
         $searchTerm = $request->input('search');
-        $query->where('payment_reference', 'like', $searchTerm . '%');
+        $query->where('payment_reference', 'like', '%' . $searchTerm . '%');
     }
     
     $transactions = $query->paginate(10);
