@@ -25,7 +25,7 @@ class AdminController extends Controller
         // Check if the 'search' parameter is present in the request
         if ($request->has('search')) {
             $searchTerm = $request->input('search');
-            $query->where('name', 'like', $searchTerm . '%');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
                 }
 
         $users = $query->paginate(10);

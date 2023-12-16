@@ -28,13 +28,12 @@ watch(
   () => props.vcard,
   (newVcard) => {
     editingVcard.value = newVcard
-    console.log("1-Valor de inserting em VcardDetail.vue mudou para:", newVcard);
+
     //console.log("Valor :", router.currentRoute.value);
   },
   { immediate: true },
   () => props.inserting,
   (newInserting) => {
-    console.log("2-Valor de inserting em VcardDetail.vue mudou para:", newInserting);
   }
 
 )
@@ -62,7 +61,7 @@ onMounted(() => {
   removeElementById("section0");
   removeElementById("section1");
   removeElementById("section3");
-  console.log("valor:" + router.currentRoute.value.params.new_balance);
+  
 })
 
 

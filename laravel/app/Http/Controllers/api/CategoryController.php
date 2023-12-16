@@ -30,7 +30,7 @@ class CategoryController extends Controller
         // Check if the 'search' parameter is present in the request
         if ($request->has('search')) {
             $searchTerm = $request->input('search');
-            $query->where('name', 'like',  $searchTerm . '%');
+            $query->where('name', 'like',  '%' . $searchTerm . '%');
         }
 
         $paginator = $request->input('disablePaginator'); // Adjusted to match the axios payload key

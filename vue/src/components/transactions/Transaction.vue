@@ -104,14 +104,17 @@ const save = async (transactionToSave) => {
       originalValueStr = JSON.stringify(transaction.value)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
 
-      console.log("new balance" + response.data.data.new_balance)
+      console.log("old balance" + userStore.userBalance)
+      userStore.updateUserBalance(response.data.data.new_balance);
+      console.log("new balance" + userStore.userBalance)
+
       router.push({
         name: 'Dashboard',
-        params: { new_balance: response.data.data.new_balance, },
       });
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
+        console.log(errors.value)
         toast.error('VCard was not registered due to validation errors!')
       } else {
         toast.error('Transaction was not registered due to unknown server error!')

@@ -83,6 +83,10 @@ export const useUserStore = defineStore('user', () => {
         return false
     }
 
+    function updateUserBalance(newBalance) {
+        user.value.balance = newBalance
+      }
+
 
 
     return {
@@ -98,5 +102,6 @@ export const useUserStore = defineStore('user', () => {
         login,
         logout,
         restoreToken,
+        updateUserBalance,
     }
 })
