@@ -42,9 +42,10 @@ const editMaxDebit = async (user, newMaxDebit) => {
   updateTable(response.data.data);
 }
 
-const delete_user = async (user) => {
+const delete_user = async (user,search=null) => {
   const response = await axios.delete(`vcards/` + user.phone_number)
-  updateTable(response.data.data);
+  loadUsers(search);
+  //updateTable(response.data.data);
 }
 const updateBlockedStatus = async (user) => {
   const response = await axios.patch(`vcards/${user.phone_number}`, {

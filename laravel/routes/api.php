@@ -22,6 +22,8 @@ Route::post('vcard', [VcardController::class, 'store']);
 
 Route::get('vcards', [VcardController::class, 'index']);
 Route::patch('vcards/{phone_number}', [VcardController::class, 'updateByAdmin']);
+Route::delete('vcards/{phone_number}', [VcardController::class, 'destroy']);
+
 Route::delete('admin/{email}', [VcardController::class, 'destroy']);
 Route::get('admin/default_categories', [DefaultCategoryController::class, 'index']);
 Route::delete('admin/default_categories/{category}', [DefaultCategoryController::class, 'destroy']);

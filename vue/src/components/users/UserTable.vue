@@ -89,7 +89,7 @@ const editMaxDebit = (admin) => {
   emit("edit", admin, newMaxDebit);
 };
 const deleteClick = (admin) => {
-  emit("delete", admin);
+  emit("delete", admin,searchQuery.value);
 };
 const search = () => {
   emit("search", searchQuery.value);
