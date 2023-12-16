@@ -29,7 +29,6 @@ export const useUserStore = defineStore('user', () => {
         try {
             const response = await axios.get('users/me')
             user.value = response.data.data
-            console.log("user.js: ", user)
 
         } catch (error) {
             console.log("erro" + error)

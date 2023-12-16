@@ -18,6 +18,7 @@ import VcardCategories from "../components/categories/VcardCategories.vue"
 import { useUserStore } from '../stores/user.js'
 import Default_CategoriesNew from "../components/categories/NewCategory.vue"
 import VcardCategoriesNew from "../components/categories/NewCategory.vue"
+import TransactionDetail from "../components/transactions/TransactionDetail.vue"
 let handlingFirstRoute = true
 
 
@@ -125,7 +126,12 @@ const router = createRouter({
       component: History,
       props: true // or props: route => ({ phone_number: route.params.phone_number })
     },
-
+    {
+      path: '/vcard/:phone_number/transactions/:id',
+      name: 'TransactionDetail',
+      component: TransactionDetail,
+      props: true // or props: route => ({ phone_number: route.params.phone_number })
+    },
 
     {
       path: '/transaction/:id',

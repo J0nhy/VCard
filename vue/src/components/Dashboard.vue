@@ -45,24 +45,18 @@ const confirmationLeaveDialog = ref(null)
 let originalValueStr = ''
 
 const routeName = router.currentRoute.value.name;
-console.log("Rota Atual:", routeName);
-
-
-
 
 const ativarPiggy = async (data) => {
   originalValueStr = ''
   errors.value = null
   try {
     const response = await axios.put('activatePiggy/' + userStore.user.id)
-    console.log(response.data);
     data.piggyBalance = response.data.data.custom_data
     data.userBalance = response.data.data.balance
     originalValueStr = JSON.stringify(vcard.value)
     toast.success('Vcard #' + vcard.value.phone_number + ', Piggy was updated successfully.')
 
   } catch (error) {
-    console.log(error)
     if (error.response.status == 422) {
       errors.value = error.response.data.errors
       toast.error('Piggy was not updated due to validation errors!')
@@ -84,11 +78,9 @@ const depositar = async (data) => {
     //userStore.updateUserBalance(data.userBalance);
     
     originalValueStr = JSON.stringify(vcard.value)
-    console.log(response.data);
     toast.success('Piggy was updated successfully.');
 
   } catch (error) {
-    console.log(error)
     if (error.response.status == 422) {
       errors.value = error.response.data.errors
       toast.error('Piggy was not updated due to validation errors!')
@@ -109,7 +101,6 @@ const debitar = async (data) => {
     data.piggyBalance = response.data.data.custom_data
     data.userBalance = response.data.data.balance
     originalValueStr = JSON.stringify(vcard.value)
-    console.log(response.data);
     toast.success('Piggy was updated successfully.');
   } catch (error) {
     // Handle errors

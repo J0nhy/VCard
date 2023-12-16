@@ -34,7 +34,14 @@ onMounted(() => {
   phone_number.value=router.currentRoute.value.params.phone_number;
   loadTransactions()
 })
-
+const show  =  (transaction) => {
+  router.push({
+    name: 'TransactionDetail',
+    params: {
+      id: transaction.id,
+    },
+  });
+}
 const search  =  (search) => {
   currentPage.value=1;
   loadTransactions(search);
@@ -56,6 +63,7 @@ const page_changed = (page) => {
     :show="true"
     @page-changed="page_changed"
     @search="search"
+    @show="show"
   ></transaction-table>
 </template>
 

@@ -1,91 +1,79 @@
 <script setup>
-import { inject, ref } from "vue";
-
-import avatarNoneUrl from '@/assets/avatar-none.png'
-import { Bootstrap5Pagination } from 'laravel-vue-pagination'
+import { ref, watch, onMounted, inject } from "vue";
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl");
-const searchQuery = ref('');
-const newMaxDebit = ref('');
+const axios = inject('axios');
+const transaction = ref([])
+const phone_number = ref(null);
 
-const props = defineProps({
-    transactions: {
-        type: Object,
-        default: () => [],
-    },
-    show: {
-        type: Boolean,
-        default: true,
-    },
-    showSearch: {
-        type: Boolean,
-        default: true,
-    },
+const props = defineProps(['id']);
 
-});
+onMounted(async ()  => {
+    phone_number.value=router.currentRoute.value.params.phone_number;
 
-const emit = defineEmits(["search","page-changed"]);
-
-const search = () => {
-    emit("search", searchQuery.value);
-};
-
-
-const pageChanged=(page)=>{
- emit("page-changed", page);
-};
+    const response = await axios.get(`vcard/${phone_number.value}/transactions/${props.id}`)
+    transaction.value= await response.data.data;
+})  
 </script>
 
 <template>
-     <div v-if="showSearch" class="input-group mb-3">
-        <input v-model="searchQuery" type="text" class="form-control" placeholder="Search To/From"
-            aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" @click="search" type="button">Search</button>
+    <form class="row g-3 needs-validation" @submit.prevent="save">
+        <h3 class="mt-5 mb-3">Transaction {{props.id}}</h3>
+        <hr />
+        <div class="d-flex flex-wrap justify-content-between">
+            <div class="w-75 pe-4">
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">ID of the transaction</label>
+                    <input disabled type="text" class="form-control" :value="transaction.id" />
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Category Name</label>
+                    <input disabled type="text" class="form-control" :value="transaction.category == null ? 'Sem Categoria' : transaction.category.name" />
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Date and Time</label>
+                    <input disabled type="text" class="form-control" :value="transaction.datetime"/>
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Type</label>
+                    <input disabled type="text" class="form-control" :value="transaction.type=='D' ? 'Debit' : 'Credit'"/>
+                </div><div class="mb-3">
+                    <label for="inputName" class="form-label">Value</label>
+                    <input disabled type="text" class="form-control" :value="transaction.value"/>
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Old Balance</label>
+                    <input disabled type="text" class="form-control" :value="transaction.old_balance"/>
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">New Balance</label>
+                    <input disabled type="text" class="form-control" :value="transaction.new_balance"/>
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Payment Type</label>
+                    <input disabled type="text" class="form-control" :value="transaction.payment_type"/>
+                </div>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Payment Reference</label>
+                    <input disabled type="text" class="form-control" :value="transaction.payment_reference"/>
+                </div>
+            </div>
         </div>
-    </div>
-    <table class="table">
-       
-        <thead>
-            <tr>
-                <th v-if="show" class="align-middle">Payment Type</th>
-                <th v-if="show" class="align-middle">To/From</th>
-                <th v-if="show" class="align-middle">Type</th>
+        <div class="mt-2 d-flex justify-content-start">
+            <button  type="button" class="btn btn-primary px-5 mx-2"><router-link
+                    class="nav-link" :to="{ name: 'History' }">
+                    Go back
+                </router-link></button>
+    
 
-                <th v-if="show" class="align-middle">Amount</th>
-                <th v-if="show" class="align-middle">Category</th>
-                <th v-if="show" class="align-middle">Date</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="transaction in transactions.data" :key="transaction.id">
-                <td v-if="show" class="align-middle">{{ transaction.payment_type }}</td>
-                <td v-if="show" class="align-middle">{{ transaction.payment_reference }}</td>
-                <td v-if="show" class="align-middle"> {{ transaction.type == 'D' ? 'Debit' : 'Credit' }}</td>
-                <td v-if="show" class="align-middle">
-                    {{ transaction.type == 'D' ? '-' : '+' }}{{ transaction.value }}
-                    <!-- Use a dynamic style binding to set the color -->
-                    (<span :style="{ color: transaction.type == 'D' ? 'red' : 'green' }">{{ transaction.new_balance
-                    }}</span>)
-                </td>
-                <td v-if="show" class="align-middle">{{ transaction.category_id }}</td>
-                <td v-if="show" class="align-middle">{{ transaction.datetime }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <Bootstrap5Pagination :data="transactions" @pagination-change-page="pageChanged"/>
-
+        </div>
+    </form>
 </template>
 
 <style scoped>
-button {
-    margin-left: 3px;
-    margin-right: 3px;
-}
-
-.img_photo {
-    width: 3.2rem;
-    height: 3.2rem;
+.total_hours {
+    width: 26rem;
 }
 </style>
