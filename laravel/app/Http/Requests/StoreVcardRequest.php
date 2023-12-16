@@ -24,7 +24,7 @@ class StoreVcardRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:vcards',
             'phone_number' => 'required|unique:vcards|max:9|min:9',
             'password' => 'required|max:50|min:3',
             'confirmation_code' => 'required|max:3|min:3',
