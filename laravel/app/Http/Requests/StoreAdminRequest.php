@@ -26,6 +26,7 @@ class StoreAdminRequest extends UpdateAdminRequest
             'name' => 'required',
             'email' => 'required',
             'password' => 'required|max:50|min:3',
+            'password_confirmation' => 'required|same:password',
             //make phone_number unique and required
 
         ];

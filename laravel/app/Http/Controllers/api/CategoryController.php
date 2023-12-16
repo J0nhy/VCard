@@ -43,8 +43,8 @@ class CategoryController extends Controller
     public function store(User $user,Request $request)
     {
         //
-        $name = $request->input('name'); 
-        $type = $request->input('type'); 
+        $name = $request->input('name');
+        $type = $request->input('type');
         $newCategory = new Category();
         $newCategory->vcard= $user->id;
         $newCategory->name = $name;

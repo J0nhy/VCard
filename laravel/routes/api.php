@@ -72,7 +72,6 @@ Route::middleware('auth:api')->group(function () {
     Route::put('vcard/password/{phone_number}', [VcardController::class, 'updatePassword']);
     Route::get('vcards/{vcard}/transactions', [VcardController::class, 'getVcardTransactions']);
 
-
     //transacoes
 
     //Route::get('transaction/{id}', [TransactionController::class, 'show_specific']);
