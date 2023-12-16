@@ -25,6 +25,7 @@ const props = defineProps({
 
 const newVcard = () => {
     return {
+      phone_number: '',
       name: '',
       email: '',
       photo_url: '',
@@ -85,7 +86,7 @@ const save = async (vcardToSave) => {
       const response = await axios.post('vcard', vcardToSave)
       vcard.value = response.data.data
       originalValueStr = JSON.stringify(vcard.value)
-      toast.success('User #' + vcard.value.id + ' was registered successfully.')
+      toast.success('User #' + vcard.value.phone_number + ' was registered successfully.')
       //do login
       router.push({name: 'Dashboard'})
     } catch (error) {
