@@ -220,7 +220,7 @@ class VcardController extends Controller
             return response()->json(['error' => 'Usuário com saldo positivo'], 401);
         }
 
-        if ($Vcard->transactions()->exists()) {
+        if ($Vcard->transactions()->exists() || $Vcard->categoriesUser()->exists()) {
             // Soft delete se houver transações associadas
             $Vcard->delete();
         } else {

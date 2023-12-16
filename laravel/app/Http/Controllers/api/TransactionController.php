@@ -23,17 +23,20 @@ class TransactionController extends Controller
 
     public function index(User $user, Request $request)
     {
-        $query = Transaction::with('category')->where('vcard', $user->id);
-
-        // Check if the 'search' parameter is present in the request
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('payment_reference', 'like',  '%' . $searchTerm . '%');
-        }
-
-        $transactions = $query->paginate(10);
-
-        return TransactionResource::collection($transactions);
+        $query = Transaction::with('category')
+        ->where('vcard', $user->id)
+        ->orderBy('datetime', 'desc');
+    
+    // Check if the 'search' parameter is present in the request
+    if ($request->has('search')) {
+        $searchTerm = $request->input('search');
+        $query->where('payment_reference', 'like', '%' . $searchTerm . '%');
+    }
+    
+    $transactions = $query->paginate(10);
+    
+    return TransactionResource::collection($transactions);
+    
     }
     //ainda n
     public function show(User $user,$transaction)
