@@ -86,6 +86,7 @@ Route::middleware('auth:api')->group(function () {
     // Route::get('categories/{search}', [CategoryController::class, 'show']);
     Route::delete('vcard/{user}/categories/{category}', [CategoryController::class, 'destroy']);
     Route::get('vcard/{user}/categories', [CategoryController::class, 'index']);
+
     Route::post('vcard/{user}/categories', [CategoryController::class, 'store']);
 
 

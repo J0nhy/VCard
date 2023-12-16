@@ -15,7 +15,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-  /*  public function index(Request $request)
+    /*  public function index(Request $request)
     {
         $userId = optional(Auth::user())->id;
 
@@ -33,20 +33,27 @@ class CategoryController extends Controller
             $query->where('name', 'like',  $searchTerm . '%');
         }
 
-        $categories = $query->paginate(10);
+        $paginator = $request->input('disablePaginator'); // Adjusted to match the axios payload key
 
+
+        if(!$paginator)
+            $categories = $query->paginate(10);
+        else
+            $categories = $query->get();
         return CategoryResource::collection($categories);
     }
+
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(User $user,Request $request)
+    public function store(User $user, Request $request)
     {
         //
         $name = $request->input('name');
         $type = $request->input('type');
         $newCategory = new Category();
-        $newCategory->vcard= $user->id;
+        $newCategory->vcard = $user->id;
         $newCategory->name = $name;
         $newCategory->type = $type;
         $newCategory->save();
@@ -78,10 +85,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user,Category $category)
+    public function destroy(User $user, Category $category)
     {
         $category->delete();
         return new CategoryResource($category);
-
     }
 }
