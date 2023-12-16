@@ -6,6 +6,8 @@ import Credit from "./CreateCreditTransaction.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useUserStore } from "../../stores/user"
 
+const socket = inject('socket')
+
 const toast = useToast()
 const router = useRouter()
 const userStore = useUserStore()
@@ -104,14 +106,17 @@ const save = async (transactionToSave) => {
       originalValueStr = JSON.stringify(transaction.value)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
 
-      console.log("new balance" + response.data.data.new_balance)
+      socket.emit("sendmoneyTransaction", { transactionData: response.data.data, userId: userStore.userId });
+
+      userStore.updateUserBalance(response.data.data.new_balance);
+
       router.push({
         name: 'Dashboard',
-        params: { new_balance: response.data.data.new_balance, },
       });
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
+        console.log(errors.value)
         toast.error('VCard was not registered due to validation errors!')
       } else {
         toast.error('Transaction was not registered due to unknown server error!')
@@ -124,6 +129,9 @@ const save = async (transactionToSave) => {
       originalValueStr = JSON.stringify(transaction.value)
       console.log(response.data.data.date)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
+
+      socket.emit("sendmoney", { transactionData: response.data.data, userId: userStore.userId });
+      
       router.push({ name: 'Dashboard' })
     } catch (error) {
       console.log(error)

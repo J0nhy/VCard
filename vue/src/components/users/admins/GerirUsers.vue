@@ -2,6 +2,9 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, inject } from 'vue'
 import UserTable from "../UserTable.vue"
+import { useToast } from "vue-toastification"
+
+const socket = inject('socket')
 
 const axios = inject('axios')
 const router = useRouter()
@@ -11,6 +14,8 @@ const currentPage = ref(1)
 
 const isLoading = ref(false);
 const errorOccurred = ref(false);
+
+const toast = useToast()
 
 const totalUsers = computed(() => {
   return users.value.length
@@ -35,7 +40,12 @@ const search  =  (search) => {
   loadUsers(search);
 }
 const editMaxDebit = async (user, newMaxDebit) => {
-  const response = await axios.patch(`vcards/${user.phone_number}`, {
+
+  if(newMaxDebit.value < user.balance){
+      toast.error('O limite de débito não pode ser inferior ao saldo atual!');
+      return;
+    }
+  const response = await axios.patch(`vcards/${user.phone_number}`, {  
     newMaxDebit: newMaxDebit.value,
   });
 
@@ -44,6 +54,8 @@ const editMaxDebit = async (user, newMaxDebit) => {
 
 const delete_user = async (user,search=null) => {
   const response = await axios.delete(`vcards/` + user.phone_number)
+  toast.success('User deleted successfully!');
+
   loadUsers(search);
   //updateTable(response.data.data);
 }
@@ -51,6 +63,16 @@ const updateBlockedStatus = async (user) => {
   const response = await axios.patch(`vcards/${user.phone_number}`, {
     block: "yes",
   });
+  if(user.blocked == 1){
+    toast.success('User unblocked successfully!');
+    socket.emit("Block", { data: 1, userId: user.phone_number });
+
+  }else{
+    toast.success('User blocked successfully!');
+    socket.emit("Block", { data: 0, userId: user.phone_number });
+
+  }
+  
   updateTable(response.data.data);
 }
 const updateTable = (user) => {

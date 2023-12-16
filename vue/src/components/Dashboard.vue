@@ -6,6 +6,8 @@ import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useVcardStore } from "../stores/vcard"
 import { useUserStore } from "../stores/user"
 
+const socket = inject('socket')
+
 const toast = useToast()
 const router = useRouter()
 const vcardStore = useVcardStore()
@@ -123,6 +125,17 @@ const leaveConfirmed = () => {
     nextCallBack()
   }
 }
+
+watch(
+  () => userStore.userBalance,
+  (newVcard) => {
+    console.log("balance Atual:", newVcard);
+    //console.log("Valor :", router.currentRoute.value);
+  },
+  { immediate: true }
+)
+
+
 
 
 

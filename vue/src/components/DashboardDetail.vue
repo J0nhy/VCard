@@ -6,6 +6,7 @@ import { useToast } from 'vue-toastification';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import Statistics from './statistics/Statistics.vue'
 
+const socket = inject('socket')
 
 const serverBaseUrl = inject("serverBaseUrl");
 
@@ -28,13 +29,12 @@ watch(
   () => props.vcard,
   (newVcard) => {
     editingVcard.value = newVcard
-    console.log("1-Valor de inserting em VcardDetail.vue mudou para:", newVcard);
+
     //console.log("Valor :", router.currentRoute.value);
   },
   { immediate: true },
   () => props.inserting,
   (newInserting) => {
-    console.log("2-Valor de inserting em VcardDetail.vue mudou para:", newInserting);
   }
 
 )
@@ -62,8 +62,17 @@ onMounted(() => {
   removeElementById("section0");
   removeElementById("section1");
   removeElementById("section3");
-  console.log("valor:" + router.currentRoute.value.params.new_balance);
+  
 })
+
+const userId = userStore.userId;
+
+socket.emit('connectUser', { userId });
+
+  // Ouvir notificações do servidor
+  socket.on('notification', (message) => {
+    toast.success(message);
+  });
 
 
 </script>

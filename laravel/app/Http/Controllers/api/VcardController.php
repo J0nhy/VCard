@@ -30,8 +30,8 @@ class VcardController extends Controller
         // Check if the 'search' parameter is present in the request
         if ($request->has('search')) {
             $searchTerm = $request->input('search');
-            $query->where('name', 'like', $searchTerm . '%')
-                    ->orWhere('phone_number', 'like', $searchTerm . '%');
+            $query->where('name', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('phone_number', 'like', '%' . $searchTerm . '%');
         }
 
         $users = $query->paginate(10);
@@ -48,8 +48,8 @@ class VcardController extends Controller
     {
         $vcards = Vcard::withTrashed()
             ->where(function ($query) use ($name) {
-                $query->where('name', 'like', $name . '%')
-                    ->orWhere('phone_number', 'like', $name . '%');
+                $query->where('name', 'like', '%' . $name . '%')
+                    ->orWhere('phone_number', 'like', '%' . $name . '%');
             })
             ->paginate(10);
 

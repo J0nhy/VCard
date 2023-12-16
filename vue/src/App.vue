@@ -6,7 +6,10 @@ import { useToast } from "vue-toastification"
 import { useVcardStore } from './stores/vcard.js'
 import { useAdminStore } from './stores/admin.js'
 import { useUserStore } from './stores/user.js'
+import { inject } from 'vue'
 
+
+const socket = inject('socket')
 
 
 import LaravelTester from '@/components/LaravelTester.vue'
@@ -38,9 +41,18 @@ const clickMenuOption = () => {
   }
 }
 
+
+
+
+
 onMounted(() => {
   userStore.restoreToken()
 })
+
+
+
+
+
 
 
 </script>
@@ -63,7 +75,7 @@ onMounted(() => {
 
 
         <div v-show="userStore.user && userStore.userType === 'V' && routeName != 'Dashboard'" class="text-white">
-          <h5 class="mt-3">Balance: {{ userStore.userBalance }}</h5>
+          <h5 class="mt-3">Saldo Atual: {{ userStore.userBalance }}€</h5>
         </div>
 
         <ul class="navbar-nav">
@@ -149,7 +161,7 @@ onMounted(() => {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <router-link to="/transactions/new" class="nav-link">
+              <router-link v-if="userStore.userType === 'V'" to="/transactions/new" class="nav-link">
                 Enviar Dinheiro
               </router-link>
             </li>
