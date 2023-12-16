@@ -23,7 +23,7 @@ class TransactionController extends Controller
 
     public function index(User $user, Request $request)
     {
-        $query = Transaction::where('vcard', $user->id);
+        $query = Transaction::with('category')->where('vcard', $user->id);
 
         // Check if the 'search' parameter is present in the request
         if ($request->has('search')) {
