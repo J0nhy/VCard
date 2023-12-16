@@ -23,11 +23,12 @@ class StoreVcardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'email' => 'required',
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:vcards',
             'phone_number' => 'required|unique:vcards|max:9|min:9',
             'password' => 'required|max:50|min:3',
             'confirmation_code' => 'required|max:3|min:3',
+            'photo_url' => 'nullable|string',
             'password_confirmation' => 'required|same:password',
             //make phone_number unique and required
 
