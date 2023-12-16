@@ -79,8 +79,10 @@ Route::middleware('auth:api')->group(function () {
     //Route::put('transaction/{id}', [TransactionController::class, 'update']);
     //Route::delete('transactions/{phoneNumber}', [TransactionController::class, 'destroy']);
     Route::post('transaction', [TransactionController::class, 'store']);
-    Route::get('vcard/{user}/transactions', [TransactionController::class, 'index']);
-    Route::get('vcard/{user}/transactions/{transaction}', [TransactionController::class, 'show']);
+    Route::get('vcard/{user}/transactions', [TransactionController::class, 'index'])
+        ->middleware('can:view,user');
+    Route::get('vcard/{user}/transactions/{transaction}', [TransactionController::class, 'show'])
+    ->middleware('can:view,user');
 
 
     //categorias
