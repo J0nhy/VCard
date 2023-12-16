@@ -67,7 +67,7 @@ class VcardController extends Controller
     }
     public function updateByAdmin(Request $request,$phoneNumber)
     {
-        $newMaxDebit = $request->input('newMaxDebit'); 
+        $newMaxDebit = $request->input('newMaxDebit');
         $block = $request->input('block');
         $Vcard = Vcard::find($phoneNumber);
 
@@ -165,6 +165,7 @@ class VcardController extends Controller
 
     public function store(StoreVcardRequest $request)
     {
+
         $dataToSave = $request->validated();
 
         $base64ImagePhoto = array_key_exists("base64ImagePhoto", $dataToSave) ?
@@ -178,6 +179,9 @@ class VcardController extends Controller
 
 
         $vcard->confirmation_code = bcrypt($dataToSave['confirmation_code']);
+
+
+
         $vcard->password = bcrypt($dataToSave['password']);
         $vcard->blocked = 0;
 
