@@ -12,14 +12,12 @@ const send = () => {
 
 socket.on('echo', (message) => {
     responseData.value = message
-
 })
 </script>
 
 <template>
     <div class="my-5">
         <h2>Web Socket Tester</h2>
-
         <form>
             <div class="mb-3">
                 <label for="message" class="form-label">Message:</label>

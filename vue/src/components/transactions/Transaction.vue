@@ -6,6 +6,8 @@ import Credit from "./CreateCreditTransaction.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useUserStore } from "../../stores/user"
 
+const socket = inject('socket')
+
 const toast = useToast()
 const router = useRouter()
 const userStore = useUserStore()
@@ -104,9 +106,9 @@ const save = async (transactionToSave) => {
       originalValueStr = JSON.stringify(transaction.value)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
 
-      console.log("old balance" + userStore.userBalance)
+      socket.emit("sendmoneyTransaction", { transactionData: response.data.data, userId: userStore.userId });
+
       userStore.updateUserBalance(response.data.data.new_balance);
-      console.log("new balance" + userStore.userBalance)
 
       router.push({
         name: 'Dashboard',
@@ -127,6 +129,9 @@ const save = async (transactionToSave) => {
       originalValueStr = JSON.stringify(transaction.value)
       console.log(response.data.data.date)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
+
+      socket.emit("sendmoney", { transactionData: response.data.data, userId: userStore.userId });
+      
       router.push({ name: 'Dashboard' })
     } catch (error) {
       console.log(error)

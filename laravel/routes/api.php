@@ -88,6 +88,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('transaction', [TransactionController::class, 'store']);
     Route::get('vcard/{user}/transactions', [TransactionController::class, 'index']);
     Route::get('vcard/{user}/transactions/{transaction}', [TransactionController::class, 'show']);
+    Route::patch('vcard/{user}/transactions/{transaction}', [TransactionController::class, 'update']);
 
 
     //categorias

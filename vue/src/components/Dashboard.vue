@@ -6,6 +6,8 @@ import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useVcardStore } from "../stores/vcard"
 import { useUserStore } from "../stores/user"
 
+const socket = inject('socket')
+
 const toast = useToast()
 const router = useRouter()
 const vcardStore = useVcardStore()
@@ -132,6 +134,9 @@ watch(
   },
   { immediate: true }
 )
+
+
+
 
 
 

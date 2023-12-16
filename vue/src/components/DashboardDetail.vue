@@ -6,6 +6,7 @@ import { useToast } from 'vue-toastification';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import Statistics from './statistics/Statistics.vue'
 
+const socket = inject('socket')
 
 const serverBaseUrl = inject("serverBaseUrl");
 
@@ -63,6 +64,15 @@ onMounted(() => {
   removeElementById("section3");
   
 })
+
+const userId = userStore.userId;
+
+socket.emit('connectUser', { userId });
+
+  // Ouvir notificações do servidor
+  socket.on('notification', (message) => {
+    toast.success(message);
+  });
 
 
 </script>
