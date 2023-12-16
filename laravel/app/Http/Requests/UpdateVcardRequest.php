@@ -25,7 +25,7 @@ class UpdateVcardRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone_number' => 'required|int',
+            'phone_number' => 'required|unique:vcards|max:9|min:9',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             //'confirmation_code' => 'required|string',

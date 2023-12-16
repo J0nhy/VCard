@@ -103,7 +103,12 @@ const save = async (transactionToSave) => {
       transaction.value = response.data.data
       originalValueStr = JSON.stringify(transaction.value)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
-      router.push({ name: 'Dashboard' })
+
+      console.log("new balance" + response.data.data.new_balance)
+      router.push({
+        name: 'Dashboard',
+        params: { new_balance: response.data.data.new_balance, },
+      });
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors

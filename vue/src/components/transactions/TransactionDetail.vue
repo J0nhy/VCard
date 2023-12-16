@@ -66,10 +66,10 @@ onMounted(async ()  => {
                     class="nav-link" :to="{ name: 'History' }">
                     Go back
                 </router-link></button>
-    
-
         </div>
     </form>
+    <br><br>
+
 </template>
 
 <style scoped>
