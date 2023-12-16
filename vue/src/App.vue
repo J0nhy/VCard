@@ -149,7 +149,7 @@ onMounted(() => {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <router-link to="/transactions/new" class="nav-link">
+              <router-link v-if="userStore.userType === 'V'" to="/transactions/new" class="nav-link">
                 Enviar Dinheiro
               </router-link>
             </li>
