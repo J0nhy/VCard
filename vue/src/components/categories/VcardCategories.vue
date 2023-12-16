@@ -3,9 +3,12 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, inject } from 'vue'
 import categoryTable from "./CategoryTable.vue"
+import { useToast } from "vue-toastification"
+
 
 const axios = inject('axios')
 
+const toast = useToast()
 const router = useRouter()
 
 const categorias = ref([])
@@ -40,6 +43,8 @@ const search = (search) => {
 }
 const deleteCategoria = async (categoria, search = null) => {
   const response = await axios.delete(`vcard/${phone_number.value}/categories/` + categoria.id)
+  toast.success('Category deleted successfully!');
+
   loadCategorias(search);
 }
 onMounted(() => {
