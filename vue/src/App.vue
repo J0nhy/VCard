@@ -6,7 +6,10 @@ import { useToast } from "vue-toastification"
 import { useVcardStore } from './stores/vcard.js'
 import { useAdminStore } from './stores/admin.js'
 import { useUserStore } from './stores/user.js'
+import { inject } from 'vue'
 
+
+const socket = inject('socket')
 
 
 import LaravelTester from '@/components/LaravelTester.vue'
@@ -38,9 +41,18 @@ const clickMenuOption = () => {
   }
 }
 
+
+
+
+
 onMounted(() => {
   userStore.restoreToken()
 })
+
+
+
+
+
 
 
 </script>

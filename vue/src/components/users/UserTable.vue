@@ -105,6 +105,7 @@ const pageChanged = (page) => {
   emit("page-changed", page, searchQuery.value);
 };
 
+
 </script>
 
 <template>

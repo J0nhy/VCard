@@ -5,6 +5,8 @@ import { useVcardStore } from "../../stores/vcard";
 import { useToast } from 'vue-toastification';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
+const socket = inject('socket')
+
 const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
@@ -145,6 +147,9 @@ const deleteClick = (Vcard) => {
     
   }  
 }
+
+
+
 
 </script>
 

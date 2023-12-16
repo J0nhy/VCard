@@ -5,6 +5,8 @@ import VcardDetail from "./VcardDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useVcardStore } from "../../stores/vcard"
 
+const socket = inject('socket')
+
 const toast = useToast()
 const router = useRouter()
 const vcardStore = useVcardStore()
@@ -39,6 +41,8 @@ const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
 // String with the JSON representation after loading the project (new or edit)
 let originalValueStr = ''
+
+const phone_number = props.phone_number
 
 const routeName = router.currentRoute.value.name;
 //console.log("Rota Atual:", routeName);

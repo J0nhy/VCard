@@ -17,4 +17,24 @@ io.on("connection", (socket) => {
     socket.emit("echo", message);
     console.log(`client ${socket.id} sent: ${message}`);
   });
+
+  socket.on('connectUser', ({ userId }) => {
+    console.log(`client ${socket.id} connected as user_${userId}`);
+    socket.join(`user_${userId}`);
+  });
+
+  socket.on("sendmoney", (data) => {
+    console.log("Received sendMoney event:", data);
+    console.log("vcard:", data.transactionData.vcard);
+    // Emita a notificação para o usuário específico usando o ID do usuário
+    io.to(`user_${data.transactionData.vcard}`).emit("notification", "Você recebeu " + data.transactionData.value  +  "€");
+  });
+
+  socket.on("sendmoneyTransaction", (data) => {
+    console.log("Received sendMoney event:", data);
+    console.log("vcard:", data.transactionData.vcard);
+    // Emita a notificação para o usuário específico usando o ID do usuário
+    io.to(`user_${data.transactionData.pair_vcard}`).emit("notification", "Você recebeu " + data.transactionData.value  +  "€" + " de " + data.transactionData.vcard);
+  });
 });
+
