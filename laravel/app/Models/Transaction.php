@@ -13,6 +13,7 @@ class Transaction extends Model
     protected $table = 'transactions';
 
     protected $fillable = [
+        'id',
         'vcard',
         'date',
         'datetime',
@@ -31,6 +32,10 @@ class Transaction extends Model
     public function vcard()
     {
         return $this->belongsTo(Vcard::class, 'vcard', 'phone_number');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
 

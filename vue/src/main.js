@@ -21,7 +21,6 @@ import router from './router'
 const app = createApp(App)
 
 const apiDomain = import.meta.env.VITE_API_DOMAIN
-console.log('apiDomain', apiDomain)
 const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
 app.provide('socket', io(wsConnection))

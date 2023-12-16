@@ -24,20 +24,22 @@ const props = defineProps({
 
 });
 
-const emit = defineEmits(["search","page-changed"]);
+const emit = defineEmits(["search", "page-changed","show"]);
 
 const search = () => {
     emit("search", searchQuery.value);
 };
 
-
-const pageChanged=(page)=>{
- emit("page-changed", page);
+const show = (transaction) => {
+    emit("show", transaction);
+};
+const pageChanged = (page) => {
+    emit("page-changed", page);
 };
 </script>
 
 <template>
-     <div v-if="showSearch" class="input-group mb-3">
+    <div v-if="showSearch" class="input-group mb-3">
         <input v-model="searchQuery" type="text" class="form-control" placeholder="Search To/From"
             aria-label="Recipient's username" aria-describedby="basic-addon2" @keyup.enter="search">
         <div class="input-group-append">
@@ -45,7 +47,7 @@ const pageChanged=(page)=>{
         </div>
     </div>
     <table class="table">
-       
+
         <thead>
             <tr>
                 <th v-if="show" class="align-middle">Payment Type</th>
@@ -71,11 +73,16 @@ const pageChanged=(page)=>{
                 </td>
                 <td v-if="show" class="align-middle">{{ transaction.category_id }}</td>
                 <td v-if="show" class="align-middle">{{ transaction.datetime }}</td>
+                <td class="text-end align-middle" v-if="show">
+                    <button class="btn btn-xs btn-light" @click="show(transaction)">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                </td>
             </tr>
         </tbody>
     </table>
-    <Bootstrap5Pagination :data="transactions" @pagination-change-page="pageChanged"/>
-
+    <Bootstrap5Pagination :data="transactions" @pagination-change-page="pageChanged" />
 </template>
 
 <style scoped>
@@ -83,9 +90,5 @@ button {
     margin-left: 3px;
     margin-right: 3px;
 }
-
-.img_photo {
-    width: 3.2rem;
-    height: 3.2rem;
-}
 </style>
+

@@ -36,9 +36,12 @@ class TransactionController extends Controller
         return TransactionResource::collection($transactions);
     }
     //ainda n
-    public function show(Transaction $transaction)
+    public function show(User $user,$transaction)
     {
-        return TransactionResource::collection($transaction);
+        $query = Transaction::with('category')->where('id', $transaction)->first();
+        return new TransactionResource($query);
+
+        
     }
     public function show_specific($id)
     {

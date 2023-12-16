@@ -18,7 +18,6 @@ const adminStore = useAdminStore()
 const userStore = useUserStore()
 const router = useRouter()
 const routeName = router.currentRoute.value.name
-console.log("Rota Atual:", routeName)
 
 const logout = async () => {
   if (await userStore.logout()) {
