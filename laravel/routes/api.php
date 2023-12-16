@@ -30,12 +30,17 @@ Route::delete('admin/default_categories/{category}', [DefaultCategoryController:
 Route::post('default_categories', [DefaultCategoryController::class, 'store']);
 
 
+
 //Route::patch('admin/{email}', [VcardController::class, 'editMaxDebit']);
 //
 
 Route::middleware('auth:api')->group(function () {
 
     Route::post('logout', [AuthController::class, 'logout']);
+
+    // teste estatisticas admin
+    Route::get('admin/AllTransactions', [AdminController::class, 'getAllTransactions']);
+    Route::get('admin/AllVcards', [AdminController::class, 'getAllVcards']);
 
     Route::put('activatePiggy/{vcard}', [VcardController::class, 'ActivatePiggy']);
     Route::put('depositar/{vcard}', [VcardController::class, 'add']);
@@ -62,6 +67,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('admin/password/{id}', [AdminController::class, 'updatePassword']);
     Route::delete('admins/{admin}', [AdminController::class, 'delete']);
     Route::get('admins', [AdminController::class, 'index']);
+    
 
 
     Route::get('vcard/{vcard}', [VcardController::class, 'show'])

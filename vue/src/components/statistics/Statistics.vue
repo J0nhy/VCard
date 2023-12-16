@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch,computed,inject } from 'vue';
+import { onMounted, ref, watch,computed, inject } from 'vue';
 import * as Chart from 'chart.js/auto';
 import { useUserStore } from '../../stores/user';
 
@@ -20,20 +20,20 @@ const years = computed(() => getUniqueYearsFromTransactions());
 const loadTransactions = async () => {
     try {
         if (userStore.user && userStore.userType === 'V') {
-            const response = await axios.get("http://laravel.test/api/vcards/" + userStore.user.id+"/transactions");
+            const response = await axios.get("vcards/" + userStore.user.id + "/transactions");
             transactions.value = Array.isArray(response.data.data) ? response.data.data : [];
         }
         if (userStore.user && userStore.userType === 'A') {
-            const response = await axios.get("http://laravel.test/api/alltransactions");
+            const response = await axios.get("admin/AllTransactions");
             transactions.value = Array.isArray(response.data.data) ? response.data.data : [];
         }
         
 
         updatePieChart();
-        calculateTotals();
         calculateAverageTransactionsPerMonth();
         calculateMonthlyExpenses();
         updateBarChart()
+        calculateTotals();
     } catch (error) {
         console.error(error);
     }
@@ -43,10 +43,10 @@ const loadTransactions = async () => {
 
 const loadVcards = async () => {
     try {
-        const response = await axios.get("http://laravel.test/api/users");
+        const response = await axios.get("admin/AllVcards");
+        console.log(response);
         vcards.value = Array.isArray(response.data.data) ? response.data.data : [];
 
-        calculateTotals();
     } catch (error) {
         console.error(error);
     }
@@ -99,6 +99,7 @@ const calculateAverageTransactionsPerMonth = () => {
 
 
 const calculateTotals = () => {
+    loadVcards();
     totalVcardBalance.value = vcards.value.reduce((total, vcard) => total + parseFloat(vcard.balance), 0);
 
     const xDaysAgo = new Date();
@@ -245,9 +246,9 @@ watch(selectedYear, () => {
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item d-flex justify-content-between align-items-center">
+              <li class="list-group-item d-flex justify-content-between align-items-center" v-if="userStore.userType === 'A'">
                 Total dos saldos dos vcards
-                <span class="badge badge-primary badge-pill text-dark">{{ totalVcardBalance }}€</span>
+                <span class="badge badge-primary badge-pill text-dark">{{ totalVcardBalance.toFixed(2) }}€</span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Total das transações nos últimos 7 dias

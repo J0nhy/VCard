@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Models\Admin;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\AdminResource;
-use App\Models\ViewAuthAdmins;
-use App\Http\Requests\UpdateAdminRequest;
-use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\UpdateAdminPasswordRequest;
 use App\Models\User;
+use App\Models\Admin;
+use App\Models\Vcard;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
+use App\Models\ViewAuthAdmins;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\AdminResource;
+use App\Http\Resources\VcardResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreAdminRequest;
+use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Resources\TransactionResource;
+use App\Http\Requests\UpdateAdminPasswordRequest;
 
 class AdminController extends Controller
 {
@@ -31,6 +35,18 @@ class AdminController extends Controller
         $users = $query->paginate(10);
 
         return AdminResource::collection($users);
+    }
+
+    public function getAllTransactions(Request $request)
+    {
+        $query = Transaction::all();
+        return TransactionResource::collection($query);
+    }
+
+    public function getAllVcards(Request $request)
+    {
+        $query = Vcard::all();
+        return VcardResource::collection($query);
     }
 
     public function show(Admin $admin)

@@ -16,7 +16,6 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\CreditTransactionResource;
 
-use function Psy\debug;
 
 class TransactionController extends Controller
 {
@@ -27,18 +26,18 @@ class TransactionController extends Controller
         ->where('vcard', $user->id)
         ->orderBy('datetime', 'desc');
     
-    // Check if the 'search' parameter is present in the request
-    if ($request->has('search')) {
-        $searchTerm = $request->input('search');
-        $query->where('payment_reference', 'like', '%' . $searchTerm . '%');
+        // Check if the 'search' parameter is present in the request
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('payment_reference', 'like', '%' . $searchTerm . '%');
+        }
+        
+        $transactions = $query->paginate(10);
+        
+        return TransactionResource::collection($transactions);
+    
     }
     
-    $transactions = $query->paginate(10);
-    
-    return TransactionResource::collection($transactions);
-    
-    }
-    //ainda n
     public function show(User $user,$transaction)
     {
         $query = Transaction::with('category')->where('id', $transaction)->first();
