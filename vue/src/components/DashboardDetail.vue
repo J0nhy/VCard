@@ -30,7 +30,7 @@ watch(
   (newVcard) => {
     editingVcard.value = newVcard
 
-    //console.log("Valor :", router.currentRoute.value);
+    ////console.log("Valor :", router.currentRoute.value);
   },
   { immediate: true },
   () => props.inserting,

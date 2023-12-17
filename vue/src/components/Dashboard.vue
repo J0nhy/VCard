@@ -129,8 +129,8 @@ const leaveConfirmed = () => {
 watch(
   () => userStore.userBalance,
   (newVcard) => {
-    console.log("balance Atual:", newVcard);
-    //console.log("Valor :", router.currentRoute.value);
+    ////console.log("balance Atual:", newVcard);
+    ////console.log("Valor :", router.currentRoute.value);
   },
   { immediate: true }
 )

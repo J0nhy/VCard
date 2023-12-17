@@ -38,7 +38,7 @@ const loadVcard = async (phone_number) => {
         vcard.value = response.data.data
         originalValueStr = JSON.stringify(vcard.value)
       } catch (error) {
-        console.log(error)
+        //console.log(error)
       }
   }
 }

@@ -44,7 +44,7 @@ const loadTransactions = async () => {
 const loadVcards = async () => {
     try {
         const response = await axios.get("admin/AllVcards");
-        console.log(response);
+        //console.log(response);
         vcards.value = Array.isArray(response.data.data) ? response.data.data : [];
 
     } catch (error) {
@@ -212,21 +212,22 @@ const getUniqueYearsFromTransactions = () => {
 onMounted(async () => {
     await loadTransactions();
     await loadVcards();
+    await updatePieChart();
+    await calculateMonthlyExpenses();
+    await updateBarChart();
+    await calculateTotals();
 });
 
 watch(transactions, () => {
-    updatePieChart();
-    calculateTotals();
-    calculateMonthlyExpenses();
-    updateBarChart();
+    
 });
 
 watch(vcards, () => {
-    calculateTotals();
+    //
 });
 
 watch(selectedYear, () => {
-    updateBarChart();
+    //updateBarChart();
 });
 </script>
 
@@ -242,7 +243,7 @@ watch(selectedYear, () => {
       <div class="col-md-6">
         <div class="card border-info">
           <div class="card-header bg-info text-white">
-            <h5 class="mb-0">Totais</h5>
+            <h5 class="mb-0">Estatísticas das ultimas vinte mil transacoes</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
@@ -257,10 +258,6 @@ watch(selectedYear, () => {
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Média de transações por mês
                 <span class="badge badge-primary badge-pill text-dark">{{ averageTransactionsPerMonth.toFixed(2) }}</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Total de Transações
-                <span class="badge badge-primary badge-pill text-dark">{{ transactions.length }}</span>
               </li>
             </ul>
           </div>

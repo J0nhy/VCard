@@ -45,19 +45,19 @@ const loadAdmin = async (id) => {
       admin.value = response.data.data
       originalValueStr = JSON.stringify(admin.value)
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
 }
 
 const routeName = router.currentRoute.value.name;
-console.log("Rota Atual:", routeName);
+//console.log("Rota Atual:", routeName);
 
 const save = async (adminToSave) => {
   errors.value = null
 
-  console.log(adminToSave)
-  console.log(props.id)
+  //console.log(adminToSave)
+  //console.log(props.id)
   if (routeName == 'NewAdmin') {
     try {
       const response = await axios.post('admin', adminToSave)

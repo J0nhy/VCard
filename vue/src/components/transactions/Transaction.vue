@@ -64,7 +64,7 @@ const confirmationLeaveDialog = ref(null)
 let originalValueStr = ''
 
 const routeName = router.currentRoute.value.name;
-console.log("Rota Atual:", routeName);
+//console.log("Rota Atual:", routeName);
 
 const inserting = (id) => !id || (id < 0)
 const loadTransaction = async () => {
@@ -88,7 +88,7 @@ const loadTransaction = async () => {
         originalValueStr = JSON.stringify(transaction.value)
       }
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
 }
@@ -97,8 +97,8 @@ const loadTransaction = async () => {
 
 const save = async (transactionToSave) => {
   errors.value = null
-  //console.log(transactionToSave)
-  //console.log(props.id)
+  ////console.log(transactionToSave)
+  ////console.log(props.id)
   if (routeName == 'NewTransaction') {
     try {
       const response = await axios.post('transaction', transactionToSave)
@@ -116,7 +116,7 @@ const save = async (transactionToSave) => {
     } catch (error) {
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
-        console.log(errors.value)
+        //console.log(errors.value)
         toast.error('VCard was not registered due to validation errors!')
       } else {
         toast.error('Transaction was not registered due to unknown server error!')
@@ -127,14 +127,14 @@ const save = async (transactionToSave) => {
       const response = await axios.post('transactionCredit', transactionToSave)
       transaction.value = response.data.data
       originalValueStr = JSON.stringify(transaction.value)
-      console.log(response.data.data.date)
+      //console.log(response.data.data.date)
       toast.success('Transaction #' + transaction.value.id + ' was registered successfully.')
 
       socket.emit("sendmoney", { transactionData: response.data.data, userId: userStore.userId });
       
       router.push({ name: 'Dashboard' })
     } catch (error) {
-      console.log(error)
+      //console.log(error)
       if (error.response.status == 422) {
         errors.value = error.response.data.errors
         toast.error('Transaction was not registered due to validation errors!')
@@ -144,7 +144,7 @@ const save = async (transactionToSave) => {
     }
   } else if (routeName == 'Transaction') {
     try {
-      console.log('transactionToSave:', transactionToSave)
+      //console.log('transactionToSave:', transactionToSave)
       const response = await axios.put('transaction/' + props.id, transactionToSave)
       transaction.value = response.data.data
       originalValueStr = JSON.stringify(transaction.value)

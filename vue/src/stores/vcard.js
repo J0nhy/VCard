@@ -19,6 +19,8 @@ export const useVcardStore = defineStore('vcard', () => {
 
 
 
+
+
     const vcardPhotoUrl = computed(() =>
     vcard.value?.photo_url
         ? serverBaseUrl + '/storage/fotos/' + vcard.value.photo_url
@@ -40,33 +42,7 @@ export const useVcardStore = defineStore('vcard', () => {
         sessionStorage.removeItem('token')
         vcard.value = null
     }
-/*
-    async function login(credentials) {
-        try {
-            const response = await axios.post('login', credentials)
-            axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
-            sessionStorage.setItem('token', response.data.access_token)
-            await loadVcard()
-            return true
-        }
-        catch(error) {
-            clearVcard()
-            console.log(error)
 
-            return false
-        }
-    }
-
-    async function logout () {
-        try {
-            await axios.post('logout')
-            axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
-            clearVcard()
-            return true
-        } catch (error) {
-            return false
-        }
-    }*/
 
     async function changePassword(credentials) {
         if (vcardId.value < 0) {
@@ -99,6 +75,8 @@ export const useVcardStore = defineStore('vcard', () => {
      
         return response.data.data
     }  
+
+  
 
 
     return {

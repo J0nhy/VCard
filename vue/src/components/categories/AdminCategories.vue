@@ -29,7 +29,7 @@ const loadCategorias = async (search = null) => {
     categorias.value = response.data
 
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 
@@ -42,10 +42,10 @@ const search = (search) => {
   loadCategorias(search);
 }
 const save = (categoryName, categoryType) => {
-  console.log("OLASDASD");
+  //console.log("OLASDASD");
 }
 const cancel = () => {
-  console.log("olas");
+  //console.log("olas");
 }
 onMounted(() => {
   loadCategorias()

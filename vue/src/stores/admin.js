@@ -25,7 +25,7 @@ export const useAdminStore = defineStore('admin', () => {
             const response = await axios.get('admins/me')
             admin.value = response.data.data
         } catch (error) {
-            console.log(error)
+            //console.log(error)
             clearAdmin()
             throw error
         }
@@ -40,7 +40,7 @@ export const useAdminStore = defineStore('admin', () => {
     /*
     async function login(credentials) {
         try {
-            console.log(credentials)
+            //console.log(credentials)
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)

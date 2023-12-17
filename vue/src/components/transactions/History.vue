@@ -26,7 +26,7 @@ const loadTransactions = async (search=null ) => {
     transactions.value = response.data
 
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 

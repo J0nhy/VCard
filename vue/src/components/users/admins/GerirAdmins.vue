@@ -32,7 +32,7 @@ const loadUsers = async (search =null) => {
     users.value = response.data
 
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 const search  =  (search) => {

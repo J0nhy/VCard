@@ -29,12 +29,12 @@ const loadCategorias = async (search = null) => {
     else {
       response = await axios.get(`vcard/${phone_number.value}/categories?page=${currentPage.value}`)
     }
-    console.log(categorias);
+    //console.log(categorias);
 
     categorias.value = response.data
 
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 const search = (search) => {

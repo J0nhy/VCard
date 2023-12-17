@@ -45,7 +45,7 @@ const loadCategories = async () => {
         disablePaginator: true,
       },
     });
-    console.log(response.data.data);
+    //console.log(response.data.data);
     categories.value = response.data.data; // Assuming 'data' is the array of categories
   } catch (error) {
     console.error('Erro ao carregar categorias:', error.message);

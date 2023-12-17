@@ -4,6 +4,10 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useVcardStore } from "../../stores/vcard";
 import { useToast } from 'vue-toastification';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import bcrypt from 'bcryptjs'
+import { useUserStore } from '../../stores/user.js'
+
+
 
 const socket = inject('socket')
 
@@ -36,6 +40,9 @@ const deleteConfirmationDialog = ref(null)
 const vcardStore = useVcardStore()
 const toast = useToast()
 const router = useRouter()
+const deleteVcardConfirmed = ref(null)
+const userStore = useUserStore()
+
 
 //const inserindo = ref(props.inserting)
 //const insert = inserindo.value
@@ -46,9 +53,6 @@ const router = useRouter()
 const vCardToDeleteDescription = computed(() => VcardToDelete.value
     ? `#${VcardToDelete.value.id} (${VcardToDelete.value.name})`
     : "")
-
-
-
 
 const inputPhotoFile = ref(null)
 const editingImageAsBase64 = ref(null)
@@ -129,26 +133,54 @@ const cleanPhoto = () => {
   deletePhotoOnTheServer.value = true
 }
 
-const deleteClick = (Vcard) => {
-  VcardToDelete.value = Vcard
-  console.log(VcardToDelete.value)
-  deleteConfirmationDialog.value.show()
-  }
 
-  const deleteVcardConfirmed = async () => {
+
+//deletar vcard
+const confirmDelete = ref(false);
+const passwordToDelete = ref("");
+const pinToDelete = ref("");
+
+const openDeleteConfirmation = () => {
+  confirmDelete.value = true;
+};
+
+const closeDeleteConfirmation = () => {
+  confirmDelete.value = false;
+  // Limpar os campos de senha e PIN quando o modal for fechado
+  passwordToDelete.value = "";
+  pinToDelete.value = "";
+};
+
+
+const deleteVcard = async (editingVcard, passwordToDelete, pinToDelete) => {
+  closeDeleteConfirmation();
+
+
+  // Executar a lógica de exclusão aqui, incluindo a verificação de senha e PIN
   try {
-    await vcardStore.deleteVcard(VcardToDelete.value)
-    toast.info(`Vcard ${VcardToDelete.value.phone_number} was deleted`)
-    router.push({name: 'Dashboard'})
-  } catch (error) {
-    console.log(error)
-    toast.error(`It was not possible to delete Project ${VcardToDelete.value}!`)
-      
+    // Supondo que você tenha armazenado a senha como hash no backend
+    // função a ser implementada no store
     
-  }  
-}
+    const passwordMatch = await bcrypt.compare(passwordToDelete, editingVcard.password);
 
+    const pinMatch = await bcrypt.compare(pinToDelete, editingVcard.confirmation_code);
 
+    if (passwordMatch && pinMatch) {
+      await vcardStore.deleteVcard(editingVcard);
+      toast.success(`Vcard ${editingVcard.phone_number} was deleted`);
+      //remove token
+      userStore.clearUser();
+      //da logout
+      router.push({ name: 'Login' });
+    } else {
+      // Se a verificação falhar, exibir uma mensagem de erro
+      toast.warning("Senha ou PIN incorretos. Exclusão abortada.");
+    }
+  } catch (error) {
+    console.error("Erro ao verificar senha e PIN:", error);
+    toast.error("Erro ao verificar senha e PIN. Por favor, tente novamente.");
+  }
+};
 
 
 </script>
@@ -261,10 +293,45 @@ const deleteClick = (Vcard) => {
     <div class="mb-3 d-flex justify-content-start">
       <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
-      <button type="button" class="btn btn-xs btn-light" @click="deleteClick(editingVcard)" ><i class="bi bi-xs bi-x-square-fill"></i></button>
+    
+    <!-- Botão de exclusão -->
+  <button type="button" class="btn btn-xs btn-light" @click="openDeleteConfirmation" v-if="inserindo === false">
+    <i class="bi bi-xs bi-x-square-fill"></i>
+  </button>
+
+    
+      
     </div>
+     
+  <!-- Modal de confirmação de exclusão -->
+  <modal v-if="confirmDelete" @close="closeDeleteConfirmation">
+    <h3 class="mb-3">Confirme a exclusão</h3>
+    <div class="mb-3">
+      <label for="inputPasswordToDelete" class="form-label">Password:</label>
+      <input
+        type="password"
+        class="form-control"
+        id="inputPasswordToDelete"
+        v-model="passwordToDelete"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="inputPinToDelete" class="form-label">PIN:</label>
+      <input
+        type="password"
+        class="form-control"
+        id="inputPinToDelete"
+        v-model="pinToDelete"
+        required
+      />
+    </div>
+    <button type="button" class="btn btn-danger" @click="deleteVcard(editingVcard, passwordToDelete,pinToDelete)">Confirmar exclusão</button>
+  </modal>
+  
     
   </form>
+  <br><br>
 
 </template>
 

@@ -20,7 +20,7 @@ const loadUsers = async () => {
     users.value = response.data.data
 
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 

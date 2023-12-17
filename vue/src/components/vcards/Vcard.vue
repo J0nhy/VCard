@@ -45,7 +45,7 @@ let originalValueStr = ''
 const phone_number = props.phone_number
 
 const routeName = router.currentRoute.value.name;
-//console.log("Rota Atual:", routeName);
+////console.log("Rota Atual:", routeName);
 
 const inserindo = ref(false)
 
@@ -58,11 +58,11 @@ const loadVcard = async (phoneNumber) => {
   if(routeName == 'Vcard') {
     //inserting.value = false
     inserindo.value = false
-    //console.log('Vcard.vue: inserting.value = false', inserting.value)
+    ////console.log('Vcard.vue: inserting.value = false', inserting.value)
   }else if(routeName == 'NewVcard'){
     //inserting.value = true  
     inserindo.value = true
-    //console.log('Vcard.vue: inserting.value = true', inserting.value)
+    ////console.log('Vcard.vue: inserting.value = true', inserting.value)
   }
 
   if (!phoneNumber || (phoneNumber < 0)) {
@@ -74,7 +74,7 @@ const loadVcard = async (phoneNumber) => {
         vcard.value = response.data.data
         originalValueStr = JSON.stringify(vcard.value)
       } catch (error) {
-        console.log(error)
+        //console.log(error)
       }
   }
 }
@@ -83,8 +83,8 @@ const loadVcard = async (phoneNumber) => {
 
 const save = async (vcardToSave) => {
   errors.value = null
-  //console.log(vcardToSave)
-  //console.log(props.id)
+  ////console.log(vcardToSave)
+  ////console.log(props.id)
   if (routeName == 'NewVcard') {
     try {
       const response = await axios.post('vcard', vcardToSave)

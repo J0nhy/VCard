@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', () => {
             user.value = response.data.data
 
         } catch (error) {
-            console.log("erro" + error)
+            //console.log("erro" + error)
             clearUser()
             throw error
         }
@@ -45,7 +45,7 @@ export const useUserStore = defineStore('user', () => {
 
     async function login(credentials) {
         try {
-            //console.log(credentials)
+            ////console.log(credentials)
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             
@@ -67,7 +67,7 @@ export const useUserStore = defineStore('user', () => {
             clearUser()
             return true
         } catch (error) {
-            console.log("erro user.js: " + error)
+            //console.log("erro user.js: " + error)
             return false
         }
     }

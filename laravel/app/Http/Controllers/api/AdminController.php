@@ -39,7 +39,7 @@ class AdminController extends Controller
 
     public function getAllTransactions(Request $request)
     {
-        $query = Transaction::all();
+        $query = Transaction::paginate(1000);
         return TransactionResource::collection($query);
     }
 

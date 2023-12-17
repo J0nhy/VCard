@@ -25,16 +25,16 @@ const login = async () => {
     axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
     //axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.getItem("token")
     await userStore.loadUser()
-    //console.log('userStore.user:', userStore.user)
+    ////console.log('userStore.user:', userStore.user)
     emit('login')
     router.push({ name: 'Dashboard' })
   }
   catch (error) {
-    //console.log('error login.vue:', error)
+    ////console.log('error login.vue:', error)
     delete axios.defaults.headers.common.Authorization
     userStore.clearUser()
     credentials.value.password = ''
-    console.log('error.response.data:', error.response.data.message)
+    //console.log('error.response.data:', error.response.data.message)
     if(error.response.data.message)
       toast.error(error.response.data.message)
     else

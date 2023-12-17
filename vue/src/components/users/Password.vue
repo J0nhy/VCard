@@ -38,7 +38,7 @@ const loadAdmin = async (id) => {
         admin.value = response.data.data
         originalValueStr = JSON.stringify(admin.value)
       } catch (error) {
-        console.log(error)
+        //console.log(error)
       }
   }
 }
